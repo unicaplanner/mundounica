@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+/* Manual de marca Unica Planner: Open Sans Bold + letter-spacing para
+   elementos de marca, acento #CEC8BA, tom elegante/editorial. */
+:root {
+  --background: #faf8f4;
+  --card: #fffefb;
+  --ink: #2b2620;
+  --muted: #766b5c;
+  --border: #e7dfd1;
+  --border-soft: #efe9df;
+
+  --accent: #cec8ba;
+  --accent-ink: #4a4438;
+  --accent-soft: #f2efe9;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-border-soft: var(--border-soft);
+
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+
+  --font-sans: var(--font-open-sans);
+}
+
+body {
+  background: var(--background);
+  color: var(--ink);
+}
+
+.brand-mark {
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
