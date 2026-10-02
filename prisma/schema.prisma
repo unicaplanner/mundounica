@@ -8,10 +8,14 @@ datasource db {
 
 // Modulo Financeiro do Mundo da Unica. As tabelas ficam num schema privado
 // do Supabase (ver src/lib/db-url.ts), nunca no public.
+//
+// "Composicao" e o que forma o custo: materiais (ficha tecnica), produtos
+// (componentes de kit) ou custo de compra (revenda). Ela pertence ao produto
+// inteiro, ou a cada variante quando Produto.custoPorVariante = true.
 
 // Produto do Shopify. Titulo, status e link sempre vem da sincronizacao;
-// tipo, custoCompra e ficha tecnica sao preenchidos aqui pela Lari e nunca
-// sao tocados pelo sync.
+// tipo, custo e composicao sao preenchidos aqui pela Lari e nunca sao
+// tocados pelo sync.
 model Produto {
   id               String  @id @default(cuid())
   shopifyProductId String  @unique // gid://shopify/Product/123...
@@ -21,11 +25,16 @@ model Produto {
 
   tipo TipoProduto? // null ate ser classificado
 
-  // So pra tipo=revenda: custo de compra do produto pronto (quem produz e o
-  // fornecedor, entao nao tem ficha tecnica).
+  // false: uma composicao so, vale pra todas as variantes (ex: variantes de
+  // cor). true: cada variante tem a sua (ex: A5 x Personal, papel diferente).
+  custoPorVariante Boolean @default(false)
+
+  // So pra tipo=revenda com custo unico: custo de compra do produto pronto.
   custoCompra Decimal? @db.Decimal(10, 2)
 
-  fichaTecnica FichaTecnicaItem[]
+  variantes    Variante[]
+  fichaTecnica FichaTecnicaItem[] // todas as linhas do produto, inclusive as por variante
+  componentes  KitItem[]          @relation("KitDoProduto")
 
   lastSyncedAt DateTime @default(now())
   createdAt    DateTime @default(now())
@@ -37,11 +46,40 @@ model Produto {
 enum TipoProduto {
   revenda
   producao_propria
+  kit
 }
 
-// Materia-prima ou embalagem usada na producao propria. custoAtual nunca e
-// editado direto: e sempre o custo unitario da compra mais recente (por
-// data da compra), atualizado a cada compra registrada.
+// Variante do Shopify (A5 Argolado, Personal Argolado / 120g...). Titulo,
+// SKU, preco e posicao vem do sync. Variante que sumiu do Shopify fica com
+// ativa=false em vez de ser apagada, pra nao quebrar kits que usam ela.
+model Variante {
+  id               String  @id @default(cuid())
+  shopifyVariantId String  @unique // gid://shopify/ProductVariant/123...
+  produtoId        String
+  produto          Produto @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+
+  title   String // "Default Title" quando o produto nao tem variantes de verdade
+  sku     String?
+  preco   Decimal? @db.Decimal(10, 2) // preco de venda no Shopify
+  posicao Int      @default(0)
+  ativa   Boolean  @default(true)
+
+  // So pra tipo=revenda com custo por variante.
+  custoCompra Decimal? @db.Decimal(10, 2)
+
+  fichaTecnica FichaTecnicaItem[]
+  componentes  KitItem[]          @relation("KitDaVariante")
+  usadaEmKits  KitItem[]          @relation("ComponenteDoKit")
+
+  lastSyncedAt DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([produtoId])
+}
+
+// Materia-prima ou embalagem. custoAtual nunca e editado direto: e sempre o
+// custo unitario da compra mais recente (por data da compra).
 model Material {
   id      String @id @default(cuid())
   nome    String @unique
@@ -73,18 +111,45 @@ model Compra {
   @@index([materialId, data])
 }
 
-// Quanto de cada material entra em uma unidade do produto (so pra
-// tipo=producao_propria). Custo = soma(quantidade * material.custoAtual).
+// Quanto de um material entra em uma unidade (producao propria, ou
+// embalagem/extras de um kit). varianteId nulo = composicao do produto
+// inteiro. Um material aparece no maximo uma vez por dono -- garantido no
+// codigo, porque unique com coluna nula nao barra repeticao no Postgres.
 model FichaTecnicaItem {
   id String @id @default(cuid())
 
-  produtoId String
-  produto   Produto @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  produtoId  String
+  produto    Produto   @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  varianteId String?
+  variante   Variante? @relation(fields: [varianteId], references: [id], onDelete: Cascade)
 
   materialId String
   material   Material @relation(fields: [materialId], references: [id])
 
   quantidade Decimal @db.Decimal(10, 4)
 
-  @@unique([produtoId, materialId])
+  @@index([produtoId])
+  @@index([varianteId])
+}
+
+// Um produto (numa variante especifica) dentro de um kit. kitVarianteId nulo
+// = composicao do kit inteiro. Kit nao entra dentro de outro kit.
+model KitItem {
+  id String @id @default(cuid())
+
+  kitProdutoId  String
+  kitProduto    Produto   @relation("KitDoProduto", fields: [kitProdutoId], references: [id], onDelete: Cascade)
+  kitVarianteId String?
+  kitVariante   Variante? @relation("KitDaVariante", fields: [kitVarianteId], references: [id], onDelete: Cascade)
+
+  componenteVarianteId String
+  componente           Variante @relation("ComponenteDoKit", fields: [componenteVarianteId], references: [id])
+
+  quantidade Decimal @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now())
+
+  @@index([kitProdutoId])
+  @@index([kitVarianteId])
+  @@index([componenteVarianteId])
 }

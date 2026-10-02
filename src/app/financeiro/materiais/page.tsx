@@ -35,7 +35,7 @@ export default async function MateriaisPage() {
             unidade: m.unidade,
             custoAtual: m.custoAtual.toNumber(),
             totalComprado: m.totalComprado.toNumber(),
-            usos: m._count.fichaTecnica,
+            usos: m.produtosQueUsam,
           }))}
         />
       )}

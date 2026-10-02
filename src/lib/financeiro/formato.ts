@@ -26,6 +26,22 @@ export function paraCampo(valor: number, casas?: number) {
   return texto.replace(".", ",");
 }
 
+// Margem bruta sobre o preco de venda: (preco - custo) / preco. Nao desconta
+// taxa de cartao, frete nem imposto -- so material/compra.
+export function margem(preco: number | null, custo: number | null): number | null {
+  if (preco === null || custo === null || preco <= 0) return null;
+  return ((preco - custo) / preco) * 100;
+}
+
+export function formatarMargem(valor: number | null) {
+  return valor === null ? "—" : `${Math.round(valor)}%`;
+}
+
+// Busca sem diferenciar maiuscula nem acento ("cafe" acha "Café").
+export function normalizarBusca(texto: string) {
+  return texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+}
+
 export function formatarQuantidade(valor: number) {
   return valor.toLocaleString("pt-BR", { maximumFractionDigits: 4 });
 }

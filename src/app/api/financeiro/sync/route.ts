@@ -6,8 +6,8 @@ export async function POST() {
   if (!(await getUsuario())) return naoAutenticado();
 
   try {
-    const total = await sincronizarProdutos();
-    return NextResponse.json({ ok: true, total });
+    const { produtos, variantes } = await sincronizarProdutos();
+    return NextResponse.json({ ok: true, produtos, variantes });
   } catch (e) {
     const mensagem = e instanceof Error ? e.message : "Erro desconhecido.";
     return erro(`Não deu pra sincronizar com o Shopify: ${mensagem}`, 502);

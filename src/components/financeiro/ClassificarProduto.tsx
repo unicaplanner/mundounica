@@ -5,11 +5,11 @@ import { useState, useTransition } from "react";
 import { enviar } from "@/lib/financeiro/enviar";
 import { campo } from "./estilos";
 
-type Tipo = "revenda" | "producao_propria" | "";
+type Tipo = "revenda" | "producao_propria" | "kit" | "";
 
 // Na lista, classificar ja leva pra pagina do produto pra completar o custo
-// (custo de compra na revenda, ficha tecnica na producao propria). Na
-// propria pagina do produto, so atualiza.
+// (custo de compra na revenda, ficha tecnica na producao propria, produtos
+// no kit). Na propria pagina do produto, so atualiza.
 export function ClassificarProduto({
   produtoId,
   tipo,
@@ -55,6 +55,7 @@ export function ClassificarProduto({
         <option value="">Classificar...</option>
         <option value="producao_propria">Produção própria</option>
         <option value="revenda">Revenda</option>
+        <option value="kit">Kit</option>
       </select>
       {erroMsg && <p className="mt-1 text-xs text-alerta">{erroMsg}</p>}
     </div>

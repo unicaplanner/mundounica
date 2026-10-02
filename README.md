@@ -87,12 +87,23 @@ para a visão completa da plataforma e o plano das próximas fases.
 
 ### Regras do Financeiro
 
-- Custo de produção própria = soma(quantidade de cada material na ficha ×
-  custo atual do material). Revenda = custo de compra informado.
+- Três tipos de produto: **produção própria** (custo = soma de quantidade ×
+  custo atual de cada material da ficha técnica), **revenda** (custo de compra
+  informado) e **kit** (soma do custo de outros produtos, cada um numa
+  variante específica, + embalagem/extras como materiais). Kit não entra
+  dentro de outro kit.
+- Produto com variantes: ou uma composição só pra todas (variantes de cor),
+  ou uma composição por variante (`custoPorVariante`, ex: A5 × Personal). Ao
+  ligar o custo por variante, cada variante começa com uma cópia da
+  composição do produto; dá pra copiar a composição de uma variante pras
+  outras (filtrando pelo nome).
+- Margem bruta = (preço da variante no Shopify − custo) / preço, sem taxas,
+  frete ou imposto.
 - O custo atual de um material é sempre o da **compra mais recente pela data
   da compra** — lançar uma compra antiga depois não "volta" o preço.
-- O sync com o Shopify só atualiza título, status e link; nunca mexe em
-  classificação, custo ou ficha técnica.
+- O sync com o Shopify só atualiza título, status, link e as variantes (nome,
+  SKU, preço); nunca mexe em classificação, custo ou composição. Variante que
+  sumiu do Shopify fica inativa em vez de ser apagada (pode estar num kit).
 - Ainda não há baixa de estoque por venda: "total já comprado" é só a soma
   das compras.
 

@@ -57,6 +57,66 @@ async function shopifyGraphQL<T>(query: string, variables: Record<string, unknow
   return json.data as T;
 }
 
+export interface ShopifyVariante {
+  id: string;
+  title: string;
+  sku: string | null;
+  price: string;
+  position: number;
+  product: { id: string };
+}
+
+interface VariantesResponse {
+  productVariants: {
+    edges: { cursor: string; node: ShopifyVariante }[];
+    pageInfo: { hasNextPage: boolean };
+  };
+}
+
+// Variantes vem numa consulta propria (e nao aninhadas em products) porque
+// conexoes aninhadas multiplicam o custo da consulta no Shopify.
+const VARIANTES_QUERY = /* GraphQL */ `
+  query Variantes($cursor: String) {
+    productVariants(first: 250, after: $cursor) {
+      edges {
+        cursor
+        node {
+          id
+          title
+          sku
+          price
+          position
+          product {
+            id
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+      }
+    }
+  }
+`;
+
+export async function buscarVariantesShopify(): Promise<ShopifyVariante[]> {
+  const variantes: ShopifyVariante[] = [];
+  let cursor: string | undefined;
+  let hasNextPage = true;
+  let paginas = 0;
+
+  while (hasNextPage && paginas < 40) {
+    paginas += 1;
+    const data = await shopifyGraphQL<VariantesResponse>(VARIANTES_QUERY, { cursor });
+    for (const edge of data.productVariants.edges) {
+      variantes.push(edge.node);
+      cursor = edge.cursor;
+    }
+    hasNextPage = data.productVariants.pageInfo.hasNextPage;
+  }
+
+  return variantes;
+}
+
 // Pagina ate acabar, com limite de seguranca de 30 paginas (~3000 produtos)
 // pra nunca entrar em loop infinito por engano.
 export async function buscarProdutosShopify(): Promise<ShopifyProduto[]> {

@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 
 const PAGINA = 60;
 
-export type FiltroTipo = "nao_classificados" | "producao_propria" | "revenda" | "todos";
+export type FiltroTipo = "nao_classificados" | "producao_propria" | "revenda" | "kit" | "todos";
 
 // "Nao classificado" ignora produtos arquivados no Shopify: nao faz sentido
 // gastar tempo classificando o que nao esta mais a venda.
@@ -24,7 +24,7 @@ export async function getProdutos(opts: { busca?: string; filtro: FiltroTipo }) 
 
   return prisma.produto.findMany({
     where,
-    include: { fichaTecnica: { include: { material: true } } },
+    include: { _count: { select: { variantes: { where: { ativa: true } } } } },
     // ACTIVE vem antes de DRAFT em ordem alfabetica: o que esta a venda primeiro.
     orderBy: [{ status: "asc" }, { title: "asc" }],
     take: PAGINA,
@@ -43,22 +43,32 @@ export async function getResumoProdutos() {
 export async function getProduto(id: string) {
   return prisma.produto.findUnique({
     where: { id },
-    include: { fichaTecnica: { include: { material: true }, orderBy: { material: { nome: "asc" } } } },
+    include: {
+      variantes: { where: { ativa: true }, orderBy: { posicao: "asc" } },
+      fichaTecnica: { include: { material: true }, orderBy: { material: { nome: "asc" } } },
+      componentes: {
+        include: { componente: { include: { produto: { select: { title: true } } } } },
+        orderBy: { createdAt: "asc" },
+      },
+    },
   });
 }
 
 export async function getMateriais() {
-  const [materiais, totais] = await Promise.all([
-    prisma.material.findMany({
-      orderBy: { nome: "asc" },
-      include: { _count: { select: { fichaTecnica: true } } },
-    }),
+  const [materiais, totais, usos] = await Promise.all([
+    prisma.material.findMany({ orderBy: { nome: "asc" } }),
     prisma.compra.groupBy({ by: ["materialId"], _sum: { quantidade: true } }),
+    // um produto com 6 variantes tem 6 linhas de ficha: conta produtos, nao linhas
+    prisma.fichaTecnicaItem.groupBy({ by: ["materialId", "produtoId"] }),
   ]);
   const compradoPorMaterial = new Map(totais.map((t) => [t.materialId, t._sum.quantidade]));
+  const produtosPorMaterial = new Map<string, number>();
+  for (const u of usos) produtosPorMaterial.set(u.materialId, (produtosPorMaterial.get(u.materialId) ?? 0) + 1);
+
   return materiais.map((m) => ({
     ...m,
     totalComprado: compradoPorMaterial.get(m.id) ?? new Prisma.Decimal(0),
+    produtosQueUsam: produtosPorMaterial.get(m.id) ?? 0,
   }));
 }
 

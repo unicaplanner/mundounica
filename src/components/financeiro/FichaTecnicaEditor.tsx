@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useId, useState, useTransition } from "react";
 import { enviar } from "@/lib/financeiro/enviar";
 import { formatarQuantidade, formatarReais, normalizarNumero, paraCampo } from "@/lib/financeiro/formato";
 import { UNIDADES } from "@/lib/financeiro/unidades";
@@ -14,15 +14,24 @@ type Item = { id: string; quantidade: number; material: Material };
 
 const NOVO = "__novo__";
 
+// varianteId nulo = composicao do produto inteiro. Pode aparecer varias vezes
+// na mesma pagina (uma por variante), por isso os ids vem de useId.
 export function FichaTecnicaEditor({
   produtoId,
+  varianteId = null,
   itens,
   materiais,
+  textoVazio = "Nenhum material ainda. Adicione abaixo tudo que vai em uma unidade do produto: papel, capa, embalagem, etc.",
+  rotuloTotal = "Custo de uma unidade",
 }: {
   produtoId: string;
+  varianteId?: string | null;
   itens: Item[];
   materiais: Material[];
+  textoVazio?: string;
+  rotuloTotal?: string;
 }) {
+  const id = useId();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [materialId, setMaterialId] = useState(materiais[0]?.id ?? NOVO);
@@ -57,6 +66,7 @@ export function FichaTecnicaEditor({
     const resultado = await enviar(`/api/financeiro/produtos/${produtoId}/ficha`, "POST", {
       materialId: idParaAdicionar,
       quantidade: normalizarNumero(quantidade),
+      varianteId,
     });
     setEnviando(false);
     if (!resultado.ok) {
@@ -85,6 +95,7 @@ export function FichaTecnicaEditor({
     const resultado = await enviar(`/api/financeiro/produtos/${produtoId}/ficha`, "POST", {
       materialId: item.material.id,
       quantidade: normalizarNumero(qtdEdicao),
+      varianteId,
     });
     if (!resultado.ok) {
       setErroMsg(resultado.erro);
@@ -99,10 +110,7 @@ export function FichaTecnicaEditor({
   return (
     <div className="space-y-6">
       {itens.length === 0 ? (
-        <p className="text-sm text-muted">
-          Nenhum material ainda. Adicione abaixo tudo que vai em uma unidade do produto: papel, capa,
-          embalagem, etc.
-        </p>
+        <p className="text-sm text-muted">{textoVazio}</p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[520px] text-sm [&_td]:pr-4 [&_th]:pr-4">
@@ -224,7 +232,7 @@ export function FichaTecnicaEditor({
             <tfoot>
               <tr className="border-t border-ink/20">
                 <td colSpan={3} className="pt-2.5 text-right text-xs font-semibold text-muted">
-                  Custo de uma unidade
+                  {rotuloTotal}
                 </td>
                 <td className="pt-2.5 text-right font-bold tabular-nums text-ink">{formatarReais(total)}</td>
                 <td />
@@ -238,11 +246,11 @@ export function FichaTecnicaEditor({
         <p className="text-xs font-semibold uppercase tracking-wide text-muted">Adicionar material</p>
         <div className="flex flex-wrap items-end gap-3">
           <div>
-            <label htmlFor="ficha-material" className={rotulo}>
+            <label htmlFor={`${id}-material`} className={rotulo}>
               Material
             </label>
             <select
-              id="ficha-material"
+              id={`${id}-material`}
               value={materialId}
               onChange={(e) => setMaterialId(e.target.value)}
               className={campo}
@@ -259,11 +267,11 @@ export function FichaTecnicaEditor({
           {criandoMaterial && (
             <>
               <div>
-                <label htmlFor="ficha-novo-nome" className={rotulo}>
+                <label htmlFor={`${id}-novo-nome`} className={rotulo}>
                   Nome do material novo
                 </label>
                 <input
-                  id="ficha-novo-nome"
+                  id={`${id}-novo-nome`}
                   type="text"
                   placeholder="Papel offset 90g"
                   value={novoNome}
@@ -272,11 +280,11 @@ export function FichaTecnicaEditor({
                 />
               </div>
               <div>
-                <label htmlFor="ficha-nova-unidade" className={rotulo}>
+                <label htmlFor={`${id}-nova-unidade`} className={rotulo}>
                   Unidade
                 </label>
                 <select
-                  id="ficha-nova-unidade"
+                  id={`${id}-nova-unidade`}
                   value={novaUnidade}
                   onChange={(e) => setNovaUnidade(e.target.value)}
                   className={campo}
@@ -292,11 +300,11 @@ export function FichaTecnicaEditor({
           )}
 
           <div>
-            <label htmlFor="ficha-quantidade" className={rotulo}>
+            <label htmlFor={`${id}-quantidade`} className={rotulo}>
               Quantidade por unidade{unidade ? ` (${unidade})` : ""}
             </label>
             <input
-              id="ficha-quantidade"
+              id={`${id}-quantidade`}
               type="text"
               inputMode="decimal"
               placeholder="40"

@@ -20,7 +20,10 @@ export function SincronizarProdutos() {
       setMensagem({ texto: resultado.erro, erro: true });
       return;
     }
-    setMensagem({ texto: `${resultado.dados.total} produtos atualizados.`, erro: false });
+    setMensagem({
+      texto: `${resultado.dados.produtos} produtos e ${resultado.dados.variantes} variantes atualizados.`,
+      erro: false,
+    });
     startTransition(() => router.refresh());
   }
 

@@ -1,11 +1,22 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useId, useState, useTransition } from "react";
 import { enviar } from "@/lib/financeiro/enviar";
 import { botaoPrimario, campo, rotulo } from "./estilos";
 
-export function CustoCompraForm({ produtoId, custoCompra }: { produtoId: string; custoCompra: number | null }) {
+// varianteId nulo = custo de compra unico do produto; com variante, o custo
+// e so daquela variante.
+export function CustoCompraForm({
+  produtoId,
+  varianteId = null,
+  custoCompra,
+}: {
+  produtoId: string;
+  varianteId?: string | null;
+  custoCompra: number | null;
+}) {
+  const id = useId();
   const router = useRouter();
   const [valor, setValor] = useState(custoCompra?.toLocaleString("pt-BR") ?? "");
   const [mensagem, setMensagem] = useState<{ texto: string; erro: boolean } | null>(null);
@@ -14,7 +25,8 @@ export function CustoCompraForm({ produtoId, custoCompra }: { produtoId: string;
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setMensagem(null);
-    const resultado = await enviar(`/api/financeiro/produtos/${produtoId}`, "PATCH", {
+    const url = varianteId ? `/api/financeiro/variantes/${varianteId}` : `/api/financeiro/produtos/${produtoId}`;
+    const resultado = await enviar(url, "PATCH", {
       custoCompra: valor.trim() === "" ? null : valor,
     });
     if (!resultado.ok) {
@@ -28,11 +40,11 @@ export function CustoCompraForm({ produtoId, custoCompra }: { produtoId: string;
   return (
     <form onSubmit={onSubmit} className="flex flex-wrap items-end gap-3">
       <div>
-        <label htmlFor="custo-compra" className={rotulo}>
+        <label htmlFor={`${id}-custo`} className={rotulo}>
           Custo de compra por unidade (R$)
         </label>
         <input
-          id="custo-compra"
+          id={`${id}-custo`}
           type="text"
           inputMode="decimal"
           placeholder="12,50"

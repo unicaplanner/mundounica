@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getProdutos, getResumoProdutos, type FiltroTipo } from "@/lib/financeiro/queries";
-import { calcularCusto } from "@/lib/financeiro/custo";
+import { carregarCustos } from "@/lib/financeiro/custo";
 import { formatarReais } from "@/lib/financeiro/formato";
 import { ClassificarProduto } from "@/components/financeiro/ClassificarProduto";
 import { SincronizarProdutos } from "@/components/financeiro/SincronizarProdutos";
@@ -14,6 +14,7 @@ const FILTROS: { valor: FiltroTipo; rotulo: string }[] = [
   { valor: "nao_classificados", rotulo: "Não classificados" },
   { valor: "producao_propria", rotulo: "Produção própria" },
   { valor: "revenda", rotulo: "Revenda" },
+  { valor: "kit", rotulo: "Kit" },
   { valor: "todos", rotulo: "Todos" },
 ];
 
@@ -28,7 +29,11 @@ export default async function ProdutosPage({ searchParams }: PageProps<"/finance
   const busca = typeof params.busca === "string" ? params.busca.trim() : "";
   const filtro = (FILTROS.find((f) => f.valor === params.filtro)?.valor ?? "nao_classificados") as FiltroTipo;
 
-  const [produtos, resumo] = await Promise.all([getProdutos({ busca, filtro }), getResumoProdutos()]);
+  const [produtos, resumo, custos] = await Promise.all([
+    getProdutos({ busca, filtro }),
+    getResumoProdutos(),
+    carregarCustos(),
+  ]);
 
   if (resumo.total === 0) {
     return (
@@ -104,8 +109,10 @@ export default async function ProdutosPage({ searchParams }: PageProps<"/finance
       ) : (
         <ul className="divide-y divide-border border-y border-border">
           {produtos.map((produto) => {
-            const custo = calcularCusto(produto);
-            const custoNum = custo?.valor.toNumber() ?? null;
+            const r = custos.resumo(produto.id);
+            const unico = r?.modo === "unico" ? r.custo : null;
+            const custoNum = unico ? unico.valor.toNumber() : null;
+            const nVariantes = produto._count.variantes;
 
             return (
               <li key={produto.id} className="flex flex-wrap items-center gap-x-4 gap-y-2 py-3">
@@ -118,24 +125,38 @@ export default async function ProdutosPage({ searchParams }: PageProps<"/finance
                   </Link>
                   <div className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-muted">
                     <StatusShopify status={produto.status} />
-                    {produto.tipo === "producao_propria" && (
+                    {nVariantes > 1 && (
                       <span>
-                        {produto.fichaTecnica.length === 0
-                          ? "Ficha técnica vazia"
-                          : `Ficha técnica: ${produto.fichaTecnica.length} ${produto.fichaTecnica.length === 1 ? "material" : "materiais"}`}
+                        {nVariantes} variantes{produto.custoPorVariante && produto.tipo ? " · custo por variante" : ""}
                       </span>
                     )}
-                    {produto.tipo === "revenda" && !produto.custoCompra && <span>Falta o custo de compra</span>}
                   </div>
                 </div>
 
                 <ClassificarProduto produtoId={produto.id} tipo={produto.tipo ?? ""} abrirProdutoAoClassificar />
 
-                <div className="w-28 text-right text-xs tabular-nums">
-                  {custoNum !== null ? (
+                <div className="w-36 text-right text-xs tabular-nums">
+                  {r?.modo === "variante" ? (
+                    r.min === null ? (
+                      <span className="text-muted">sem custo</span>
+                    ) : (
+                      <>
+                        <span className="font-semibold text-ink">
+                          {r.min.equals(r.max!)
+                            ? formatarReais(r.min.toNumber())
+                            : `${formatarReais(r.min.toNumber())} a ${formatarReais(r.max!.toNumber())}`}
+                        </span>
+                        {r.incompleto && (
+                          <span className="block text-alerta">
+                            {r.comCusto < r.total ? `${r.comCusto} de ${r.total} com custo` : "custo incompleto"}
+                          </span>
+                        )}
+                      </>
+                    )
+                  ) : custoNum !== null ? (
                     <>
                       <span className="font-semibold text-ink">{formatarReais(custoNum)}</span>
-                      {custo?.incompleto && <span className="block text-alerta">custo incompleto</span>}
+                      {unico?.incompleto && <span className="block text-alerta">custo incompleto</span>}
                     </>
                   ) : (
                     <span className="text-muted">sem custo</span>
