@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import { Open_Sans } from "next/font/google";
+import { Fraunces, Open_Sans } from "next/font/google";
 import "./globals.css";
 
 const openSans = Open_Sans({
   variable: "--font-open-sans",
+  subsets: ["latin"],
+});
+
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
 });
 
@@ -14,7 +19,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="pt-BR" className={`${openSans.variable} h-full antialiased`}>
+    // suppressHydrationWarning: extensoes do navegador (ex: a de assinatura
+    // digital BRy) injetam atributos no <html> antes do React carregar.
+    <html
+      lang="pt-BR"
+      className={`${openSans.variable} ${fraunces.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
       <body className="min-h-full flex flex-col bg-background text-ink">{children}</body>
     </html>
   );

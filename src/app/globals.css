@@ -13,6 +13,9 @@
   --accent: #cec8ba;
   --accent-ink: #4a4438;
   --accent-soft: #f2efe9;
+
+  --alerta: #8c4a32;
+  --alerta-soft: #f6e9e2;
 }
 
 @theme inline {
@@ -27,7 +30,11 @@
   --color-accent-ink: var(--accent-ink);
   --color-accent-soft: var(--accent-soft);
 
+  --color-alerta: var(--alerta);
+  --color-alerta-soft: var(--alerta-soft);
+
   --font-sans: var(--font-open-sans);
+  --font-serif: var(--font-fraunces);
 }
 
 body {

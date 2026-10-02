@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Modulo Financeiro do Mundo da Unica. As tabelas ficam num schema privado
+// do Supabase (ver src/lib/db-url.ts), nunca no public.
+
+// Produto do Shopify. Titulo, status e link sempre vem da sincronizacao;
+// tipo, custoCompra e ficha tecnica sao preenchidos aqui pela Lari e nunca
+// sao tocados pelo sync.
+model Produto {
+  id               String  @id @default(cuid())
+  shopifyProductId String  @unique // gid://shopify/Product/123...
+  title            String
+  status           String? // ACTIVE, DRAFT ou ARCHIVED no Shopify
+  url              String? // onlineStoreUrl, nulo se nao esta publicado no site
+
+  tipo TipoProduto? // null ate ser classificado
+
+  // So pra tipo=revenda: custo de compra do produto pronto (quem produz e o
+  // fornecedor, entao nao tem ficha tecnica).
+  custoCompra Decimal? @db.Decimal(10, 2)
+
+  fichaTecnica FichaTecnicaItem[]
+
+  lastSyncedAt DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([title])
+}
+
+enum TipoProduto {
+  revenda
+  producao_propria
+}
+
+// Materia-prima ou embalagem usada na producao propria. custoAtual nunca e
+// editado direto: e sempre o custo unitario da compra mais recente (por
+// data da compra), atualizado a cada compra registrada.
+model Material {
+  id      String @id @default(cuid())
+  nome    String @unique
+  unidade String // "folha", "un", "m", "kg"... e o que aparece na ficha tecnica
+
+  custoAtual Decimal @default(0) @db.Decimal(10, 4)
+
+  compras      Compra[]
+  fichaTecnica FichaTecnicaItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Compra {
+  id String @id @default(cuid())
+
+  materialId String
+  material   Material @relation(fields: [materialId], references: [id])
+
+  data          DateTime // data da compra (pode ser retroativa)
+  quantidade    Decimal  @db.Decimal(10, 2)
+  valorTotal    Decimal  @db.Decimal(10, 2)
+  custoUnitario Decimal  @db.Decimal(10, 4) // valorTotal / quantidade
+  fornecedor    String?
+
+  createdAt DateTime @default(now())
+
+  @@index([materialId, data])
+}
+
+// Quanto de cada material entra em uma unidade do produto (so pra
+// tipo=producao_propria). Custo = soma(quantidade * material.custoAtual).
+model FichaTecnicaItem {
+  id String @id @default(cuid())
+
+  produtoId String
+  produto   Produto @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+
+  materialId String
+  material   Material @relation(fields: [materialId], references: [id])
+
+  quantidade Decimal @db.Decimal(10, 4)
+
+  @@unique([produtoId, materialId])
+}
