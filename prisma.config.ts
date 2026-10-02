@@ -7,12 +7,13 @@ import { databaseUrlComSchemaPrivado } from "./src/lib/db-url";
 config({ path: ".env.local", quiet: true });
 config({ quiet: true });
 
+// "prisma generate" (que roda no npm install) nao precisa do banco; so os
+// comandos que conectam (db push, studio) precisam da URL -- e ai ela tem
+// que passar pela trava do schema privado.
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
   },
-  datasource: {
-    url: databaseUrlComSchemaPrivado().completa,
-  },
+  ...(process.env.DATABASE_URL ? { datasource: { url: databaseUrlComSchemaPrivado().completa } } : {}),
 });
