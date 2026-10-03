@@ -175,7 +175,8 @@ model Impressora {
   updatedAt DateTime @updatedAt
 }
 
-// Quantas paginas (lados impressos) de uma impressora vao numa unidade.
+// Quantas folhas de uma impressora vao numa unidade. Toda folha conta frente
+// e verso: custo = folhas x 2 x custo por pagina.
 // varianteId nulo = composicao do produto inteiro, igual a ficha tecnica.
 model ImpressaoItem {
   id String @id @default(cuid())
@@ -187,7 +188,7 @@ model ImpressaoItem {
   impressoraId String
   impressora   Impressora @relation(fields: [impressoraId], references: [id])
 
-  paginas Decimal @db.Decimal(10, 2)
+  folhas Decimal @db.Decimal(10, 2)
 
   createdAt DateTime @default(now())
 

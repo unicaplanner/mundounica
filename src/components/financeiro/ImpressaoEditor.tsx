@@ -8,10 +8,11 @@ import { formatarQuantidade, formatarReais, normalizarNumero, paraCampo } from "
 import { IconeLapis, IconeLixeira, botaoIcone } from "./Icones";
 import { botaoPrimario, botaoSecundario, campo, rotulo } from "./estilos";
 
-export type ImpressoraOpcao = { id: string; nome: string; custoPagina: number | null };
-export type ItemImpressao = { id: string; impressoraId: string; nome: string; paginas: number; custoPagina: number | null };
+export type ImpressoraOpcao = { id: string; nome: string; custoFolha: number | null };
+export type ItemImpressao = { id: string; impressoraId: string; nome: string; folhas: number; custoFolha: number | null };
 
-// Paginas impressas (lados) por unidade, por impressora. varianteId nulo =
+// Folhas impressas por unidade, por impressora; toda folha conta frente e
+// verso. varianteId nulo =
 // composicao do produto inteiro.
 export function ImpressaoEditor({
   produtoId,
@@ -28,17 +29,17 @@ export function ImpressaoEditor({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [impressoraId, setImpressoraId] = useState(impressoras[0]?.id ?? "");
-  const [paginas, setPaginas] = useState("");
+  const [folhas, setFolhas] = useState("");
   const [editando, setEditando] = useState<string | null>(null);
-  const [pagEdicao, setPagEdicao] = useState("");
+  const [folhasEdicao, setFolhasEdicao] = useState("");
   const [excluindo, setExcluindo] = useState<string | null>(null);
   const [erroMsg, setErroMsg] = useState<string | null>(null);
 
-  async function salvar(impId: string, pags: string) {
+  async function salvar(impId: string, qtd: string) {
     setErroMsg(null);
     const resultado = await enviar(`/api/financeiro/produtos/${produtoId}/impressao`, "POST", {
       impressoraId: impId,
-      paginas: normalizarNumero(pags),
+      folhas: normalizarNumero(qtd),
       varianteId,
     });
     if (!resultado.ok) {
@@ -71,7 +72,7 @@ export function ImpressaoEditor({
     );
   }
 
-  const total = itens.reduce((acc, i) => acc + i.paginas * (i.custoPagina ?? 0), 0);
+  const total = itens.reduce((acc, i) => acc + i.folhas * (i.custoFolha ?? 0), 0);
 
   return (
     <div className="space-y-4">
@@ -81,8 +82,8 @@ export function ImpressaoEditor({
             <thead>
               <tr className="text-left text-xs text-muted">
                 <th className="pb-2 font-semibold">Impressora</th>
-                <th className="pb-2 font-semibold">Páginas</th>
-                <th className="pb-2 font-semibold">Custo por página</th>
+                <th className="pb-2 font-semibold">Folhas</th>
+                <th className="pb-2 font-semibold">Custo por folha (frente e verso)</th>
                 <th className="pb-2 text-right font-semibold">Subtotal</th>
                 <th className="pb-2">
                   <span className="sr-only">Ações</span>
@@ -104,26 +105,26 @@ export function ImpressaoEditor({
                         <input
                           type="text"
                           inputMode="decimal"
-                          aria-label={`Páginas na ${item.nome}`}
-                          value={pagEdicao}
-                          onChange={(e) => setPagEdicao(e.target.value)}
+                          aria-label={`Folhas na ${item.nome}`}
+                          value={folhasEdicao}
+                          onChange={(e) => setFolhasEdicao(e.target.value)}
                           className={`${campo} w-20 py-1 text-xs`}
                         />
                       ) : (
-                        formatarQuantidade(item.paginas)
+                        formatarQuantidade(item.folhas)
                       )}
                     </td>
                     <td className="py-2.5 tabular-nums">
-                      {item.custoPagina === null ? (
+                      {item.custoFolha === null ? (
                         <Link href="/financeiro/impressoras" className="text-xs text-alerta underline">
                           falta o volume de páginas
                         </Link>
                       ) : (
-                        <span className="text-muted">{formatarReais(item.custoPagina, 4)}</span>
+                        <span className="text-muted">{formatarReais(item.custoFolha, 4)}</span>
                       )}
                     </td>
                     <td className="py-2.5 text-right font-semibold tabular-nums">
-                      {formatarReais(item.paginas * (item.custoPagina ?? 0))}
+                      {formatarReais(item.folhas * (item.custoFolha ?? 0))}
                     </td>
                     <td className="py-1.5 text-right">
                       {emEdicao ? (
@@ -132,7 +133,7 @@ export function ImpressaoEditor({
                             type="button"
                             disabled={isPending}
                             onClick={async () => {
-                              if (await salvar(item.impressoraId, pagEdicao)) setEditando(null);
+                              if (await salvar(item.impressoraId, folhasEdicao)) setEditando(null);
                             }}
                             className={`${botaoPrimario} px-3 py-1 text-xs`}
                           >
@@ -164,10 +165,10 @@ export function ImpressaoEditor({
                             onClick={() => {
                               setExcluindo(null);
                               setEditando(item.id);
-                              setPagEdicao(paraCampo(item.paginas));
+                              setFolhasEdicao(paraCampo(item.folhas));
                             }}
-                            aria-label={`Editar páginas na ${item.nome}`}
-                            title="Editar páginas"
+                            aria-label={`Editar folhas na ${item.nome}`}
+                            title="Editar folhas"
                             className={botaoIcone}
                           >
                             <IconeLapis />
@@ -207,7 +208,7 @@ export function ImpressaoEditor({
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          if (await salvar(impressoraId, paginas)) setPaginas("");
+          if (await salvar(impressoraId, folhas)) setFolhas("");
         }}
         className="flex flex-wrap items-end gap-3 rounded-2xl border border-dashed border-border p-4"
       >
@@ -229,16 +230,16 @@ export function ImpressaoEditor({
           </select>
         </div>
         <div>
-          <label htmlFor={`${id}-paginas`} className={rotulo}>
-            Páginas por unidade (frente e verso = 2)
+          <label htmlFor={`${id}-folhas`} className={rotulo}>
+            Folhas por unidade (frente e verso)
           </label>
           <input
-            id={`${id}-paginas`}
+            id={`${id}-folhas`}
             type="text"
             inputMode="decimal"
-            placeholder="80"
-            value={paginas}
-            onChange={(e) => setPaginas(e.target.value)}
+            placeholder="40"
+            value={folhas}
+            onChange={(e) => setFolhas(e.target.value)}
             className={`${campo} w-24`}
           />
         </div>

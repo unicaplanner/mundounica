@@ -1,6 +1,6 @@
 import { Prisma, type TipoProduto } from "@prisma/client";
 import { prisma } from "@/lib/db";
-import { custoPorPagina } from "./impressao";
+import { custoPorFolha } from "./impressao";
 
 export interface Custo {
   valor: Prisma.Decimal;
@@ -14,7 +14,7 @@ type Composicao = {
   custoCompra: Prisma.Decimal | null;
   ficha: { quantidade: Prisma.Decimal; custoMaterial: Prisma.Decimal }[];
   kit: { quantidade: Prisma.Decimal; componenteVarianteId: string }[];
-  impressao: { paginas: Prisma.Decimal; custoPagina: Prisma.Decimal | null }[];
+  impressao: { folhas: Prisma.Decimal; custoFolha: Prisma.Decimal | null }[];
 };
 
 type VarianteInfo = { id: string; produtoId: string; title: string; preco: Prisma.Decimal | null; ativa: boolean; posicao: number; composicao: Composicao };
@@ -55,11 +55,11 @@ export class Custos {
       if (item.custoMaterial.isZero()) incompleto = true;
     }
     for (const item of c.impressao) {
-      if (!item.custoPagina) {
+      if (!item.custoFolha) {
         incompleto = true;
         continue;
       }
-      valor = valor.plus(item.paginas.times(item.custoPagina));
+      valor = valor.plus(item.folhas.times(item.custoFolha));
     }
     if (tipo === "kit") {
       for (const item of c.kit) {
@@ -134,7 +134,7 @@ export async function carregarCustos(): Promise<Custos> {
       select: { kitProdutoId: true, kitVarianteId: true, componenteVarianteId: true, quantidade: true },
     }),
     prisma.impressaoItem.findMany({
-      select: { produtoId: true, varianteId: true, paginas: true, impressora: true },
+      select: { produtoId: true, varianteId: true, folhas: true, impressora: true },
     }),
   ]);
 
@@ -176,7 +176,7 @@ export async function carregarCustos(): Promise<Custos> {
   }
   for (const i of impressao) {
     const dono = i.varianteId ? mapaVariantes.get(i.varianteId) : mapaProdutos.get(i.produtoId);
-    dono?.composicao.impressao.push({ paginas: i.paginas, custoPagina: custoPorPagina(i.impressora) });
+    dono?.composicao.impressao.push({ folhas: i.folhas, custoFolha: custoPorFolha(i.impressora) });
   }
 
   return new Custos(mapaProdutos, mapaVariantes);

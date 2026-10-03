@@ -40,7 +40,7 @@ export function ComposicaoEditor({
   const secaoImpressao = (
     <section>
       <h4 className="mb-1 text-sm font-semibold text-ink">Impressão</h4>
-      <p className="mb-3 text-xs text-muted">Quantas páginas (lados impressos) cada unidade usa em cada impressora.</p>
+      <p className="mb-3 text-xs text-muted">Quantas folhas cada unidade usa em cada impressora. Toda folha conta frente e verso (2 páginas).</p>
       <ImpressaoEditor produtoId={produtoId} varianteId={varianteId} itens={impressao} impressoras={impressoras} />
     </section>
   );

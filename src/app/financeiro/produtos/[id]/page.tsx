@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getImpressoras, getMateriais, getProduto } from "@/lib/financeiro/queries";
 import { carregarCustos, nomeVariante, type Custo } from "@/lib/financeiro/custo";
-import { custoPorPagina } from "@/lib/financeiro/impressao";
+import { custoPorFolha } from "@/lib/financeiro/impressao";
 import { carregarParametros } from "@/lib/financeiro/precificacao";
 import { analisarPreco, type ParametrosAnalise } from "@/lib/financeiro/analise";
 import { formatarReais } from "@/lib/financeiro/formato";
@@ -79,7 +79,7 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
     custoAtual: m.custoAtual.toNumber(),
   }));
 
-  const impressoras = impressorasDb.map((i) => ({ id: i.id, nome: i.nome, custoPagina: num(custoPorPagina(i)) }));
+  const impressoras = impressorasDb.map((i) => ({ id: i.id, nome: i.nome, custoFolha: num(custoPorFolha(i)) }));
 
   const fichaDe = (varianteId: string | null) =>
     produto.fichaTecnica
@@ -97,8 +97,8 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
         id: i.id,
         impressoraId: i.impressoraId,
         nome: i.impressora.nome,
-        paginas: i.paginas.toNumber(),
-        custoPagina: num(custoPorPagina(i.impressora)),
+        folhas: i.folhas.toNumber(),
+        custoFolha: num(custoPorFolha(i.impressora)),
       }));
 
   const kitDe = (varianteId: string | null) =>

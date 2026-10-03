@@ -4,15 +4,15 @@ import { erro, getUsuario, naoAutenticado } from "@/lib/auth";
 import { paraDecimal } from "@/lib/financeiro/valores";
 import { varianteDoProduto } from "@/lib/financeiro/composicao";
 
-// Adiciona paginas de uma impressora a composicao (do produto ou de uma
+// Adiciona folhas (frente e verso) de uma impressora a composicao (do produto ou de uma
 // variante), ou atualiza a quantidade se a impressora ja estiver la.
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   if (!(await getUsuario())) return naoAutenticado();
   const { id: produtoId } = await params;
   const body = await req.json();
 
-  const paginas = paraDecimal(body.paginas);
-  if (!paginas || paginas.isZero()) return erro("Informe quantas páginas (lados impressos), por exemplo 80.");
+  const folhas = paraDecimal(body.folhas);
+  if (!folhas || folhas.isZero()) return erro("Informe quantas folhas, por exemplo 40.");
 
   const [produto, impressora, dono] = await Promise.all([
     prisma.produto.findUnique({ where: { id: produtoId }, select: { id: true } }),
@@ -29,10 +29,10 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       select: { id: true },
     });
     if (existente) {
-      await tx.impressaoItem.update({ where: { id: existente.id }, data: { paginas } });
+      await tx.impressaoItem.update({ where: { id: existente.id }, data: { folhas } });
     } else {
       await tx.impressaoItem.create({
-        data: { produtoId, varianteId: dono.varianteId, impressoraId: impressora.id, paginas },
+        data: { produtoId, varianteId: dono.varianteId, impressoraId: impressora.id, folhas },
       });
     }
   });

@@ -40,7 +40,7 @@ export async function copiarComposicao(
   });
   await tx.impressaoItem.createMany({
     data: destinoVarianteIds.flatMap((varianteId) =>
-      impressao.map((i) => ({ produtoId, varianteId, impressoraId: i.impressoraId, paginas: i.paginas }))
+      impressao.map((i) => ({ produtoId, varianteId, impressoraId: i.impressoraId, folhas: i.folhas }))
     ),
   });
   await tx.kitItem.createMany({

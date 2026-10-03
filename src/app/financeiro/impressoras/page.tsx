@@ -1,5 +1,5 @@
 import { getImpressoras } from "@/lib/financeiro/queries";
-import { custoAnualImpressora, custoPorPagina } from "@/lib/financeiro/impressao";
+import { custoAnualImpressora, custoPorFolha, custoPorPagina } from "@/lib/financeiro/impressao";
 import { formatarReais, paraCampo } from "@/lib/financeiro/formato";
 import { TabelaEditavel } from "@/components/financeiro/TabelaEditavel";
 
@@ -13,7 +13,8 @@ export default async function ImpressorasPage() {
       <p className="max-w-2xl text-sm text-muted">
         Custo por página (um lado impresso) = (preço ÷ vida útil + tinta por ano + manutenção por ano) ÷ páginas por
         ano. As páginas por ano você vê no <strong>contador da impressora</strong>: divida o total pelo tempo de uso.
-        Sem esse número o custo fica em aberto e os produtos aparecem como incompletos.
+        Nos produtos, toda folha conta <strong>frente e verso</strong>: custo da folha = 2 × custo da página. Sem o
+        número de páginas por ano o custo fica em aberto e os produtos aparecem como incompletos.
       </p>
 
       <TabelaEditavel
@@ -30,10 +31,11 @@ export default async function ImpressorasPage() {
           { chave: "manutencaoAno", rotulo: "Manutenção/ano (R$)", placeholder: "300", numerico: true, largura: "w-24" },
           { chave: "paginasAno", rotulo: "Páginas/ano", placeholder: "12000", numerico: true, largura: "w-24" },
         ]}
-        colunasExtras={["Custo/ano", "Custo/página", "Usada em"]}
+        colunasExtras={["Custo/ano", "Custo/página", "Custo/folha (frente e verso)", "Usada em"]}
         linhas={impressoras.map((i) => {
           const anual = custoAnualImpressora(i);
           const pagina = custoPorPagina(i);
+          const folha = custoPorFolha(i);
           return {
             id: i.id,
             nome: i.nome,
@@ -61,7 +63,8 @@ export default async function ImpressorasPage() {
             },
             extras: [
               anual ? formatarReais(anual.toNumber()) : "—",
-              pagina ? <span className="font-semibold text-ink">{formatarReais(pagina.toNumber(), 4)}</span> : "—",
+              pagina ? formatarReais(pagina.toNumber(), 4) : "—",
+              folha ? <span className="font-semibold text-ink">{formatarReais(folha.toNumber(), 4)}</span> : "—",
               i.produtosQueUsam === 0 ? "—" : `${i.produtosQueUsam} ${i.produtosQueUsam === 1 ? "produto" : "produtos"}`,
             ],
           };

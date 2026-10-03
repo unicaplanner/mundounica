@@ -21,3 +21,10 @@ export function custoPorPagina(i: DadosImpressora): Prisma.Decimal | null {
   if (!anual || !i.paginasAno || i.paginasAno <= 0) return null;
   return anual.dividedBy(i.paginasAno);
 }
+
+// Toda folha e impressa frente e verso: 2 paginas.
+export const PAGINAS_POR_FOLHA = 2;
+
+export function custoPorFolha(i: DadosImpressora): Prisma.Decimal | null {
+  return custoPorPagina(i)?.times(PAGINAS_POR_FOLHA) ?? null;
+}
