@@ -5,7 +5,8 @@ import { formatarReais } from "@/lib/financeiro/formato";
 import { ClassificarProduto } from "@/components/financeiro/ClassificarProduto";
 import { SincronizarProdutos } from "@/components/financeiro/SincronizarProdutos";
 import { StatusShopify } from "@/components/financeiro/StatusShopify";
-import { SugestaoPreco } from "@/components/financeiro/SugestaoPreco";
+import { carregarParametros } from "@/lib/financeiro/precificacao";
+import { precoSugerido } from "@/lib/financeiro/analise";
 import { botaoSecundario, campo } from "@/components/financeiro/estilos";
 
 export const dynamic = "force-dynamic";
@@ -29,10 +30,11 @@ export default async function ProdutosPage({ searchParams }: PageProps<"/finance
   const busca = typeof params.busca === "string" ? params.busca.trim() : "";
   const filtro = (FILTROS.find((f) => f.valor === params.filtro)?.valor ?? "nao_classificados") as FiltroTipo;
 
-  const [produtos, resumo, custos] = await Promise.all([
+  const [produtos, resumo, custos, parametros] = await Promise.all([
     getProdutos({ busca, filtro }),
     getResumoProdutos(),
     carregarCustos(),
+    carregarParametros(),
   ]);
 
   if (resumo.total === 0) {
@@ -113,6 +115,7 @@ export default async function ProdutosPage({ searchParams }: PageProps<"/finance
             const unico = r?.modo === "unico" ? r.custo : null;
             const custoNum = unico ? unico.valor.toNumber() : null;
             const nVariantes = produto._count.variantes;
+            const sugerido = custoNum !== null && custoNum > 0 ? precoSugerido(custoNum, parametros) : null;
 
             return (
               <li key={produto.id} className="flex flex-wrap items-center gap-x-4 gap-y-2 py-3">
@@ -163,7 +166,14 @@ export default async function ProdutosPage({ searchParams }: PageProps<"/finance
                   )}
                 </div>
 
-                <div className="w-36">{custoNum !== null && custoNum > 0 && <SugestaoPreco custo={custoNum} compacto />}</div>
+                <div className="w-32 text-right text-xs tabular-nums">
+                  {sugerido !== null && (
+                    <>
+                      <span className="block text-muted">sugerido</span>
+                      <span className="font-semibold text-ink">{formatarReais(sugerido)}</span>
+                    </>
+                  )}
+                </div>
               </li>
             );
           })}

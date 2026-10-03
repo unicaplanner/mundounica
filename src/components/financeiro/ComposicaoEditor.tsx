@@ -1,14 +1,15 @@
 import type { TipoProduto } from "@prisma/client";
 import { CustoCompraForm } from "./CustoCompraForm";
 import { FichaTecnicaEditor } from "./FichaTecnicaEditor";
+import { ImpressaoEditor, type ImpressoraOpcao, type ItemImpressao } from "./ImpressaoEditor";
 import { KitEditor, type CandidatoKit, type ItemKit } from "./KitEditor";
 
 type Material = { id: string; nome: string; unidade: string; custoAtual: number };
 type ItemFicha = { id: string; quantidade: number; material: Material };
 
 // O que forma o custo, conforme o tipo: custo de compra (revenda), materiais
-// (producao propria) ou produtos + embalagem (kit). varianteId nulo =
-// composicao do produto inteiro.
+// + impressao (producao propria) ou produtos + embalagem + impressao (kit).
+// varianteId nulo = composicao do produto inteiro.
 export function ComposicaoEditor({
   produtoId,
   varianteId = null,
@@ -16,8 +17,10 @@ export function ComposicaoEditor({
   custoCompra,
   ficha,
   kit,
+  impressao,
   materiais,
   candidatos,
+  impressoras,
 }: {
   produtoId: string;
   varianteId?: string | null;
@@ -25,15 +28,33 @@ export function ComposicaoEditor({
   custoCompra: number | null;
   ficha: ItemFicha[];
   kit: ItemKit[];
+  impressao: ItemImpressao[];
   materiais: Material[];
   candidatos: CandidatoKit[];
+  impressoras: ImpressoraOpcao[];
 }) {
   if (tipo === "revenda") {
     return <CustoCompraForm produtoId={produtoId} varianteId={varianteId} custoCompra={custoCompra} />;
   }
 
+  const secaoImpressao = (
+    <section>
+      <h4 className="mb-1 text-sm font-semibold text-ink">Impressão</h4>
+      <p className="mb-3 text-xs text-muted">Quantas páginas (lados impressos) cada unidade usa em cada impressora.</p>
+      <ImpressaoEditor produtoId={produtoId} varianteId={varianteId} itens={impressao} impressoras={impressoras} />
+    </section>
+  );
+
   if (tipo === "producao_propria") {
-    return <FichaTecnicaEditor produtoId={produtoId} varianteId={varianteId} itens={ficha} materiais={materiais} />;
+    return (
+      <div className="space-y-8">
+        <section>
+          <h4 className="mb-3 text-sm font-semibold text-ink">Materiais</h4>
+          <FichaTecnicaEditor produtoId={produtoId} varianteId={varianteId} itens={ficha} materiais={materiais} rotuloTotal="Materiais" />
+        </section>
+        {secaoImpressao}
+      </div>
+    );
   }
 
   return (
@@ -54,6 +75,7 @@ export function ComposicaoEditor({
           rotuloTotal="Embalagem e extras"
         />
       </section>
+      {secaoImpressao}
     </div>
   );
 }

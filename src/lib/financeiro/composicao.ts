@@ -11,7 +11,7 @@ export async function varianteDoProduto(produtoId: string, varianteId: unknown) 
   return variante ? { ok: true as const, varianteId: variante.id } : { ok: false as const };
 }
 
-// Substitui a composicao (materiais, produtos do kit e custo de compra) de
+// Substitui a composicao (materiais, impressao, produtos do kit e custo de compra) de
 // cada variante de destino por uma copia da origem. origemVarianteId nulo
 // copia a composicao do produto inteiro.
 export async function copiarComposicao(
@@ -20,8 +20,9 @@ export async function copiarComposicao(
   origemVarianteId: string | null,
   destinoVarianteIds: string[]
 ) {
-  const [ficha, kit, origem] = await Promise.all([
+  const [ficha, impressao, kit, origem] = await Promise.all([
     tx.fichaTecnicaItem.findMany({ where: { produtoId, varianteId: origemVarianteId } }),
+    tx.impressaoItem.findMany({ where: { produtoId, varianteId: origemVarianteId } }),
     tx.kitItem.findMany({ where: { kitProdutoId: produtoId, kitVarianteId: origemVarianteId } }),
     origemVarianteId
       ? tx.variante.findUniqueOrThrow({ where: { id: origemVarianteId }, select: { custoCompra: true } })
@@ -29,11 +30,17 @@ export async function copiarComposicao(
   ]);
 
   await tx.fichaTecnicaItem.deleteMany({ where: { produtoId, varianteId: { in: destinoVarianteIds } } });
+  await tx.impressaoItem.deleteMany({ where: { produtoId, varianteId: { in: destinoVarianteIds } } });
   await tx.kitItem.deleteMany({ where: { kitProdutoId: produtoId, kitVarianteId: { in: destinoVarianteIds } } });
 
   await tx.fichaTecnicaItem.createMany({
     data: destinoVarianteIds.flatMap((varianteId) =>
       ficha.map((f) => ({ produtoId, varianteId, materialId: f.materialId, quantidade: f.quantidade }))
+    ),
+  });
+  await tx.impressaoItem.createMany({
+    data: destinoVarianteIds.flatMap((varianteId) =>
+      impressao.map((i) => ({ produtoId, varianteId, impressoraId: i.impressoraId, paginas: i.paginas }))
     ),
   });
   await tx.kitItem.createMany({

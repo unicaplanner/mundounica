@@ -1,10 +1,12 @@
 import { Prisma, type TipoProduto } from "@prisma/client";
 import { prisma } from "@/lib/db";
+import { custoPorPagina } from "./impressao";
 
 export interface Custo {
   valor: Prisma.Decimal;
   // true quando falta algo pra conta fechar (material sem compra registrada,
-  // produto do kit ainda sem custo): o valor existe, mas esta subestimado.
+  // produto do kit sem custo, impressora sem volume de paginas): o valor
+  // existe, mas esta subestimado.
   incompleto: boolean;
 }
 
@@ -12,6 +14,7 @@ type Composicao = {
   custoCompra: Prisma.Decimal | null;
   ficha: { quantidade: Prisma.Decimal; custoMaterial: Prisma.Decimal }[];
   kit: { quantidade: Prisma.Decimal; componenteVarianteId: string }[];
+  impressao: { paginas: Prisma.Decimal; custoPagina: Prisma.Decimal | null }[];
 };
 
 type VarianteInfo = { id: string; produtoId: string; title: string; preco: Prisma.Decimal | null; ativa: boolean; posicao: number; composicao: Composicao };
@@ -21,7 +24,7 @@ export type ResumoCusto =
   | { modo: "unico"; custo: Custo | null }
   | { modo: "variante"; min: Prisma.Decimal | null; max: Prisma.Decimal | null; comCusto: number; total: number; incompleto: boolean };
 
-const vazia = (): Composicao => ({ custoCompra: null, ficha: [], kit: [] });
+const vazia = (): Composicao => ({ custoCompra: null, ficha: [], kit: [], impressao: [] });
 
 export function nomeVariante(tituloProduto: string, tituloVariante: string) {
   return tituloVariante === "Default Title" ? tituloProduto : `${tituloProduto} — ${tituloVariante}`;
@@ -43,13 +46,20 @@ export class Custos {
       return c.custoCompra ? { valor: c.custoCompra, incompleto: false } : null;
     }
     if (tipo !== "producao_propria" && tipo !== "kit") return null;
-    if (c.ficha.length === 0 && (tipo === "producao_propria" || c.kit.length === 0)) return null;
+    if (c.ficha.length === 0 && c.impressao.length === 0 && (tipo === "producao_propria" || c.kit.length === 0)) return null;
 
     let valor = new Prisma.Decimal(0);
     let incompleto = false;
     for (const item of c.ficha) {
       valor = valor.plus(item.quantidade.times(item.custoMaterial));
       if (item.custoMaterial.isZero()) incompleto = true;
+    }
+    for (const item of c.impressao) {
+      if (!item.custoPagina) {
+        incompleto = true;
+        continue;
+      }
+      valor = valor.plus(item.paginas.times(item.custoPagina));
     }
     if (tipo === "kit") {
       for (const item of c.kit) {
@@ -103,7 +113,7 @@ export class Custos {
 }
 
 export async function carregarCustos(): Promise<Custos> {
-  const [produtos, ficha, kit] = await Promise.all([
+  const [produtos, ficha, kit, impressao] = await Promise.all([
     prisma.produto.findMany({
       select: {
         id: true,
@@ -122,6 +132,9 @@ export async function carregarCustos(): Promise<Custos> {
     }),
     prisma.kitItem.findMany({
       select: { kitProdutoId: true, kitVarianteId: true, componenteVarianteId: true, quantidade: true },
+    }),
+    prisma.impressaoItem.findMany({
+      select: { produtoId: true, varianteId: true, paginas: true, impressora: true },
     }),
   ]);
 
@@ -160,6 +173,10 @@ export async function carregarCustos(): Promise<Custos> {
   for (const k of kit) {
     const dono = k.kitVarianteId ? mapaVariantes.get(k.kitVarianteId) : mapaProdutos.get(k.kitProdutoId);
     dono?.composicao.kit.push({ quantidade: k.quantidade, componenteVarianteId: k.componenteVarianteId });
+  }
+  for (const i of impressao) {
+    const dono = i.varianteId ? mapaVariantes.get(i.varianteId) : mapaProdutos.get(i.produtoId);
+    dono?.composicao.impressao.push({ paginas: i.paginas, custoPagina: custoPorPagina(i.impressora) });
   }
 
   return new Custos(mapaProdutos, mapaVariantes);

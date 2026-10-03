@@ -16,6 +16,10 @@
 
   --alerta: #8c4a32;
   --alerta-soft: #f6e9e2;
+  --atencao: #8a6424;
+  --atencao-soft: #f4ead6;
+  --ok: #4f5f3e;
+  --ok-soft: #e7ecdf;
 }
 
 @theme inline {
@@ -32,6 +36,10 @@
 
   --color-alerta: var(--alerta);
   --color-alerta-soft: var(--alerta-soft);
+  --color-atencao: var(--atencao);
+  --color-atencao-soft: var(--atencao-soft);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
 
   --font-sans: var(--font-open-sans);
   --font-serif: var(--font-fraunces);

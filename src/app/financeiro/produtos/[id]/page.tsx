@@ -1,29 +1,73 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getMateriais, getProduto } from "@/lib/financeiro/queries";
+import { getImpressoras, getMateriais, getProduto } from "@/lib/financeiro/queries";
 import { carregarCustos, nomeVariante, type Custo } from "@/lib/financeiro/custo";
-import { formatarMargem, formatarReais, margem } from "@/lib/financeiro/formato";
+import { custoPorPagina } from "@/lib/financeiro/impressao";
+import { carregarParametros } from "@/lib/financeiro/precificacao";
+import { analisarPreco, type ParametrosAnalise } from "@/lib/financeiro/analise";
+import { formatarReais } from "@/lib/financeiro/formato";
 import { ClassificarProduto } from "@/components/financeiro/ClassificarProduto";
 import { ComposicaoEditor } from "@/components/financeiro/ComposicaoEditor";
 import { CopiarComposicao } from "@/components/financeiro/CopiarComposicao";
 import { CustoPorVariante } from "@/components/financeiro/CustoPorVariante";
+import { SimuladorPreco } from "@/components/financeiro/SimuladorPreco";
+import { StatusPreco } from "@/components/financeiro/StatusPreco";
 import { StatusShopify } from "@/components/financeiro/StatusShopify";
-import { SugestaoPreco } from "@/components/financeiro/SugestaoPreco";
 import type { CandidatoKit } from "@/components/financeiro/KitEditor";
 
 export const dynamic = "force-dynamic";
 
 const num = (d: { toNumber(): number } | null | undefined) => (d ? d.toNumber() : null);
 
-function Margem({ preco, custo }: { preco: number | null; custo: number | null }) {
-  const m = margem(preco, custo);
-  return <span className={m !== null && m < 0 ? "font-semibold text-alerta" : ""}>{formatarMargem(m)}</span>;
+// Lucro % (depois das despesas por venda e dos custos fixos) com a etiqueta de situacao.
+function Lucro({ preco, custo, p }: { preco: number | null; custo: number | null; p: ParametrosAnalise }) {
+  const a = preco !== null && custo !== null ? analisarPreco(custo, preco, p) : null;
+  if (!a) return <span className="text-muted">—</span>;
+  return (
+    <span className="inline-flex items-center gap-2">
+      <span className={`tabular-nums ${a.lucro < 0 ? "font-semibold text-alerta" : ""}`}>
+        {a.lucroPct.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%
+      </span>
+      <StatusPreco status={a.status} />
+    </span>
+  );
+}
+
+function AnalisePreco({ custo, preco, p, semFixos }: { custo: number; preco: number | null; p: ParametrosAnalise; semFixos: boolean }) {
+  return (
+    <section className="rounded-2xl border border-border bg-card px-5 py-4">
+      <h3 className="mb-3 text-sm font-semibold text-ink">Análise de preço</h3>
+      <SimuladorPreco custo={custo} precoSite={preco} parametros={p} />
+      {semFixos && (
+        <p className="mt-3 text-xs text-atencao">
+          Os custos fixos ainda não entram na conta: falta o faturamento médio em{" "}
+          <Link href="/financeiro/custos" className="underline">
+            Custos fixos
+          </Link>
+          .
+        </p>
+      )}
+    </section>
+  );
 }
 
 export default async function ProdutoPage({ params }: PageProps<"/financeiro/produtos/[id]">) {
   const { id } = await params;
-  const [produto, materiais, custos] = await Promise.all([getProduto(id), getMateriais(), carregarCustos()]);
+  const [produto, materiais, custos, impressorasDb, parametros] = await Promise.all([
+    getProduto(id),
+    getMateriais(),
+    carregarCustos(),
+    getImpressoras(),
+    carregarParametros(),
+  ]);
   if (!produto) notFound();
+
+  const p: ParametrosAnalise = {
+    fixosPct: parametros.fixosPct,
+    despesasPct: parametros.despesasPct,
+    lucroPct: parametros.lucroPct,
+  };
+  const semFixos = parametros.fixosPct === null;
 
   const temVariantes = produto.variantes.length > 1;
   const porVariante = produto.tipo !== null && produto.custoPorVariante;
@@ -35,6 +79,8 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
     custoAtual: m.custoAtual.toNumber(),
   }));
 
+  const impressoras = impressorasDb.map((i) => ({ id: i.id, nome: i.nome, custoPagina: num(custoPorPagina(i)) }));
+
   const fichaDe = (varianteId: string | null) =>
     produto.fichaTecnica
       .filter((f) => f.varianteId === varianteId)
@@ -42,6 +88,17 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
         id: f.id,
         quantidade: f.quantidade.toNumber(),
         material: { id: f.material.id, nome: f.material.nome, unidade: f.material.unidade, custoAtual: f.material.custoAtual.toNumber() },
+      }));
+
+  const impressaoDe = (varianteId: string | null) =>
+    produto.impressoes
+      .filter((i) => i.varianteId === varianteId)
+      .map((i) => ({
+        id: i.id,
+        impressoraId: i.impressoraId,
+        nome: i.impressora.nome,
+        paginas: i.paginas.toNumber(),
+        custoPagina: num(custoPorPagina(i.impressora)),
       }));
 
   const kitDe = (varianteId: string | null) =>
@@ -81,8 +138,10 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
     custoCompra,
     ficha: fichaDe(varianteId),
     kit: kitDe(varianteId),
+    impressao: impressaoDe(varianteId),
     materiais: listaMateriais,
     candidatos,
+    impressoras,
   });
 
   const custoUnico: Custo | null = produto.tipo && !porVariante ? custos.doProduto(produto.id) : null;
@@ -129,40 +188,34 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
 
       {produto.tipo && !porVariante && (
         <>
-          <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-ink px-6 py-5 text-background">
-            <div>
-              <p className="text-xs uppercase tracking-wide text-background/60">Custo de uma unidade</p>
-              <p className="font-serif text-3xl font-semibold">{custoUnicoNum !== null ? formatarReais(custoUnicoNum) : "—"}</p>
-              {custoUnico?.incompleto && (
-                <p className="mt-1 text-xs text-accent">Incompleto: falta compra de algum material ou custo de algum produto.</p>
-              )}
-              {custoUnicoNum === null && (
-                <p className="mt-1 text-xs text-background/70">Preencha a composição abaixo.</p>
-              )}
-              {precoUnico !== null && (
-                <p className="mt-2 text-xs text-background/80">
-                  Preço no site {formatarReais(precoUnico)} · margem <Margem preco={precoUnico} custo={custoUnicoNum} />
-                </p>
-              )}
-            </div>
-            {custoUnicoNum !== null && custoUnicoNum > 0 && (
-              <div className="rounded-xl bg-background px-3 py-2">
-                <p className="mb-1 text-[11px] text-muted">Preço sugerido</p>
-                <SugestaoPreco custo={custoUnicoNum} />
-              </div>
+          <div className="rounded-2xl bg-ink px-6 py-5 text-background">
+            <p className="text-xs uppercase tracking-wide text-background/60">Custo de uma unidade</p>
+            <p className="font-serif text-3xl font-semibold">{custoUnicoNum !== null ? formatarReais(custoUnicoNum) : "—"}</p>
+            {custoUnico?.incompleto && (
+              <p className="mt-1 text-xs text-accent">
+                Incompleto: falta compra de algum material, custo de algum produto ou páginas/ano da impressora.
+              </p>
+            )}
+            {custoUnicoNum === null && <p className="mt-1 text-xs text-background/70">Preencha a composição abaixo.</p>}
+            {precoUnico !== null && (
+              <p className="mt-2 text-xs text-background/80">Preço no site {formatarReais(precoUnico)}</p>
             )}
           </div>
 
+          {custoUnicoNum !== null && custoUnicoNum > 0 && !temVariantes && (
+            <AnalisePreco custo={custoUnicoNum} preco={precoUnico} p={p} semFixos={semFixos} />
+          )}
+
           {temVariantes && (
             <section>
-              <h3 className="mb-2 text-sm font-semibold text-ink">Preço no site e margem por variante</h3>
+              <h3 className="mb-2 text-sm font-semibold text-ink">Preço no site e lucro por variante</h3>
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[420px] text-sm [&_td]:pr-4 [&_th]:pr-4">
                   <thead>
                     <tr className="border-b border-border text-left text-xs text-muted">
                       <th className="py-2 font-semibold">Variante</th>
                       <th className="py-2 font-semibold">Preço no site</th>
-                      <th className="py-2 font-semibold">Margem</th>
+                      <th className="py-2 font-semibold">Lucro</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -170,16 +223,22 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
                       <tr key={v.id} className="border-b border-border">
                         <td className="py-2">{v.title}</td>
                         <td className="py-2 tabular-nums">{v.preco ? formatarReais(v.preco.toNumber()) : "—"}</td>
-                        <td className="py-2 tabular-nums">
-                          <Margem preco={num(v.preco)} custo={custoUnicoNum} />
+                        <td className="py-2">
+                          <Lucro preco={num(v.preco)} custo={custoUnicoNum} p={p} />
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <p className="mt-2 text-xs text-muted">Margem bruta: preço menos o custo acima, sem taxa de cartão, frete ou imposto.</p>
+              <p className="mt-2 text-xs text-muted">
+                Lucro depois do custo, das despesas por venda e da parte dos custos fixos.
+              </p>
             </section>
+          )}
+
+          {custoUnicoNum !== null && custoUnicoNum > 0 && temVariantes && (
+            <AnalisePreco custo={custoUnicoNum} preco={null} p={p} semFixos={semFixos} />
           )}
 
           <section>
@@ -212,7 +271,7 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
 
           <section className="space-y-2">
             <h3 className="text-sm font-semibold text-ink">Variantes</h3>
-            <p className="text-xs text-muted">Clique numa variante pra ver e editar a composição dela.</p>
+            <p className="text-xs text-muted">Clique numa variante pra ver e editar a composição e simular o preço dela.</p>
             <div className="divide-y divide-border border-y border-border">
               {produto.variantes.map((v) => {
                 const custo = custos.daVariante(v.id);
@@ -236,18 +295,23 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
                           <span className="text-xs text-alerta">sem custo</span>
                         )}
                       </span>
-                      <span className="w-20 text-right tabular-nums text-muted">
-                        <Margem preco={preco} custo={custoNum} />
+                      <span className="w-44">
+                        <Lucro preco={preco} custo={custoNum} p={p} />
                       </span>
                     </summary>
-                    <div className="pb-6 pl-5">
+                    <div className="space-y-6 pb-6 pl-5">
                       <ComposicaoEditor {...composicaoProps(v.id, num(v.custoCompra))} />
+                      {custoNum !== null && custoNum > 0 && (
+                        <AnalisePreco custo={custoNum} preco={preco} p={p} semFixos={semFixos} />
+                      )}
                     </div>
                   </details>
                 );
               })}
             </div>
-            <p className="text-xs text-muted">Colunas: preço no site, custo e margem bruta (sem taxa de cartão, frete ou imposto).</p>
+            <p className="text-xs text-muted">
+              Colunas: preço no site, custo e lucro (depois das despesas por venda e da parte dos custos fixos).
+            </p>
           </section>
         </>
       )}

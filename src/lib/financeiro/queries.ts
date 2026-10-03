@@ -50,8 +50,27 @@ export async function getProduto(id: string) {
         include: { componente: { include: { produto: { select: { title: true } } } } },
         orderBy: { createdAt: "asc" },
       },
+      impressoes: { include: { impressora: true }, orderBy: { createdAt: "asc" } },
     },
   });
+}
+
+export async function getImpressoras() {
+  const [impressoras, usos] = await Promise.all([
+    prisma.impressora.findMany({ orderBy: { nome: "asc" } }),
+    prisma.impressaoItem.groupBy({ by: ["impressoraId", "produtoId"] }),
+  ]);
+  const produtosPorImpressora = new Map<string, number>();
+  for (const u of usos) produtosPorImpressora.set(u.impressoraId, (produtosPorImpressora.get(u.impressoraId) ?? 0) + 1);
+  return impressoras.map((i) => ({ ...i, produtosQueUsam: produtosPorImpressora.get(i.id) ?? 0 }));
+}
+
+export async function getCustosFixos() {
+  return prisma.custoFixo.findMany({ orderBy: [{ valorMensal: "desc" }, { nome: "asc" }] });
+}
+
+export async function getDespesasVariaveis() {
+  return prisma.despesaVariavel.findMany({ orderBy: { createdAt: "asc" } });
 }
 
 export async function getMateriais() {

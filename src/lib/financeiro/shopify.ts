@@ -33,7 +33,7 @@ const PRODUTOS_QUERY = /* GraphQL */ `
   }
 `;
 
-async function shopifyGraphQL<T>(query: string, variables: Record<string, unknown>): Promise<T> {
+export async function shopifyGraphQL<T>(query: string, variables: Record<string, unknown>): Promise<T> {
   const domain = process.env.SHOPIFY_STORE_DOMAIN;
   const token = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;
   if (!domain || !token) {

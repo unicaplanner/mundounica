@@ -5,8 +5,11 @@ import { usePathname } from "next/navigation";
 
 const ABAS = [
   { href: "/financeiro", label: "Produtos" },
+  { href: "/financeiro/precificacao", label: "Precificação" },
+  { href: "/financeiro/custos", label: "Custos fixos" },
   { href: "/financeiro/materiais", label: "Materiais" },
   { href: "/financeiro/compras", label: "Compras" },
+  { href: "/financeiro/impressoras", label: "Impressoras" },
 ];
 
 export function FinanceiroNav() {

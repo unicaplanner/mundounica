@@ -9,3 +9,9 @@ export function paraDecimal(valor: unknown): Prisma.Decimal | null {
   if (!/^\d+(\.\d+)?$/.test(texto)) return null;
   return new Prisma.Decimal(texto);
 }
+
+// Texto curto vindo de formulario: sem espacos nas pontas, null se vazio.
+export function paraTexto(valor: unknown, max = 120): string | null {
+  const texto = String(valor ?? "").trim().slice(0, max);
+  return texto || null;
+}

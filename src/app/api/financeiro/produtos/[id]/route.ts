@@ -54,13 +54,15 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     // composicao propria comeca com uma copia da composicao do produto --
     // ai so precisa ajustar o que muda (ex: o tamanho do papel).
     if (ligandoPorVariante) {
-      const [comFicha, comKit, comCusto] = await Promise.all([
+      const [comFicha, comImpressao, comKit, comCusto] = await Promise.all([
         tx.fichaTecnicaItem.findMany({ where: { produtoId: id, varianteId: { not: null } }, select: { varianteId: true } }),
+        tx.impressaoItem.findMany({ where: { produtoId: id, varianteId: { not: null } }, select: { varianteId: true } }),
         tx.kitItem.findMany({ where: { kitProdutoId: id, kitVarianteId: { not: null } }, select: { kitVarianteId: true } }),
         tx.variante.findMany({ where: { produtoId: id, custoCompra: { not: null } }, select: { id: true } }),
       ]);
       const jaTem = new Set([
         ...comFicha.map((f) => f.varianteId),
+        ...comImpressao.map((i) => i.varianteId),
         ...comKit.map((k) => k.kitVarianteId),
         ...comCusto.map((v) => v.id),
       ]);

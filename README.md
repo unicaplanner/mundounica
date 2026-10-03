@@ -6,8 +6,19 @@ Unica Planner. Módulos ativos:
 - **Central de Produção** — link pro sistema existente (que continua com seu
   próprio login separado, sem nenhuma alteração).
 - **Financeiro** (`/financeiro`) — módulo interno, mesmo login do Mundo da
-  Unica. Fase 1: precificador (ficha técnica de materiais por produto,
-  registro de compras que atualiza o custo dos materiais, preço sugerido).
+  Unica. Fase 1: precificador — custo de cada produto (ficha técnica de
+  materiais, impressão, kits, custo por variante), registro de compras que
+  atualiza o custo dos materiais, custos fixos e despesas por venda, markup,
+  análise de lucro por variante e simulador de preço.
+
+  Regras de precificação (markup divisor, como no Sebrae), tudo em % sobre o
+  preço de venda (`src/lib/financeiro/analise.ts`):
+  - custos fixos % = custos fixos do mês ÷ faturamento médio do mês (a média
+    pode vir das vendas do Shopify, sem frete, cancelados nem pedidos teste)
+  - preço sugerido = custo ÷ (1 − (fixos% + despesas% + lucro desejado%))
+  - lucro = preço − custo − despesas por venda − parte dos custos fixos
+  - custo por página da impressora = (preço ÷ vida útil + tinta/ano +
+    manutenção/ano) ÷ páginas por ano
 
 Os demais (Leads de criadoras, Propostas de UGC, Feedbacks e ideias de
 produto) aparecem como "em breve" e serão construídos em conversas
@@ -25,7 +36,8 @@ para a visão completa da plataforma e o plano das próximas fases.
   `financeiro_teste` no desenvolvimento). Nunca no `public`, que é exposto
   pela chave pública do Supabase — `src/lib/db-url.ts` se recusa a conectar
   sem um schema privado.
-- **Shopify Admin API** (só leitura de produtos) para o catálogo do Financeiro
+- **Shopify Admin API** (só leitura: produtos e pedidos) para o catálogo e o
+  faturamento do Financeiro
 - O mesmo projeto Supabase vai hospedar depois o banco compartilhado de
   "criadoras" (Leads + Propostas de UGC)
 
@@ -79,7 +91,8 @@ para a visão completa da plataforma e o plano das próximas fases.
 - `src/app/login/` — tela e Server Action de login.
 - `src/app/page.tsx` — hub/menu com os módulos.
 - `src/app/actions.ts` — Server Action de logout.
-- `src/app/financeiro/` — telas do Financeiro (produtos, ficha técnica,
+- `src/app/financeiro/` — telas do Financeiro (produtos, precificação,
+  custos fixos, impressoras, ficha técnica,
   materiais, compras); `src/app/api/financeiro/` — rotas que gravam dados
   (cada uma confere o login de novo, além do proxy).
 - `src/lib/financeiro/` — sync com o Shopify, cálculo de custo, consultas.
