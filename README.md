@@ -17,7 +17,8 @@ Unica Planner. Módulos ativos:
     pode vir das vendas do Shopify, sem frete, cancelados nem pedidos teste)
   - preço sugerido = custo ÷ (1 − (fixos% + despesas% + lucro desejado%))
   - lucro = preço − custo − despesas por venda − parte dos custos fixos
-  - custo por página da impressora = (preço ÷ vida útil + tinta/ano +
+  - impressão: toda folha conta frente e verso (custo da folha = 2 × custo
+    por página); custo por página da impressora = (preço ÷ vida útil + tinta/ano +
     manutenção/ano) ÷ páginas por ano
 
 Os demais (Leads de criadoras, Propostas de UGC, Feedbacks e ideias de
