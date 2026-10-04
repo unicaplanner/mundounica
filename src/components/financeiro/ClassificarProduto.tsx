@@ -5,7 +5,7 @@ import { useState, useTransition } from "react";
 import { enviar } from "@/lib/financeiro/enviar";
 import { campo } from "./estilos";
 
-type Tipo = "revenda" | "producao_propria" | "kit" | "";
+type Tipo = "revenda" | "producao_propria" | "kit" | "ignorar" | "";
 
 // Na lista, classificar ja leva pra pagina do produto pra completar o custo
 // (custo de compra na revenda, ficha tecnica na producao propria, produtos
@@ -38,7 +38,7 @@ export function ClassificarProduto({
     }
 
     startTransition(() => {
-      if (abrirProdutoAoClassificar && novo) router.push(`/financeiro/produtos/${produtoId}`);
+      if (abrirProdutoAoClassificar && novo && novo !== "ignorar") router.push(`/financeiro/produtos/${produtoId}`);
       else router.refresh();
     });
   }
@@ -56,6 +56,7 @@ export function ClassificarProduto({
         <option value="producao_propria">Produção própria</option>
         <option value="revenda">Revenda</option>
         <option value="kit">Kit</option>
+        <option value="ignorar">Não contar (brinde)</option>
       </select>
       {erroMsg && <p className="mt-1 text-xs text-alerta">{erroMsg}</p>}
     </div>

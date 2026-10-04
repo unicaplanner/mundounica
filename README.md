@@ -9,7 +9,11 @@ Unica Planner. Módulos ativos:
   Unica. Fase 1: precificador — custo de cada produto (ficha técnica de
   materiais, impressão, kits, custo por variante), registro de compras que
   atualiza o custo dos materiais, custos fixos e despesas por venda, markup,
-  análise de lucro por variante e simulador de preço.
+  análise de lucro por variante e simulador de preço. Cadastro rápido: vendas
+  dos últimos 12 meses por variante (tabela `VendaMensal`, puxada junto com o
+  catálogo), lista ordenada pelos mais vendidos com % das vendas já com custo,
+  classificação em lote, tipo "Não contar" (brindes) e modelo de ficha
+  (copia a composição de um produto pra outros, variante por variante pelo nome).
 
   Regras de precificação (markup divisor, como no Sebrae), tudo em % sobre o
   preço de venda (`src/lib/financeiro/analise.ts`):

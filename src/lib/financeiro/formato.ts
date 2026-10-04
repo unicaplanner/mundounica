@@ -34,3 +34,8 @@ export function normalizarBusca(texto: string) {
 export function formatarQuantidade(valor: number) {
   return valor.toLocaleString("pt-BR", { maximumFractionDigits: 4 });
 }
+
+// Nome de variante pra comparar entre produtos ("A5  argolado" = "A5 Argolado").
+export function normalizarVariante(titulo: string) {
+  return titulo.trim().toLowerCase().replace(/\s+/g, " ");
+}

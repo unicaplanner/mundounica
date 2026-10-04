@@ -48,6 +48,7 @@ enum TipoProduto {
   revenda
   producao_propria
   kit
+  ignorar // "Nao contar": brindes e o que nao precisa de custo; sai da lista de pendentes
 }
 
 // Variante do Shopify (A5 Argolado, Personal Argolado / 120g...). Titulo,
@@ -223,9 +224,30 @@ model DespesaVariavel {
 
 // Parametros gerais da precificacao (uma linha so, id "unica").
 model ConfiguracaoPrecificacao {
-  id                String   @id @default("unica")
-  faturamentoMensal Decimal? @db.Decimal(12, 2) // faturamento medio usado pra ratear os fixos
-  lucroDesejado     Decimal  @default(15) @db.Decimal(5, 2) // % sobre o preco
+  id                  String    @id @default("unica")
+  faturamentoMensal   Decimal?  @db.Decimal(12, 2) // faturamento medio usado pra ratear os fixos
+  lucroDesejado       Decimal   @default(15) @db.Decimal(5, 2) // % sobre o preco
+  vendasAtualizadasEm DateTime? // ultima vez que as vendas do Shopify foram puxadas
 
   updatedAt DateTime @updatedAt
+}
+
+// Vendas do Shopify somadas por variante e por mes (fuso de Sao Paulo), sem
+// pedidos cancelados nem de teste. receita = preco depois de todos os
+// descontos x quantidade que ficou no pedido (sem devolvidos). Item sem
+// variante (item avulso de pedido manual, produto apagado) fica com
+// shopifyVariantId nulo e chave "avulso:<titulo>". Sem relacao com Variante:
+// a venda continua valendo mesmo se a variante sumir do Shopify.
+model VendaMensal {
+  id               String  @id @default(cuid())
+  mes              String // "2026-09"
+  chave            String // shopifyVariantId, ou "avulso:<titulo>"
+  shopifyVariantId String?
+  shopifyProductId String?
+  titulo           String
+  quantidade       Int
+  receita          Decimal @db.Decimal(12, 2)
+
+  @@unique([mes, chave])
+  @@index([shopifyVariantId])
 }

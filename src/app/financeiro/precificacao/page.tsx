@@ -39,7 +39,7 @@ export default async function PrecificacaoPage({ searchParams }: PageProps<"/fin
 
   const linhas: Linha[] = [];
   for (const produto of custos.produtos.values()) {
-    if (!produto.tipo) continue;
+    if (!produto.tipo || produto.tipo === "ignorar") continue;
     for (const v of produto.variantes.filter((x) => x.ativa)) {
       const custo = custos.daVariante(v.id);
       const custoNum = custo ? custo.valor.toNumber() : null;

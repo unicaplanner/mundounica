@@ -5,7 +5,7 @@ import { erro, getUsuario, naoAutenticado } from "@/lib/auth";
 import { paraDecimal } from "@/lib/financeiro/valores";
 import { copiarComposicao } from "@/lib/financeiro/composicao";
 
-const TIPOS = ["revenda", "producao_propria", "kit"] as const;
+const TIPOS = ["revenda", "producao_propria", "kit", "ignorar"] as const;
 
 // Classifica o produto, liga/desliga custo por variante e/ou define o custo
 // de compra unico (revenda). Trocar de tipo nao apaga composicao nenhuma:

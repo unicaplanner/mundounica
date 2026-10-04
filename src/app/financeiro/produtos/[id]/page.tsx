@@ -4,9 +4,11 @@ import { getImpressoras, getMateriais, getProduto } from "@/lib/financeiro/queri
 import { carregarCustos, nomeVariante, type Custo } from "@/lib/financeiro/custo";
 import { custoPorFolha } from "@/lib/financeiro/impressao";
 import { carregarParametros } from "@/lib/financeiro/precificacao";
+import { carregarVendas } from "@/lib/financeiro/vendas";
 import { analisarPreco, type ParametrosAnalise } from "@/lib/financeiro/analise";
 import { formatarReais } from "@/lib/financeiro/formato";
 import { ClassificarProduto } from "@/components/financeiro/ClassificarProduto";
+import { AplicarModelo, type CandidatoModelo } from "@/components/financeiro/AplicarModelo";
 import { ComposicaoEditor } from "@/components/financeiro/ComposicaoEditor";
 import { CopiarComposicao } from "@/components/financeiro/CopiarComposicao";
 import { CustoPorVariante } from "@/components/financeiro/CustoPorVariante";
@@ -53,12 +55,13 @@ function AnalisePreco({ custo, preco, p, semFixos }: { custo: number; preco: num
 
 export default async function ProdutoPage({ params }: PageProps<"/financeiro/produtos/[id]">) {
   const { id } = await params;
-  const [produto, materiais, custos, impressorasDb, parametros] = await Promise.all([
+  const [produto, materiais, custos, impressorasDb, parametros, vendas] = await Promise.all([
     getProduto(id),
     getMateriais(),
     carregarCustos(),
     getImpressoras(),
     carregarParametros(),
+    carregarVendas(),
   ]);
   if (!produto) notFound();
 
@@ -70,7 +73,8 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
   const semFixos = parametros.fixosPct === null;
 
   const temVariantes = produto.variantes.length > 1;
-  const porVariante = produto.tipo !== null && produto.custoPorVariante;
+  const ignorado = produto.tipo === "ignorar";
+  const porVariante = produto.tipo !== null && !ignorado && produto.custoPorVariante;
 
   const listaMateriais = materiais.map((m) => ({
     id: m.id,
@@ -122,7 +126,7 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
   const candidatos: CandidatoKit[] =
     produto.tipo === "kit"
       ? [...custos.produtos.values()]
-          .filter((p) => p.tipo !== "kit" && p.id !== produto.id)
+          .filter((p) => p.tipo !== "kit" && p.tipo !== "ignorar" && p.id !== produto.id)
           .flatMap((p) =>
             p.variantes
               .filter((v) => v.ativa)
@@ -144,7 +148,24 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
     impressoras,
   });
 
-  const custoUnico: Custo | null = produto.tipo && !porVariante ? custos.doProduto(produto.id) : null;
+  // Outros produtos que podem receber esta composicao como modelo.
+  const temComposicao = (c: { custoCompra: unknown; ficha: unknown[]; kit: unknown[]; impressao: unknown[] }) =>
+    c.custoCompra !== null || c.ficha.length > 0 || c.kit.length > 0 || c.impressao.length > 0;
+  const candidatosModelo: CandidatoModelo[] = [...custos.produtos.values()]
+    .filter((c) => c.id !== produto.id)
+    .map((c) => {
+      const ativas = c.variantes.filter((v) => v.ativa);
+      return {
+        id: c.id,
+        title: c.title,
+        tipo: c.tipo,
+        variantes: ativas.map((v) => v.title),
+        temComposicao: temComposicao(c.composicao) || ativas.some((v) => temComposicao(v.composicao)),
+        receita: vendas.porProduto.get(c.id) ?? 0,
+      };
+    });
+
+  const custoUnico: Custo | null = produto.tipo && !ignorado && !porVariante ? custos.doProduto(produto.id) : null;
   const custoUnicoNum = num(custoUnico?.valor);
   const resumo = custos.resumo(produto.id);
   const precoUnico = !temVariantes ? num(produto.variantes[0]?.preco) : null;
@@ -178,7 +199,14 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
         </p>
       )}
 
-      {produto.tipo && (temVariantes || produto.custoPorVariante) && (
+      {ignorado && (
+        <p className="rounded-2xl border border-dashed border-border p-6 text-sm text-muted">
+          Esse produto <strong>não entra nas contas</strong> de custo e lucro (brinde, por exemplo) e saiu da lista de
+          pendentes. Se ele tiver custo de verdade, classifique como produção própria, revenda ou kit.
+        </p>
+      )}
+
+      {produto.tipo && !ignorado && (temVariantes || produto.custoPorVariante) && (
         <CustoPorVariante
           produtoId={produto.id}
           custoPorVariante={produto.custoPorVariante}
@@ -186,7 +214,7 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
         />
       )}
 
-      {produto.tipo && !porVariante && (
+      {produto.tipo && !ignorado && !porVariante && (
         <>
           <div className="rounded-2xl bg-ink px-6 py-5 text-background">
             <p className="text-xs uppercase tracking-wide text-background/60">Custo de uma unidade</p>
@@ -314,6 +342,15 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
             </p>
           </section>
         </>
+      )}
+
+      {produto.tipo && !ignorado && (custoUnico !== null || (resumo?.modo === "variante" && resumo.comCusto > 0)) && (
+        <AplicarModelo
+          produtoId={produto.id}
+          porVariante={porVariante}
+          variantesOrigem={produto.variantes.map((v) => v.title)}
+          candidatos={candidatosModelo}
+        />
       )}
     </div>
   );

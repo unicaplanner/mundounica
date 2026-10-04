@@ -1,9 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 
-const PAGINA = 60;
-
-export type FiltroTipo = "nao_classificados" | "producao_propria" | "revenda" | "kit" | "todos";
+export type FiltroTipo = "nao_classificados" | "sem_custo" | "producao_propria" | "revenda" | "kit" | "ignorar" | "todos";
 
 // "Nao classificado" ignora produtos arquivados no Shopify: nao faz sentido
 // gastar tempo classificando o que nao esta mais a venda.
@@ -12,6 +10,8 @@ const NAO_CLASSIFICADO: Prisma.ProdutoWhereInput = {
   OR: [{ status: null }, { status: { not: "ARCHIVED" } }],
 };
 
+// Todos os produtos do filtro (a loja tem algumas centenas): a tela ordena
+// pelos mais vendidos e mostra so o comeco.
 export async function getProdutos(opts: { busca?: string; filtro: FiltroTipo }) {
   const where: Prisma.ProdutoWhereInput = {
     ...(opts.busca ? { title: { contains: opts.busca, mode: "insensitive" } } : {}),
@@ -19,7 +19,9 @@ export async function getProdutos(opts: { busca?: string; filtro: FiltroTipo }) 
       ? NAO_CLASSIFICADO
       : opts.filtro === "todos"
         ? {}
-        : { tipo: opts.filtro }),
+        : opts.filtro === "sem_custo"
+          ? { tipo: { in: ["producao_propria", "revenda", "kit"] } } // a tela filtra os que tem custo
+          : { tipo: opts.filtro }),
   };
 
   return prisma.produto.findMany({
@@ -27,7 +29,6 @@ export async function getProdutos(opts: { busca?: string; filtro: FiltroTipo }) 
     include: { _count: { select: { variantes: { where: { ativa: true } } } } },
     // ACTIVE vem antes de DRAFT em ordem alfabetica: o que esta a venda primeiro.
     orderBy: [{ status: "asc" }, { title: "asc" }],
-    take: PAGINA,
   });
 }
 

@@ -21,7 +21,7 @@ export function SincronizarProdutos() {
       return;
     }
     setMensagem({
-      texto: `${resultado.dados.produtos} produtos e ${resultado.dados.variantes} variantes atualizados.`,
+      texto: `${resultado.dados.produtos} produtos, ${resultado.dados.variantes} variantes e ${resultado.dados.pedidos} pedidos dos últimos 12 meses atualizados.`,
       erro: false,
     });
     startTransition(() => router.refresh());
@@ -30,7 +30,7 @@ export function SincronizarProdutos() {
   return (
     <div className="flex flex-wrap items-center gap-3">
       <button type="button" onClick={sincronizar} disabled={carregando} className={botaoSecundario}>
-        {carregando ? "Sincronizando..." : "Sincronizar produtos do Shopify"}
+        {carregando ? "Atualizando (leva uns 20 segundos)..." : "Atualizar produtos e vendas do Shopify"}
       </button>
       {mensagem && (
         <span role="status" className={`text-xs ${mensagem.erro ? "text-alerta" : "text-muted"}`}>
