@@ -1,16 +1,22 @@
 // Formulas de precificacao (markup divisor, como no metodo do Sebrae). Sem
 // dependencia do banco: roda no servidor e no navegador (simulador).
 //
-// Tudo em % sobre o PRECO DE VENDA:
+// Em % sobre o PRECO DE VENDA:
 //   fixosPct    = custos fixos do mes / faturamento medio do mes
-//   despesasPct = o que sai de cada venda (imposto, taxa de cartao...)
+//   despesasPct = o que sai de cada venda (imposto, taxa do Shopify, gateway...)
 //   lucroPct    = lucro que sobra depois de pagar tudo
-// preco sugerido = custo / (1 - (fixos + despesas + lucro) / 100)
+// Em R$ por produto vendido:
+//   envioPorProduto = embalagem de envio media por pedido / produtos por pedido
+// preco sugerido = (custo + envio) / (1 - (fixos + despesas + lucro) / 100)
+
+export type DespesaVenda = { nome: string; pct: number };
 
 export type ParametrosAnalise = {
   fixosPct: number | null; // null enquanto o faturamento medio nao foi informado
   despesasPct: number;
   lucroPct: number;
+  envioPorProduto: number; // 0 enquanto nao da pra calcular
+  despesas: DespesaVenda[]; // o detalhe de despesasPct, pra mostrar linha a linha
 };
 
 export type StatusPreco = "prejuizo" | "abaixo_meta" | "ok";
@@ -22,13 +28,14 @@ export function markup(p: ParametrosAnalise): number | null {
 
 export function precoSugerido(custo: number, p: ParametrosAnalise): number | null {
   const m = markup(p);
-  return m === null ? null : custo * m;
+  return m === null ? null : (custo + p.envioPorProduto) * m;
 }
 
 export type AnalisePreco = {
+  envio: number; // R$ por unidade (rateio da embalagem de envio)
   despesas: number; // R$ por unidade
   fixos: number; // R$ por unidade (rateio)
-  contribuicao: number; // preco - custo - despesas
+  contribuicao: number; // preco - custo - envio - despesas
   contribuicaoPct: number;
   lucro: number; // contribuicao - fixos
   lucroPct: number;
@@ -38,12 +45,14 @@ export type AnalisePreco = {
 
 export function analisarPreco(custo: number, preco: number, p: ParametrosAnalise): AnalisePreco | null {
   if (preco <= 0) return null;
+  const envio = p.envioPorProduto;
   const despesas = (preco * p.despesasPct) / 100;
   const fixos = (preco * (p.fixosPct ?? 0)) / 100;
-  const contribuicao = preco - custo - despesas;
+  const contribuicao = preco - custo - envio - despesas;
   const lucro = contribuicao - fixos;
   const lucroPct = (lucro / preco) * 100;
   return {
+    envio,
     despesas,
     fixos,
     contribuicao,

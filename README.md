@@ -20,7 +20,11 @@ Unica Planner. Módulos ativos:
   `ResumoMensal`) vira um % que entra nas despesas por venda do markup.
   Materiais têm link de compra. Impressão: só o número de folhas (frente e
   verso), com o custo da impressora mais cara (`impressoraPadrao`). Custos
-  fixos em categorias fechadas (`src/lib/financeiro/categorias.ts`).
+  fixos em categorias fechadas (`src/lib/financeiro/categorias.ts`). Na tela do
+  produto, "Para produzir" junta materiais e impressão (`ProducaoEditor`) e o
+  simulador mostra a conta completa até o lucro; a embalagem de envio entra
+  em R$ por produto (custo médio do pedido ÷ unidades por pedido). Aba
+  Materiais: colocar um material em vários produtos por nome de variante.
 
   Regras de precificação (markup divisor, como no Sebrae), tudo em % sobre o
   preço de venda (`src/lib/financeiro/analise.ts`):

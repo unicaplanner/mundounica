@@ -80,7 +80,7 @@ export default async function PrecificacaoPage({ searchParams }: PageProps<"/fin
           <span className="font-semibold text-ink">
             {p.markup !== null ? `${p.markup.toLocaleString("pt-BR", { maximumFractionDigits: 2 })}×` : "—"}
           </span>{" "}
-          · fixos {p.fixosPct !== null ? pct(p.fixosPct) : "—"} · despesas e envio {pct(p.despesasPct)} · lucro desejado{" "}
+          · fixos {p.fixosPct !== null ? pct(p.fixosPct) : "—"} · despesas por venda {pct(p.despesasPct)} · envio {formatarReais(p.envioPorProduto)}/produto · lucro desejado{" "}
           {pct(p.lucroPct)}
         </p>
         <Link href="/financeiro/custos" className="text-xs text-ink underline">

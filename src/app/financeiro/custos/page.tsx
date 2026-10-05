@@ -30,7 +30,9 @@ export default async function CustosPage() {
         <p className="font-serif text-3xl font-semibold">
           {p.markup !== null ? `${p.markup.toLocaleString("pt-BR", { maximumFractionDigits: 2 })}×` : "—"}
         </p>
-        <p className="mt-1 text-sm text-background/80">Preço sugerido = custo do produto × markup</p>
+        <p className="mt-1 text-sm text-background/80">
+          Preço sugerido = (custo do produto + embalagem de envio por produto) × markup
+        </p>
         <dl className="mt-4 grid gap-3 text-xs sm:grid-cols-4">
           <div>
             <dt className="text-background/60">Custos fixos</dt>
@@ -41,7 +43,7 @@ export default async function CustosPage() {
           </div>
           <div>
             <dt className="text-background/60">Despesas por venda</dt>
-            <dd className="font-semibold">{pct(p.despesasVendaPct)}</dd>
+            <dd className="font-semibold">{pct(p.despesasPct)}</dd>
           </div>
           <div>
             <dt className="text-background/60">
@@ -50,9 +52,11 @@ export default async function CustosPage() {
               </Link>
             </dt>
             <dd className="font-semibold">
-              {p.envioPct !== null ? pct(p.envioPct) : "—"}
-              {p.custoMedioEnvio !== null && (
-                <span className="font-normal text-background/70"> · {formatarReais(p.custoMedioEnvio)}/pedido</span>
+              {p.envioPorProduto > 0 ? `${formatarReais(p.envioPorProduto)}/produto` : "—"}
+              {p.custoMedioEnvio !== null && p.itensPorPedido && (
+                <span className="block font-normal text-background/70">
+                  {formatarReais(p.custoMedioEnvio)}/pedido ÷ {p.itensPorPedido.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} produtos
+                </span>
               )}
             </dd>
           </div>

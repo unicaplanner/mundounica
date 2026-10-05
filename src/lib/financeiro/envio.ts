@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db";
 import { impressoraPadrao } from "./impressao";
-import { ticketMedio } from "./vendas";
+import { mediasPedido } from "./vendas";
 
 export type ItemEnvioMaterial = {
   id: string;
@@ -28,7 +28,8 @@ export type ResumoEnvio = {
   ticket: number | null; // valor medio de um pedido (12 meses)
   custoFolha: number | null; // folha impressa (impressora mais cara)
   impressora: string | null; // nome dela
-  envioPct: number | null; // custo medio por pedido em % do valor do pedido
+  itensPorPedido: number | null; // produtos num pedido, em media (12 meses)
+  porProduto: number | null; // custo medio por pedido / produtos por pedido: o que cada produto vendido paga
 };
 
 // Materiais de envio que a Lari compra (nomes iguais aos cadastrados em
@@ -69,7 +70,7 @@ export const ENVIOS_PADRAO = [
 ];
 
 export async function carregarEnvio(): Promise<ResumoEnvio> {
-  const [tipos, { ticket }, impressoras] = await Promise.all([
+  const [tipos, { ticket, itensPorPedido }, impressoras] = await Promise.all([
     prisma.tipoEnvio.findMany({
       orderBy: [{ ordem: "asc" }, { createdAt: "asc" }],
       include: {
@@ -77,7 +78,7 @@ export async function carregarEnvio(): Promise<ResumoEnvio> {
         impressoes: { orderBy: { createdAt: "asc" } },
       },
     }),
-    ticketMedio(),
+    mediasPedido(),
     prisma.impressora.findMany(),
   ]);
   const padrao = impressoraPadrao(impressoras);
@@ -111,7 +112,7 @@ export async function carregarEnvio(): Promise<ResumoEnvio> {
   const percentualTotal = calculados.reduce((acc, t) => acc + t.percentual, 0);
   const custoMedio =
     percentualTotal > 0 ? calculados.reduce((acc, t) => acc + t.custo * t.percentual, 0) / percentualTotal : null;
-  const envioPct = custoMedio !== null && ticket ? (custoMedio / ticket) * 100 : null;
+  const porProduto = custoMedio !== null && itensPorPedido ? custoMedio / itensPorPedido : null;
 
-  return { tipos: calculados, percentualTotal, custoMedio, ticket, envioPct, custoFolha, impressora: padrao?.nome ?? null };
+  return { tipos: calculados, percentualTotal, custoMedio, ticket, itensPorPedido, porProduto, custoFolha, impressora: padrao?.nome ?? null };
 }

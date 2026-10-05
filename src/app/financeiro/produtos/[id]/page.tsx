@@ -35,12 +35,27 @@ function Lucro({ preco, custo, p }: { preco: number | null; custo: number | null
   );
 }
 
-function AnalisePreco({ custo, preco, p, semFixos }: { custo: number; preco: number | null; p: ParametrosAnalise; semFixos: boolean }) {
+type ContextoAnalise = {
+  p: ParametrosAnalise;
+  semFixos: boolean;
+  rotuloCusto: string;
+  envioPorPedido: number | null;
+  itensPorPedido: number | null;
+};
+
+function AnalisePreco({ custo, preco, ctx }: { custo: number; preco: number | null; ctx: ContextoAnalise }) {
   return (
     <section className="rounded-2xl border border-border bg-card px-5 py-4">
-      <h3 className="mb-3 text-sm font-semibold text-ink">Análise de preço</h3>
-      <SimuladorPreco custo={custo} precoSite={preco} parametros={p} />
-      {semFixos && (
+      <h3 className="mb-3 text-sm font-semibold text-ink">Pra onde vai cada venda</h3>
+      <SimuladorPreco
+        custo={custo}
+        precoSite={preco}
+        parametros={ctx.p}
+        rotuloCusto={ctx.rotuloCusto}
+        envioPorPedido={ctx.envioPorPedido}
+        itensPorPedido={ctx.itensPorPedido}
+      />
+      {ctx.semFixos && (
         <p className="mt-3 text-xs text-atencao">
           Os custos fixos ainda não entram na conta: falta o faturamento médio em{" "}
           <Link href="/financeiro/custos" className="underline">
@@ -69,8 +84,21 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
     fixosPct: parametros.fixosPct,
     despesasPct: parametros.despesasPct,
     lucroPct: parametros.lucroPct,
+    envioPorProduto: parametros.envioPorProduto,
+    despesas: parametros.despesas,
   };
-  const semFixos = parametros.fixosPct === null;
+  const ctx: ContextoAnalise = {
+    p,
+    semFixos: parametros.fixosPct === null,
+    rotuloCusto:
+      produto.tipo === "revenda"
+        ? "Custo de compra"
+        : produto.tipo === "kit"
+          ? "Produtos do kit e embalagem"
+          : "Produção (materiais e impressão)",
+    envioPorPedido: parametros.custoMedioEnvio,
+    itensPorPedido: parametros.itensPorPedido,
+  };
 
   const temVariantes = produto.variantes.length > 1;
   const ignorado = produto.tipo === "ignorar";
@@ -227,7 +255,7 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
           </div>
 
           {custoUnicoNum !== null && custoUnicoNum > 0 && !temVariantes && (
-            <AnalisePreco custo={custoUnicoNum} preco={precoUnico} p={p} semFixos={semFixos} />
+            <AnalisePreco custo={custoUnicoNum} preco={precoUnico} ctx={ctx} />
           )}
 
           {temVariantes && (
@@ -262,12 +290,12 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
           )}
 
           {custoUnicoNum !== null && custoUnicoNum > 0 && temVariantes && (
-            <AnalisePreco custo={custoUnicoNum} preco={null} p={p} semFixos={semFixos} />
+            <AnalisePreco custo={custoUnicoNum} preco={null} ctx={ctx} />
           )}
 
           <section>
             <h3 className="mb-3 text-sm font-semibold text-ink">
-              {produto.tipo === "revenda" ? "Custo de compra" : produto.tipo === "kit" ? "Composição do kit" : "Ficha técnica"}
+              {produto.tipo === "revenda" ? "Custo de compra" : produto.tipo === "kit" ? "Composição do kit" : "Para produzir"}
             </h3>
             <ComposicaoEditor {...composicaoProps(null, num(produto.custoCompra))} />
           </section>
@@ -326,7 +354,7 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
                     <div className="space-y-6 pb-6 pl-5">
                       <ComposicaoEditor {...composicaoProps(v.id, num(v.custoCompra))} />
                       {custoNum !== null && custoNum > 0 && (
-                        <AnalisePreco custo={custoNum} preco={preco} p={p} semFixos={semFixos} />
+                        <AnalisePreco custo={custoNum} preco={preco} ctx={ctx} />
                       )}
                     </div>
                   </details>

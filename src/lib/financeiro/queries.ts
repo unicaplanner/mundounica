@@ -100,3 +100,35 @@ export async function getComprasRecentes() {
     take: 40,
   });
 }
+
+// Pra "colocar um material em varios produtos": produtos com variantes ativas
+// e quais materiais ja estao na ficha de cada dono (produto ou variante).
+export async function getProdutosParaLote() {
+  const [produtos, ficha] = await Promise.all([
+    prisma.produto.findMany({
+      select: {
+        id: true,
+        title: true,
+        tipo: true,
+        status: true,
+        custoPorVariante: true,
+        variantes: { where: { ativa: true }, select: { id: true, title: true }, orderBy: { posicao: "asc" } },
+      },
+      orderBy: { title: "asc" },
+    }),
+    prisma.fichaTecnicaItem.findMany({ select: { produtoId: true, varianteId: true, materialId: true } }),
+  ]);
+  return {
+    produtos: produtos
+      .filter((p) => p.variantes.length > 0)
+      .map((p) => ({
+        id: p.id,
+        title: p.title,
+        tipo: p.tipo,
+        arquivado: p.status === "ARCHIVED",
+        custoPorVariante: p.custoPorVariante,
+        variantes: p.variantes,
+      })),
+    ficha: ficha.map((f) => [f.produtoId, f.varianteId ?? "", f.materialId] as [string, string, string]),
+  };
+}

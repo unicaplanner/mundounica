@@ -3,7 +3,7 @@ import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { erro, getUsuario, naoAutenticado } from "@/lib/auth";
 import { paraDecimal } from "@/lib/financeiro/valores";
-import { copiarComposicao } from "@/lib/financeiro/composicao";
+import { preencherVariantesVazias } from "@/lib/financeiro/composicao";
 
 const TIPOS = ["revenda", "producao_propria", "kit", "ignorar"] as const;
 
@@ -50,25 +50,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   await prisma.$transaction(async (tx) => {
     await tx.produto.update({ where: { id }, data });
 
-    // Ao passar a ter custo por variante, cada variante que ainda nao tem
-    // composicao propria comeca com uma copia da composicao do produto --
-    // ai so precisa ajustar o que muda (ex: o tamanho do papel).
-    if (ligandoPorVariante) {
-      const [comFicha, comImpressao, comKit, comCusto] = await Promise.all([
-        tx.fichaTecnicaItem.findMany({ where: { produtoId: id, varianteId: { not: null } }, select: { varianteId: true } }),
-        tx.impressaoItem.findMany({ where: { produtoId: id, varianteId: { not: null } }, select: { varianteId: true } }),
-        tx.kitItem.findMany({ where: { kitProdutoId: id, kitVarianteId: { not: null } }, select: { kitVarianteId: true } }),
-        tx.variante.findMany({ where: { produtoId: id, custoCompra: { not: null } }, select: { id: true } }),
-      ]);
-      const jaTem = new Set([
-        ...comFicha.map((f) => f.varianteId),
-        ...comImpressao.map((i) => i.varianteId),
-        ...comKit.map((k) => k.kitVarianteId),
-        ...comCusto.map((v) => v.id),
-      ]);
-      const vazias = produto.variantes.map((v) => v.id).filter((vid) => !jaTem.has(vid));
-      if (vazias.length > 0) await copiarComposicao(tx, id, null, vazias);
-    }
+    if (ligandoPorVariante) await preencherVariantesVazias(tx, id, produto.variantes.map((v) => v.id));
   });
 
   return NextResponse.json({ ok: true });

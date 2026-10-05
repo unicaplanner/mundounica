@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { getMateriais } from "@/lib/financeiro/queries";
+import { getMateriais, getProdutosParaLote } from "@/lib/financeiro/queries";
+import { AplicarMaterialLote } from "@/components/financeiro/AplicarMaterialLote";
 import { MaterialForm } from "@/components/financeiro/MaterialForm";
 import { MateriaisTabela } from "@/components/financeiro/MateriaisTabela";
 
 export const dynamic = "force-dynamic";
 
 export default async function MateriaisPage() {
-  const materiais = await getMateriais();
+  const [materiais, lote] = await Promise.all([getMateriais(), getProdutosParaLote()]);
 
   return (
     <div className="space-y-6">
@@ -22,6 +23,14 @@ export default async function MateriaisPage() {
       <div className="rounded-2xl border border-dashed border-border p-4">
         <MaterialForm />
       </div>
+
+      {materiais.length > 0 && (
+        <AplicarMaterialLote
+          materiais={materiais.map((m) => ({ id: m.id, nome: m.nome, unidade: m.unidade }))}
+          produtos={lote.produtos}
+          ficha={lote.ficha}
+        />
+      )}
 
       {materiais.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted">

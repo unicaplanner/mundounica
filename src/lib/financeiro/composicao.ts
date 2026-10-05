@@ -163,3 +163,88 @@ export async function aplicarModelo(origemId: string, destinoIds: string[]): Pro
   }
   return resultados;
 }
+
+// Ao passar a ter custo por variante, cada variante que ainda nao tem
+// composicao propria comeca com uma copia da composicao do produto -- ai so
+// precisa ajustar o que muda (ex: o tamanho do papel).
+export async function preencherVariantesVazias(tx: Prisma.TransactionClient, produtoId: string, varianteIds: string[]) {
+  const [comFicha, comImpressao, comKit, comCusto] = await Promise.all([
+    tx.fichaTecnicaItem.findMany({ where: { produtoId, varianteId: { not: null } }, select: { varianteId: true } }),
+    tx.impressaoItem.findMany({ where: { produtoId, varianteId: { not: null } }, select: { varianteId: true } }),
+    tx.kitItem.findMany({ where: { kitProdutoId: produtoId, kitVarianteId: { not: null } }, select: { kitVarianteId: true } }),
+    tx.variante.findMany({ where: { produtoId, custoCompra: { not: null } }, select: { id: true } }),
+  ]);
+  const jaTem = new Set([
+    ...comFicha.map((f) => f.varianteId),
+    ...comImpressao.map((i) => i.varianteId),
+    ...comKit.map((k) => k.kitVarianteId),
+    ...comCusto.map((v) => v.id),
+  ]);
+  const vazias = varianteIds.filter((vid) => !jaTem.has(vid));
+  if (vazias.length > 0) await copiarComposicao(tx, produtoId, null, vazias);
+}
+
+export type ResultadoMaterial = { titulo: string; aplicado: boolean; motivo?: string; onde?: string };
+
+// Coloca um material (ex: o saquinho) na composicao de varios produtos de uma
+// vez, so nas variantes escolhidas. Se o produto tem composicao unica e nem
+// todas as variantes foram escolhidas (ex: so a A5 leva o saco 15x25), ele
+// passa a ter custo por variante, cada variante comecando com a composicao
+// que ja tinha. Revenda, kit e "nao contar" ficam de fora; produto sem tipo
+// vira producao propria se classificar = true.
+export async function aplicarMaterial(
+  materialId: string,
+  quantidade: Prisma.Decimal,
+  alvos: { produtoId: string; varianteIds: string[] }[],
+  classificar: boolean
+): Promise<ResultadoMaterial[]> {
+  const produtos = await prisma.produto.findMany({
+    where: { id: { in: alvos.map((a) => a.produtoId) } },
+    include: { variantes: { where: { ativa: true }, select: { id: true, title: true } } },
+  });
+  const porId = new Map(produtos.map((p) => [p.id, p]));
+  const resultados: ResultadoMaterial[] = [];
+
+  for (const alvo of alvos) {
+    const produto = porId.get(alvo.produtoId);
+    if (!produto) continue;
+    if (produto.tipo && produto.tipo !== "producao_propria") {
+      resultados.push({ titulo: produto.title, aplicado: false, motivo: "não é produção própria" });
+      continue;
+    }
+    if (!produto.tipo && !classificar) {
+      resultados.push({ titulo: produto.title, aplicado: false, motivo: "ainda sem classificação" });
+      continue;
+    }
+    const ativas = produto.variantes.map((v) => v.id);
+    const escolhidas = alvo.varianteIds.filter((id) => ativas.includes(id));
+    if (escolhidas.length === 0) {
+      resultados.push({ titulo: produto.title, aplicado: false, motivo: "nenhuma variante escolhida" });
+      continue;
+    }
+    const todas = escolhidas.length === ativas.length;
+
+    await prisma.$transaction(async (tx) => {
+      const viraPorVariante = !produto.custoPorVariante && !todas;
+      await tx.produto.update({
+        where: { id: produto.id },
+        data: { tipo: "producao_propria", ...(viraPorVariante ? { custoPorVariante: true } : {}) },
+      });
+      if (viraPorVariante) await preencherVariantesVazias(tx, produto.id, ativas);
+
+      const donos: (string | null)[] = produto.custoPorVariante || viraPorVariante ? escolhidas : [null];
+      for (const varianteId of donos) {
+        const existente = await tx.fichaTecnicaItem.findFirst({
+          where: { produtoId: produto.id, varianteId, materialId },
+          select: { id: true },
+        });
+        if (existente) await tx.fichaTecnicaItem.update({ where: { id: existente.id }, data: { quantidade } });
+        else await tx.fichaTecnicaItem.create({ data: { produtoId: produto.id, varianteId, materialId, quantidade } });
+      }
+    });
+
+    const nomes = produto.variantes.filter((v) => escolhidas.includes(v.id)).map((v) => v.title);
+    resultados.push({ titulo: produto.title, aplicado: true, onde: todas ? "todas as variantes" : nomes.join(", ") });
+  }
+  return resultados;
+}

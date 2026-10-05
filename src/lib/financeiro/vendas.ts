@@ -208,13 +208,21 @@ export async function carregarVendas(): Promise<VendasProdutos> {
   return { meses, total, porVariante, porProduto, semProduto, atualizadoEm: config?.vendasAtualizadasEm ?? null };
 }
 
-// Valor medio de um pedido nos ultimos 12 meses completos (null sem vendas).
-export async function ticketMedio(): Promise<{ ticket: number | null; pedidos: number }> {
-  const r = await prisma.resumoMensal.aggregate({
-    where: { mes: { in: mesesCompletos(12) } },
-    _sum: { pedidos: true, receita: true },
-  });
+// Medias dos pedidos nos ultimos 12 meses completos (null sem vendas): valor
+// medio e quantos produtos vem num pedido. Brinde (item de R$ 0) nao conta
+// como produto.
+export async function mediasPedido(): Promise<{ ticket: number | null; itensPorPedido: number | null; pedidos: number }> {
+  const meses = mesesCompletos(12);
+  const [r, itens] = await Promise.all([
+    prisma.resumoMensal.aggregate({ where: { mes: { in: meses } }, _sum: { pedidos: true, receita: true } }),
+    prisma.vendaMensal.aggregate({ where: { mes: { in: meses }, receita: { gt: 0 } }, _sum: { quantidade: true } }),
+  ]);
   const pedidos = r._sum.pedidos ?? 0;
   const receita = r._sum.receita?.toNumber() ?? 0;
-  return { ticket: pedidos > 0 ? receita / pedidos : null, pedidos };
+  const unidades = itens._sum.quantidade ?? 0;
+  return {
+    ticket: pedidos > 0 ? receita / pedidos : null,
+    itensPorPedido: pedidos > 0 && unidades > 0 ? unidades / pedidos : null,
+    pedidos,
+  };
 }
