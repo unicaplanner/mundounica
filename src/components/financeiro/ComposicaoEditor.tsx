@@ -1,7 +1,7 @@
 import type { TipoProduto } from "@prisma/client";
 import { CustoCompraForm } from "./CustoCompraForm";
 import { FichaTecnicaEditor } from "./FichaTecnicaEditor";
-import { ImpressaoEditor, type ImpressoraOpcao, type ItemImpressao } from "./ImpressaoEditor";
+import { ImpressaoEditor, type ItemImpressao } from "./ImpressaoEditor";
 import { KitEditor, type CandidatoKit, type ItemKit } from "./KitEditor";
 
 type Material = { id: string; nome: string; unidade: string; custoAtual: number };
@@ -20,7 +20,8 @@ export function ComposicaoEditor({
   impressao,
   materiais,
   candidatos,
-  impressoras,
+  custoFolha,
+  impressora,
 }: {
   produtoId: string;
   varianteId?: string | null;
@@ -31,7 +32,8 @@ export function ComposicaoEditor({
   impressao: ItemImpressao[];
   materiais: Material[];
   candidatos: CandidatoKit[];
-  impressoras: ImpressoraOpcao[];
+  custoFolha: number | null; // folha impressa, com o custo da impressora mais cara
+  impressora: string | null;
 }) {
   if (tipo === "revenda") {
     return <CustoCompraForm produtoId={produtoId} varianteId={varianteId} custoCompra={custoCompra} />;
@@ -39,9 +41,8 @@ export function ComposicaoEditor({
 
   const secaoImpressao = (
     <section>
-      <h4 className="mb-1 text-sm font-semibold text-ink">Impressão</h4>
-      <p className="mb-3 text-xs text-muted">Quantas folhas cada unidade usa em cada impressora. Toda folha conta frente e verso (2 páginas).</p>
-      <ImpressaoEditor produtoId={produtoId} varianteId={varianteId} itens={impressao} impressoras={impressoras} />
+      <h4 className="mb-2 text-sm font-semibold text-ink">Impressão</h4>
+      <ImpressaoEditor produtoId={produtoId} varianteId={varianteId} itens={impressao} custoFolha={custoFolha} impressora={impressora} />
     </section>
   );
 

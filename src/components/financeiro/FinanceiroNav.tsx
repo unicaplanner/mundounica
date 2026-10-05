@@ -7,6 +7,7 @@ const ABAS = [
   { href: "/financeiro", label: "Produtos" },
   { href: "/financeiro/precificacao", label: "Precificação" },
   { href: "/financeiro/custos", label: "Custos fixos" },
+  { href: "/financeiro/envio", label: "Envio" },
   { href: "/financeiro/materiais", label: "Materiais" },
   { href: "/financeiro/compras", label: "Compras" },
   { href: "/financeiro/impressoras", label: "Impressoras" },

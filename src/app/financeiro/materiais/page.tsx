@@ -11,7 +11,7 @@ export default async function MateriaisPage() {
   return (
     <div className="space-y-6">
       <p className="max-w-2xl text-sm text-muted">
-        Matéria-prima e embalagem usadas na produção própria. O custo de cada material é sempre o da
+        Matéria-prima e embalagem usadas na produção própria e nos envios. O custo de cada material é sempre o da
         compra mais recente registrada em{" "}
         <Link href="/financeiro/compras" className="text-ink underline">
           Compras
@@ -36,6 +36,8 @@ export default async function MateriaisPage() {
             custoAtual: m.custoAtual.toNumber(),
             totalComprado: m.totalComprado.toNumber(),
             usos: m.produtosQueUsam,
+            envios: m.enviosQueUsam,
+            linkCompra: m.linkCompra,
           }))}
         />
       )}

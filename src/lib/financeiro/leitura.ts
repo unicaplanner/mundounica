@@ -1,5 +1,6 @@
 import type { Prisma } from "@prisma/client";
 import { paraDecimal, paraTexto } from "./valores";
+import { categoriaFixo } from "./categorias";
 
 type Lido<T> = { ok: true; dados: T } | { ok: false; erro: string };
 
@@ -12,7 +13,7 @@ export function lerCustoFixo(body: Record<string, unknown>): Lido<{
   if (!nome) return { ok: false, erro: "Dê um nome pro custo, por exemplo Contador." };
   const valorMensal = paraDecimal(body.valorMensal);
   if (!valorMensal) return { ok: false, erro: "Informe o valor por mês, por exemplo 350,00." };
-  return { ok: true, dados: { nome, categoria: paraTexto(body.categoria, 60) ?? "Outros", valorMensal } };
+  return { ok: true, dados: { nome, categoria: categoriaFixo(paraTexto(body.categoria, 60)), valorMensal } };
 }
 
 export function lerDespesaVariavel(body: Record<string, unknown>): Lido<{

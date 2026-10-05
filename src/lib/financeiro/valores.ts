@@ -15,3 +15,17 @@ export function paraTexto(valor: unknown, max = 120): string | null {
   const texto = String(valor ?? "").trim().slice(0, max);
   return texto || null;
 }
+
+// Link de compra (anuncio do fornecedor): so http/https. undefined = invalido;
+// null = vazio (sem link).
+export function paraLink(valor: unknown): string | null | undefined {
+  const texto = String(valor ?? "").trim();
+  if (!texto) return null;
+  try {
+    const url = new URL(texto);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return undefined;
+    return texto.slice(0, 1000);
+  } catch {
+    return undefined;
+  }
+}

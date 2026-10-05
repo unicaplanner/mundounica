@@ -11,17 +11,19 @@ export function MaterialForm() {
   const [isPending, startTransition] = useTransition();
   const [nome, setNome] = useState("");
   const [unidade, setUnidade] = useState("folha");
+  const [linkCompra, setLinkCompra] = useState("");
   const [erroMsg, setErroMsg] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErroMsg(null);
-    const resultado = await enviar("/api/financeiro/materiais", "POST", { nome, unidade });
+    const resultado = await enviar("/api/financeiro/materiais", "POST", { nome, unidade, linkCompra });
     if (!resultado.ok) {
       setErroMsg(resultado.erro);
       return;
     }
     setNome("");
+    setLinkCompra("");
     startTransition(() => router.refresh());
   }
 
@@ -57,6 +59,19 @@ export function MaterialForm() {
               </option>
             ))}
           </select>
+        </div>
+        <div className="min-w-0 flex-1 basis-56">
+          <label htmlFor="material-link" className={rotulo}>
+            Link de compra (opcional)
+          </label>
+          <input
+            id="material-link"
+            type="url"
+            value={linkCompra}
+            onChange={(e) => setLinkCompra(e.target.value)}
+            placeholder="https://www.mercadolivre.com.br/..."
+            className={`${campo} w-full`}
+          />
         </div>
         <button type="submit" disabled={isPending} className={botaoPrimario}>
           Cadastrar material

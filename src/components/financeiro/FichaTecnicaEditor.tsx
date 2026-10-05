@@ -18,13 +18,18 @@ const NOVO = "__novo__";
 // na mesma pagina (uma por variante), por isso os ids vem de useId.
 export function FichaTecnicaEditor({
   produtoId,
+  baseUrl,
+  por = "unidade",
   varianteId = null,
   itens,
   materiais,
   textoVazio = "Nenhum material ainda. Adicione abaixo tudo que vai em uma unidade do produto: papel, capa, embalagem, etc.",
   rotuloTotal = "Custo de uma unidade",
 }: {
-  produtoId: string;
+  produtoId?: string;
+  // de onde gravar; padrao = composicao do produto (a embalagem de envio usa outra rota)
+  baseUrl?: string;
+  por?: string; // "unidade" (produto) ou "pedido" (embalagem de envio)
   varianteId?: string | null;
   itens: Item[];
   materiais: Material[];
@@ -32,6 +37,7 @@ export function FichaTecnicaEditor({
   rotuloTotal?: string;
 }) {
   const id = useId();
+  const base = baseUrl ?? `/api/financeiro/produtos/${produtoId}`;
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [materialId, setMaterialId] = useState(materiais[0]?.id ?? NOVO);
@@ -63,7 +69,7 @@ export function FichaTecnicaEditor({
       idParaAdicionar = String(criado.dados.id);
     }
 
-    const resultado = await enviar(`/api/financeiro/produtos/${produtoId}/ficha`, "POST", {
+    const resultado = await enviar(`${base}/ficha`, "POST", {
       materialId: idParaAdicionar,
       quantidade: normalizarNumero(quantidade),
       varianteId,
@@ -82,7 +88,7 @@ export function FichaTecnicaEditor({
 
   async function remover(itemId: string) {
     setExcluindoItem(null);
-    const resultado = await enviar(`/api/financeiro/produtos/${produtoId}/ficha/${itemId}`, "DELETE");
+    const resultado = await enviar(`${base}/ficha/${itemId}`, "DELETE");
     if (!resultado.ok) {
       setErroMsg(resultado.erro);
       return;
@@ -92,7 +98,7 @@ export function FichaTecnicaEditor({
 
   async function salvarQuantidade(item: Item) {
     setErroMsg(null);
-    const resultado = await enviar(`/api/financeiro/produtos/${produtoId}/ficha`, "POST", {
+    const resultado = await enviar(`${base}/ficha`, "POST", {
       materialId: item.material.id,
       quantidade: normalizarNumero(qtdEdicao),
       varianteId,
@@ -301,7 +307,7 @@ export function FichaTecnicaEditor({
 
           <div>
             <label htmlFor={`${id}-quantidade`} className={rotulo}>
-              Quantidade por unidade{unidade ? ` (${unidade})` : ""}
+              Quantidade por {por}{unidade ? ` (${unidade})` : ""}
             </label>
             <input
               id={`${id}-quantidade`}

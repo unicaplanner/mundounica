@@ -82,8 +82,8 @@ export function mesesCompletos(meses = 12): string[] {
 }
 
 // Puxa do Shopify as vendas dos ultimos 12 meses completos + o mes corrente e
-// regrava esses meses na tabela VendaMensal (meses mais antigos ficam como
-// estao, pra ir formando historico).
+// regrava esses meses nas tabelas VendaMensal e ResumoMensal (meses mais
+// antigos ficam como estao, pra ir formando historico).
 export async function sincronizarVendas(): Promise<{ pedidos: number; meses: number }> {
   const meses = [...mesesCompletos(12), mesSP.format(new Date())];
   const filtro = `created_at:>=${meses[0]}-01`;
@@ -91,6 +91,7 @@ export async function sincronizarVendas(): Promise<{ pedidos: number; meses: num
 
   type Linha = { mes: string; chave: string; shopifyVariantId: string | null; shopifyProductId: string | null; titulo: string; quantidade: number; receita: Prisma.Decimal };
   const linhas = new Map<string, Linha>();
+  const resumo = new Map(meses.map((m) => [m, { mes: m, pedidos: 0, receita: new Prisma.Decimal(0) }]));
   let pedidos = 0;
 
   const somar = (mes: string, item: ItemPedido) => {
@@ -98,6 +99,8 @@ export async function sincronizarVendas(): Promise<{ pedidos: number; meses: num
     const chave = item.variant?.id ?? `avulso:${item.title}`;
     const k = `${mes}|${chave}`;
     const receita = new Prisma.Decimal(item.discountedUnitPriceAfterAllDiscountsSet.shopMoney.amount).times(item.currentQuantity);
+    const doMes = resumo.get(mes)!;
+    doMes.receita = doMes.receita.plus(receita);
     const linha = linhas.get(k);
     if (linha) {
       linha.quantidade += item.currentQuantity;
@@ -127,6 +130,7 @@ export async function sincronizarVendas(): Promise<{ pedidos: number; meses: num
       const mes = mesSP.format(new Date(pedido.createdAt));
       if (!doPeriodo.has(mes)) continue;
       pedidos += 1;
+      resumo.get(mes)!.pedidos += 1;
       pedido.lineItems.nodes.forEach((item) => somar(mes, item));
 
       let itens = pedido.lineItems;
@@ -144,6 +148,8 @@ export async function sincronizarVendas(): Promise<{ pedidos: number; meses: num
   await prisma.$transaction(async (tx) => {
     await tx.vendaMensal.deleteMany({ where: { mes: { in: meses } } });
     await tx.vendaMensal.createMany({ data: [...linhas.values()] });
+    await tx.resumoMensal.deleteMany({ where: { mes: { in: meses } } });
+    await tx.resumoMensal.createMany({ data: [...resumo.values()] });
     await tx.configuracaoPrecificacao.upsert({
       where: { id: "unica" },
       create: { id: "unica", vendasAtualizadasEm: new Date() },
@@ -200,4 +206,15 @@ export async function carregarVendas(): Promise<VendasProdutos> {
   }
 
   return { meses, total, porVariante, porProduto, semProduto, atualizadoEm: config?.vendasAtualizadasEm ?? null };
+}
+
+// Valor medio de um pedido nos ultimos 12 meses completos (null sem vendas).
+export async function ticketMedio(): Promise<{ ticket: number | null; pedidos: number }> {
+  const r = await prisma.resumoMensal.aggregate({
+    where: { mes: { in: mesesCompletos(12) } },
+    _sum: { pedidos: true, receita: true },
+  });
+  const pedidos = r._sum.pedidos ?? 0;
+  const receita = r._sum.receita?.toNumber() ?? 0;
+  return { ticket: pedidos > 0 ? receita / pedidos : null, pedidos };
 }

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getImpressoras, getMateriais, getProduto } from "@/lib/financeiro/queries";
 import { carregarCustos, nomeVariante, type Custo } from "@/lib/financeiro/custo";
-import { custoPorFolha } from "@/lib/financeiro/impressao";
+import { impressoraPadrao } from "@/lib/financeiro/impressao";
 import { carregarParametros } from "@/lib/financeiro/precificacao";
 import { carregarVendas } from "@/lib/financeiro/vendas";
 import { analisarPreco, type ParametrosAnalise } from "@/lib/financeiro/analise";
@@ -83,7 +83,8 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
     custoAtual: m.custoAtual.toNumber(),
   }));
 
-  const impressoras = impressorasDb.map((i) => ({ id: i.id, nome: i.nome, custoFolha: num(custoPorFolha(i)) }));
+  // toda folha impressa usa o custo da impressora mais cara
+  const padrao = impressoraPadrao(impressorasDb);
 
   const fichaDe = (varianteId: string | null) =>
     produto.fichaTecnica
@@ -97,13 +98,7 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
   const impressaoDe = (varianteId: string | null) =>
     produto.impressoes
       .filter((i) => i.varianteId === varianteId)
-      .map((i) => ({
-        id: i.id,
-        impressoraId: i.impressoraId,
-        nome: i.impressora.nome,
-        folhas: i.folhas.toNumber(),
-        custoFolha: num(custoPorFolha(i.impressora)),
-      }));
+      .map((i) => ({ id: i.id, folhas: i.folhas.toNumber() }));
 
   const kitDe = (varianteId: string | null) =>
     produto.componentes
@@ -145,7 +140,8 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
     impressao: impressaoDe(varianteId),
     materiais: listaMateriais,
     candidatos,
-    impressoras,
+    custoFolha: num(padrao?.custoFolha),
+    impressora: padrao?.nome ?? null,
   });
 
   // Outros produtos que podem receber esta composicao como modelo.

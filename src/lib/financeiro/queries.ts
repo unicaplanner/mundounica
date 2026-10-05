@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
+import { impressoraPadrao } from "./impressao";
 
 export type FiltroTipo = "nao_classificados" | "sem_custo" | "producao_propria" | "revenda" | "kit" | "ignorar" | "todos";
 
@@ -51,19 +52,16 @@ export async function getProduto(id: string) {
         include: { componente: { include: { produto: { select: { title: true } } } } },
         orderBy: { createdAt: "asc" },
       },
-      impressoes: { include: { impressora: true }, orderBy: { createdAt: "asc" } },
+      impressoes: { orderBy: { createdAt: "asc" } },
     },
   });
 }
 
+// padrao = a impressora cujo custo de folha vale nos produtos e envios.
 export async function getImpressoras() {
-  const [impressoras, usos] = await Promise.all([
-    prisma.impressora.findMany({ orderBy: { nome: "asc" } }),
-    prisma.impressaoItem.groupBy({ by: ["impressoraId", "produtoId"] }),
-  ]);
-  const produtosPorImpressora = new Map<string, number>();
-  for (const u of usos) produtosPorImpressora.set(u.impressoraId, (produtosPorImpressora.get(u.impressoraId) ?? 0) + 1);
-  return impressoras.map((i) => ({ ...i, produtosQueUsam: produtosPorImpressora.get(i.id) ?? 0 }));
+  const impressoras = await prisma.impressora.findMany({ orderBy: { nome: "asc" } });
+  const padrao = impressoraPadrao(impressoras);
+  return impressoras.map((i) => ({ ...i, padrao: i.id === padrao?.id }));
 }
 
 export async function getCustosFixos() {
@@ -75,12 +73,14 @@ export async function getDespesasVariaveis() {
 }
 
 export async function getMateriais() {
-  const [materiais, totais, usos] = await Promise.all([
+  const [materiais, totais, usos, envios] = await Promise.all([
     prisma.material.findMany({ orderBy: { nome: "asc" } }),
     prisma.compra.groupBy({ by: ["materialId"], _sum: { quantidade: true } }),
     // um produto com 6 variantes tem 6 linhas de ficha: conta produtos, nao linhas
     prisma.fichaTecnicaItem.groupBy({ by: ["materialId", "produtoId"] }),
+    prisma.envioMaterial.groupBy({ by: ["materialId"], _count: { _all: true } }),
   ]);
+  const enviosPorMaterial = new Map(envios.map((e) => [e.materialId, e._count._all]));
   const compradoPorMaterial = new Map(totais.map((t) => [t.materialId, t._sum.quantidade]));
   const produtosPorMaterial = new Map<string, number>();
   for (const u of usos) produtosPorMaterial.set(u.materialId, (produtosPorMaterial.get(u.materialId) ?? 0) + 1);
@@ -89,6 +89,7 @@ export async function getMateriais() {
     ...m,
     totalComprado: compradoPorMaterial.get(m.id) ?? new Prisma.Decimal(0),
     produtosQueUsam: produtosPorMaterial.get(m.id) ?? 0,
+    enviosQueUsam: enviosPorMaterial.get(m.id) ?? 0,
   }));
 }
 

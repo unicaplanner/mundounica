@@ -14,6 +14,13 @@ Unica Planner. Módulos ativos:
   catálogo), lista ordenada pelos mais vendidos com % das vendas já com custo,
   classificação em lote, tipo "Não contar" (brindes) e modelo de ficha
   (copia a composição de um produto pra outros, variante por variante pelo nome).
+  Embalagem de envio (`/financeiro/envio`): custo por pedido (caixa, papel de
+  seda, mimos, etiqueta, folhas impressas) por tipo de caixa, com o % dos
+  pedidos de cada uma; a média ponderada ÷ valor médio do pedido (tabela
+  `ResumoMensal`) vira um % que entra nas despesas por venda do markup.
+  Materiais têm link de compra. Impressão: só o número de folhas (frente e
+  verso), com o custo da impressora mais cara (`impressoraPadrao`). Custos
+  fixos em categorias fechadas (`src/lib/financeiro/categorias.ts`).
 
   Regras de precificação (markup divisor, como no Sebrae), tudo em % sobre o
   preço de venda (`src/lib/financeiro/analise.ts`):

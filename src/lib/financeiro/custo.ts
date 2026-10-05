@@ -1,6 +1,6 @@
 import { Prisma, type TipoProduto } from "@prisma/client";
 import { prisma } from "@/lib/db";
-import { custoPorFolha } from "./impressao";
+import { impressoraPadrao } from "./impressao";
 
 export interface Custo {
   valor: Prisma.Decimal;
@@ -113,7 +113,7 @@ export class Custos {
 }
 
 export async function carregarCustos(): Promise<Custos> {
-  const [produtos, ficha, kit, impressao] = await Promise.all([
+  const [produtos, ficha, kit, impressao, impressoras] = await Promise.all([
     prisma.produto.findMany({
       select: {
         id: true,
@@ -134,9 +134,12 @@ export async function carregarCustos(): Promise<Custos> {
       select: { kitProdutoId: true, kitVarianteId: true, componenteVarianteId: true, quantidade: true },
     }),
     prisma.impressaoItem.findMany({
-      select: { produtoId: true, varianteId: true, folhas: true, impressora: true },
+      select: { produtoId: true, varianteId: true, folhas: true },
     }),
+    prisma.impressora.findMany(),
   ]);
+  // toda folha usa o custo da impressora mais cara (ver impressoraPadrao)
+  const custoFolha = impressoraPadrao(impressoras)?.custoFolha ?? null;
 
   const mapaProdutos = new Map<string, ProdutoInfo>();
   const mapaVariantes = new Map<string, VarianteInfo>();
@@ -176,7 +179,7 @@ export async function carregarCustos(): Promise<Custos> {
   }
   for (const i of impressao) {
     const dono = i.varianteId ? mapaVariantes.get(i.varianteId) : mapaProdutos.get(i.produtoId);
-    dono?.composicao.impressao.push({ folhas: i.folhas, custoFolha: custoPorFolha(i.impressora) });
+    dono?.composicao.impressao.push({ folhas: i.folhas, custoFolha });
   }
 
   return new Custos(mapaProdutos, mapaVariantes);

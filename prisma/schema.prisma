@@ -90,8 +90,11 @@ model Material {
 
   custoAtual Decimal @default(0) @db.Decimal(10, 4)
 
+  linkCompra String? // anuncio onde a Lari compra (ex: Mercado Livre), pra recomprar rapido
+
   compras      Compra[]
   fichaTecnica FichaTecnicaItem[]
+  envios       EnvioMaterial[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -170,24 +173,27 @@ model Impressora {
   manutencaoAno Decimal @default(0) @db.Decimal(10, 2)
   paginasAno    Int?
 
-  itens ImpressaoItem[]
+  itens  ImpressaoItem[]
+  envios EnvioImpressao[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-// Quantas folhas de uma impressora vao numa unidade. Toda folha conta frente
-// e verso: custo = folhas x 2 x custo por pagina.
+// Quantas folhas impressas vao numa unidade. Toda folha conta frente e verso,
+// e o custo da folha e o da impressora mais cara (cobre mesmo quando imprime
+// na outra): custo = folhas x 2 x custo por pagina dela. impressoraId ficou
+// de quando se escolhia a impressora; itens novos nao tem.
 // varianteId nulo = composicao do produto inteiro, igual a ficha tecnica.
 model ImpressaoItem {
   id String @id @default(cuid())
 
   produtoId    String
-  produto      Produto    @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  produto      Produto     @relation(fields: [produtoId], references: [id], onDelete: Cascade)
   varianteId   String?
-  variante     Variante?  @relation(fields: [varianteId], references: [id], onDelete: Cascade)
-  impressoraId String
-  impressora   Impressora @relation(fields: [impressoraId], references: [id])
+  variante     Variante?   @relation(fields: [varianteId], references: [id], onDelete: Cascade)
+  impressoraId String?
+  impressora   Impressora? @relation(fields: [impressoraId], references: [id])
 
   folhas Decimal @db.Decimal(10, 2)
 
@@ -250,4 +256,60 @@ model VendaMensal {
 
   @@unique([mes, chave])
   @@index([shopifyVariantId])
+}
+
+// Embalagem de envio: o que vai em cada PEDIDO (caixa, papel de seda, mimos
+// de unboxing, etiqueta), independente de quantos produtos ele tem. Cada tipo
+// (Caixa Planner, Caixa Bloco, Caixa A4) tem a sua composicao e o % dos
+// pedidos que usam ele; a media ponderada vira o custo medio por pedido.
+model TipoEnvio {
+  id         String  @id @default(cuid())
+  nome       String  @unique
+  quando     String? // regra de uso, ex: "pedidos com case fichario"
+  percentual Decimal @default(0) @db.Decimal(5, 2) // % dos pedidos que vao nessa embalagem
+  ordem      Int     @default(0)
+
+  materiais  EnvioMaterial[]
+  impressoes EnvioImpressao[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EnvioMaterial {
+  id          String    @id @default(cuid())
+  tipoEnvioId String
+  tipoEnvio   TipoEnvio @relation(fields: [tipoEnvioId], references: [id], onDelete: Cascade)
+  materialId  String
+  material    Material  @relation(fields: [materialId], references: [id])
+  quantidade  Decimal   @db.Decimal(10, 4)
+
+  createdAt DateTime @default(now())
+
+  @@unique([tipoEnvioId, materialId])
+}
+
+// Folhas impressas em cada pedido (ex: folhas de bloco pra experimentar, guia).
+// Toda folha conta frente e verso, com o custo da impressora mais cara, igual
+// na ficha do produto. Uma linha por embalagem (a rota garante); impressoraId
+// ficou opcional e os itens novos nao tem.
+model EnvioImpressao {
+  id           String      @id @default(cuid())
+  tipoEnvioId  String
+  tipoEnvio    TipoEnvio   @relation(fields: [tipoEnvioId], references: [id], onDelete: Cascade)
+  impressoraId String?
+  impressora   Impressora? @relation(fields: [impressoraId], references: [id])
+  folhas       Decimal     @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now())
+
+  @@unique([tipoEnvioId, impressoraId])
+}
+
+// Pedidos e faturamento de produtos por mes (mesmas regras de VendaMensal),
+// pra saber o valor medio por pedido.
+model ResumoMensal {
+  mes     String  @id // "2026-09"
+  pedidos Int
+  receita Decimal @db.Decimal(12, 2)
 }

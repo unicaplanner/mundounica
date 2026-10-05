@@ -14,6 +14,7 @@ export type CampoTabela = {
   numerico?: boolean;
   largura?: string; // classe de largura do campo, ex "w-28"
   sugestoes?: string[];
+  opcoes?: string[]; // lista fechada (select) em vez de texto livre
 };
 
 export type LinhaTabela = {
@@ -120,7 +121,20 @@ export function TabelaEditavel({
                   >
                     {campos.map((c) => (
                       <td key={c.chave} className="py-2.5 tabular-nums">
-                        {emEdicao ? (
+                        {emEdicao && c.opcoes ? (
+                          <select
+                            aria-label={c.rotulo}
+                            value={edicao[c.chave] ?? ""}
+                            onChange={(e) => setEdicao({ ...edicao, [c.chave]: e.target.value })}
+                            className={`${estiloCampo} py-1 text-xs ${c.largura ?? "w-28"}`}
+                          >
+                            {c.opcoes.map((o) => (
+                              <option key={o} value={o}>
+                                {o}
+                              </option>
+                            ))}
+                          </select>
+                        ) : emEdicao ? (
                           <input
                             type="text"
                             inputMode={c.numerico ? "decimal" : undefined}
@@ -224,16 +238,32 @@ export function TabelaEditavel({
               <label htmlFor={`${id}-${c.chave}`} className={rotulo}>
                 {c.rotulo}
               </label>
-              <input
-                id={`${id}-${c.chave}`}
-                type="text"
-                inputMode={c.numerico ? "decimal" : undefined}
-                list={listaSugestoes(c)}
-                placeholder={c.placeholder}
-                value={novo[c.chave] ?? ""}
-                onChange={(e) => setNovo({ ...novo, [c.chave]: e.target.value })}
-                className={`${estiloCampo} ${c.largura ?? "w-32"}`}
-              />
+              {c.opcoes ? (
+                <select
+                  id={`${id}-${c.chave}`}
+                  value={novo[c.chave] ?? ""}
+                  onChange={(e) => setNovo({ ...novo, [c.chave]: e.target.value })}
+                  className={`${estiloCampo} ${c.largura ?? "w-32"}`}
+                >
+                  <option value="">Escolha...</option>
+                  {c.opcoes.map((o) => (
+                    <option key={o} value={o}>
+                      {o}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  id={`${id}-${c.chave}`}
+                  type="text"
+                  inputMode={c.numerico ? "decimal" : undefined}
+                  list={listaSugestoes(c)}
+                  placeholder={c.placeholder}
+                  value={novo[c.chave] ?? ""}
+                  onChange={(e) => setNovo({ ...novo, [c.chave]: e.target.value })}
+                  className={`${estiloCampo} ${c.largura ?? "w-32"}`}
+                />
+              )}
             </div>
           ))}
           <button type="submit" disabled={isPending} className={botaoPrimario}>

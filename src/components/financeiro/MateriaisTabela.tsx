@@ -15,7 +15,17 @@ export type MaterialLinha = {
   custoAtual: number;
   totalComprado: number;
   usos: number;
+  envios: number;
+  linkCompra: string | null;
 };
+
+function textoUsos(produtos: number, envios: number) {
+  const partes = [
+    produtos > 0 && `${produtos} ${produtos === 1 ? "produto" : "produtos"}`,
+    envios > 0 && `${envios} ${envios === 1 ? "embalagem de envio" : "embalagens de envio"}`,
+  ].filter(Boolean);
+  return partes.length ? partes.join(" · ") : "—";
+}
 
 export function MateriaisTabela({ materiais }: { materiais: MaterialLinha[] }) {
   const router = useRouter();
@@ -24,6 +34,7 @@ export function MateriaisTabela({ materiais }: { materiais: MaterialLinha[] }) {
   const [excluindo, setExcluindo] = useState<string | null>(null);
   const [nome, setNome] = useState("");
   const [unidade, setUnidade] = useState("");
+  const [link, setLink] = useState("");
   const [erro, setErro] = useState<{ id: string; texto: string } | null>(null);
 
   function abrirEdicao(m: MaterialLinha) {
@@ -32,11 +43,12 @@ export function MateriaisTabela({ materiais }: { materiais: MaterialLinha[] }) {
     setEditando(m.id);
     setNome(m.nome);
     setUnidade(m.unidade);
+    setLink(m.linkCompra ?? "");
   }
 
   async function salvar(id: string) {
     setErro(null);
-    const resultado = await enviar(`/api/financeiro/materiais/${id}`, "PATCH", { nome, unidade });
+    const resultado = await enviar(`/api/financeiro/materiais/${id}`, "PATCH", { nome, unidade, linkCompra: link });
     if (!resultado.ok) {
       setErro({ id, texto: resultado.erro });
       return;
@@ -82,15 +94,37 @@ export function MateriaisTabela({ materiais }: { materiais: MaterialLinha[] }) {
               >
                 <td className="py-2.5 pr-2">
                   {emEdicao ? (
-                    <input
-                      type="text"
-                      aria-label="Nome do material"
-                      value={nome}
-                      onChange={(e) => setNome(e.target.value)}
-                      className={`${campo} w-52 py-1 text-xs`}
-                    />
+                    <div className="space-y-1">
+                      <input
+                        type="text"
+                        aria-label="Nome do material"
+                        value={nome}
+                        onChange={(e) => setNome(e.target.value)}
+                        className={`${campo} w-52 py-1 text-xs`}
+                      />
+                      <input
+                        type="url"
+                        aria-label="Link de compra"
+                        value={link}
+                        onChange={(e) => setLink(e.target.value)}
+                        placeholder="Link de compra (opcional)"
+                        className={`${campo} block w-52 py-1 text-xs`}
+                      />
+                    </div>
                   ) : (
-                    <span className="font-semibold text-ink">{m.nome}</span>
+                    <>
+                      <span className="font-semibold text-ink">{m.nome}</span>
+                      {m.linkCompra && (
+                        <a
+                          href={m.linkCompra}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="ml-2 text-xs text-muted underline hover:text-ink"
+                        >
+                          comprar ↗
+                        </a>
+                      )}
+                    </>
                   )}
                 </td>
                 <td className="py-2.5 pr-2 text-muted">
@@ -122,7 +156,7 @@ export function MateriaisTabela({ materiais }: { materiais: MaterialLinha[] }) {
                   {formatarQuantidade(m.totalComprado)} {m.unidade}
                 </td>
                 <td className="py-2.5 text-muted">
-                  {m.usos === 0 ? "—" : `${m.usos} ${m.usos === 1 ? "produto" : "produtos"}`}
+                  {textoUsos(m.usos, m.envios)}
                 </td>
                 <td className="py-1.5 text-right">
                   {emEdicao ? (

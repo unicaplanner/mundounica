@@ -21,18 +21,15 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   }
 }
 
-// Impressora em uso numa ficha nao pode sumir: o custo dos produtos mudaria
-// sem a Lari perceber.
+// A impressao nas fichas nao depende de uma impressora (usa a mais cara),
+// entao excluir so solta a referencia antiga dos itens de antes dessa mudanca.
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   if (!(await getUsuario())) return naoAutenticado();
   const { id } = await params;
-  const usos = await prisma.impressaoItem.groupBy({ by: ["produtoId"], where: { impressoraId: id } });
-  if (usos.length > 0) {
-    return erro(
-      `Não dá pra excluir: a impressora está na composição de ${usos.length} ${usos.length === 1 ? "produto" : "produtos"}. Tire ela de lá antes.`,
-      409
-    );
-  }
-  await prisma.impressora.deleteMany({ where: { id } });
+  await prisma.$transaction([
+    prisma.impressaoItem.updateMany({ where: { impressoraId: id }, data: { impressoraId: null } }),
+    prisma.envioImpressao.updateMany({ where: { impressoraId: id }, data: { impressoraId: null } }),
+    prisma.impressora.deleteMany({ where: { id } }),
+  ]);
   return NextResponse.json({ ok: true });
 }

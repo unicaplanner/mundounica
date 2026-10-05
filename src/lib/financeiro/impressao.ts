@@ -28,3 +28,15 @@ export const PAGINAS_POR_FOLHA = 2;
 export function custoPorFolha(i: DadosImpressora): Prisma.Decimal | null {
   return custoPorPagina(i)?.times(PAGINAS_POR_FOLHA) ?? null;
 }
+
+// A impressora cujo custo vale nos produtos e envios: a de folha mais cara
+// (com paginas por ano informadas), pra cobrir o custo mesmo quando a
+// impressao sai na outra. null se nenhuma tem custo calculavel ainda.
+export function impressoraPadrao<T extends DadosImpressora>(impressoras: T[]): (T & { custoFolha: Prisma.Decimal }) | null {
+  let escolhida: (T & { custoFolha: Prisma.Decimal }) | null = null;
+  for (const i of impressoras) {
+    const custoFolha = custoPorFolha(i);
+    if (custoFolha && (!escolhida || custoFolha.gt(escolhida.custoFolha))) escolhida = { ...i, custoFolha };
+  }
+  return escolhida;
+}

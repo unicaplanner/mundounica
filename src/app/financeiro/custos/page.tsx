@@ -1,28 +1,27 @@
+import Link from "next/link";
 import { getCustosFixos, getDespesasVariaveis } from "@/lib/financeiro/queries";
 import { carregarParametros } from "@/lib/financeiro/precificacao";
 import { formatarReais, paraCampo } from "@/lib/financeiro/formato";
 import { ParametrosPrecificacao } from "@/components/financeiro/ParametrosPrecificacao";
 import { TabelaEditavel } from "@/components/financeiro/TabelaEditavel";
+import { CATEGORIAS_FIXOS, NOMES_CATEGORIAS, categoriaFixo } from "@/lib/financeiro/categorias";
 
 export const dynamic = "force-dynamic";
 
 const pct = (n: number) => `${n.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%`;
 
-const CATEGORIAS = [
-  "Pró-labore",
-  "Contador",
-  "Plano do Shopify",
-  "Apps e assinaturas",
-  "Aluguel",
-  "Energia",
-  "Internet e telefone",
-  "Marketing fixo",
-  "Ajudante",
-  "Outros",
-];
-
 export default async function CustosPage() {
-  const [custos, despesas, p] = await Promise.all([getCustosFixos(), getDespesasVariaveis(), carregarParametros()]);
+  const [custosDb, despesas, p] = await Promise.all([getCustosFixos(), getDespesasVariaveis(), carregarParametros()]);
+
+  // agrupados por categoria (na ordem da lista), maiores primeiro dentro de cada uma
+  const ordem = (cat: string) => NOMES_CATEGORIAS.indexOf(cat);
+  const custos = custosDb
+    .map((c) => ({ ...c, cat: categoriaFixo(c.categoria) }))
+    .sort((a, b) => ordem(a.cat) - ordem(b.cat) || b.valorMensal.comparedTo(a.valorMensal));
+  const porCategoria = CATEGORIAS_FIXOS.map((cat) => ({
+    ...cat,
+    total: custos.filter((c) => c.cat === cat.nome).reduce((acc, c) => acc + c.valorMensal.toNumber(), 0),
+  })).filter((c) => c.total > 0);
 
   return (
     <div className="space-y-10">
@@ -32,7 +31,7 @@ export default async function CustosPage() {
           {p.markup !== null ? `${p.markup.toLocaleString("pt-BR", { maximumFractionDigits: 2 })}×` : "—"}
         </p>
         <p className="mt-1 text-sm text-background/80">Preço sugerido = custo do produto × markup</p>
-        <dl className="mt-4 grid gap-3 text-xs sm:grid-cols-3">
+        <dl className="mt-4 grid gap-3 text-xs sm:grid-cols-4">
           <div>
             <dt className="text-background/60">Custos fixos</dt>
             <dd className="font-semibold">
@@ -42,7 +41,20 @@ export default async function CustosPage() {
           </div>
           <div>
             <dt className="text-background/60">Despesas por venda</dt>
-            <dd className="font-semibold">{pct(p.despesasPct)}</dd>
+            <dd className="font-semibold">{pct(p.despesasVendaPct)}</dd>
+          </div>
+          <div>
+            <dt className="text-background/60">
+              <Link href="/financeiro/envio" className="underline">
+                Embalagem de envio
+              </Link>
+            </dt>
+            <dd className="font-semibold">
+              {p.envioPct !== null ? pct(p.envioPct) : "—"}
+              {p.custoMedioEnvio !== null && (
+                <span className="font-normal text-background/70"> · {formatarReais(p.custoMedioEnvio)}/pedido</span>
+              )}
+            </dd>
           </div>
           <div>
             <dt className="text-background/60">Lucro desejado</dt>
@@ -83,6 +95,36 @@ export default async function CustosPage() {
           preço já nasce pagando o seu salário. Se algo é anual, divida por 12. Não inclua material nem impressora:
           eles já entram no custo de cada produto.
         </p>
+        {porCategoria.length > 0 && (
+          <ul className="grid gap-2 sm:grid-cols-2">
+            {porCategoria.map((c) => {
+              const parte = p.totalFixos > 0 ? (c.total / p.totalFixos) * 100 : 0;
+              return (
+                <li key={c.nome} className="rounded-xl border border-border bg-card px-4 py-2.5">
+                  <div className="flex items-baseline justify-between gap-2 text-sm">
+                    <span className="font-semibold text-ink">{c.nome}</span>
+                    <span className="tabular-nums text-ink">
+                      {formatarReais(c.total)} <span className="text-xs text-muted">· {pct(parte)}</span>
+                    </span>
+                  </div>
+                  <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-accent-soft" aria-hidden="true">
+                    <div className="h-full rounded-full bg-ink/70" style={{ width: `${parte}%` }} />
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        <details className="text-xs text-muted">
+          <summary className="cursor-pointer">O que entra em cada categoria</summary>
+          <ul className="mt-2 space-y-0.5">
+            {CATEGORIAS_FIXOS.map((c) => (
+              <li key={c.nome}>
+                <strong className="text-ink">{c.nome}</strong>: {c.exemplos}
+              </li>
+            ))}
+          </ul>
+        </details>
         <TabelaEditavel
           endpoint="/api/financeiro/custos-fixos"
           nomeItem="este custo"
@@ -90,16 +132,16 @@ export default async function CustosPage() {
           textoVazio="Nenhum custo fixo cadastrado ainda. Comece pelo pró-labore."
           campos={[
             { chave: "nome", rotulo: "Nome", placeholder: "Contador", largura: "w-44" },
-            { chave: "categoria", rotulo: "Categoria", placeholder: "Contador", largura: "w-40", sugestoes: CATEGORIAS },
+            { chave: "categoria", rotulo: "Categoria", largura: "w-48", opcoes: NOMES_CATEGORIAS },
             { chave: "valorMensal", rotulo: "Valor por mês (R$)", placeholder: "350,00", numerico: true },
           ]}
           linhas={custos.map((c) => ({
             id: c.id,
             nome: c.nome,
-            valores: { nome: c.nome, categoria: c.categoria, valorMensal: paraCampo(c.valorMensal.toNumber(), 2) },
+            valores: { nome: c.nome, categoria: c.cat, valorMensal: paraCampo(c.valorMensal.toNumber(), 2) },
             exibir: {
               nome: <span className="font-semibold text-ink">{c.nome}</span>,
-              categoria: <span className="text-muted">{c.categoria}</span>,
+              categoria: <span className="text-muted">{c.cat}</span>,
               valorMensal: formatarReais(c.valorMensal.toNumber()),
             },
           }))}
