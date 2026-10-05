@@ -12,12 +12,13 @@ export function MaterialForm() {
   const [nome, setNome] = useState("");
   const [unidade, setUnidade] = useState("folha");
   const [linkCompra, setLinkCompra] = useState("");
+  const [impresso, setImpresso] = useState(true);
   const [erroMsg, setErroMsg] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErroMsg(null);
-    const resultado = await enviar("/api/financeiro/materiais", "POST", { nome, unidade, linkCompra });
+    const resultado = await enviar("/api/financeiro/materiais", "POST", { nome, unidade, linkCompra, impresso });
     if (!resultado.ok) {
       setErroMsg(resultado.erro);
       return;
@@ -60,6 +61,17 @@ export function MaterialForm() {
             ))}
           </select>
         </div>
+        {unidade === "folha" && (
+          <label className="flex items-center gap-2 pb-2 text-xs text-ink/80">
+            <input
+              type="checkbox"
+              checked={impresso}
+              onChange={(e) => setImpresso(e.target.checked)}
+              className="size-4 accent-ink"
+            />
+            É impresso (frente e verso)
+          </label>
+        )}
         <div className="min-w-0 flex-1 basis-56">
           <label htmlFor="material-link" className={rotulo}>
             Link de compra (opcional)

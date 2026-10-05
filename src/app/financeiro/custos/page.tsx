@@ -79,12 +79,12 @@ export default async function CustosPage() {
       </div>
 
       <section className="space-y-3">
-        <h2 className="font-serif text-xl font-semibold text-ink">Faturamento e lucro</h2>
+        <h2 className="font-serif text-xl font-semibold text-ink">Faturamento, lucro e mão de obra</h2>
         <p className="max-w-2xl text-sm text-muted">
           Os custos fixos viram um percentual do faturamento: se você fatura R$ 6.000 e tem R$ 1.500 de fixos, cada
           venda precisa reservar 25% do preço pra pagar esses fixos.
         </p>
-        <ParametrosPrecificacao faturamentoMensal={p.faturamentoMensal} lucroDesejado={p.lucroPct} />
+        <ParametrosPrecificacao faturamentoMensal={p.faturamentoMensal} lucroDesejado={p.lucroPct} valorHora={p.valorHora} />
       </section>
 
       <section className="space-y-3">

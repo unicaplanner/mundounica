@@ -47,6 +47,7 @@ export default async function MateriaisPage() {
             usos: m.produtosQueUsam,
             envios: m.enviosQueUsam,
             linkCompra: m.linkCompra,
+            impresso: m.impresso,
           }))}
         />
       )}

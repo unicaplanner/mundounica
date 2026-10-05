@@ -8,6 +8,7 @@ export type ParametrosPrecificacao = ParametrosAnalise & {
   markup: number | null; // null quando os percentuais somam 100% ou mais
   custoMedioEnvio: number | null; // R$ por pedido
   itensPorPedido: number | null;
+  valorHora: number | null; // hora de producao (mao de obra)
 };
 
 // Os parametros de preco usados em todo o Financeiro. A embalagem de envio e
@@ -27,7 +28,7 @@ export async function carregarParametros(): Promise<ParametrosPrecificacao> {
   const base: ParametrosAnalise = {
     fixosPct: faturamentoMensal && faturamentoMensal > 0 ? (totalFixos / faturamentoMensal) * 100 : null,
     despesasPct: lista.reduce((acc, d) => acc + d.pct, 0),
-    lucroPct: config?.lucroDesejado.toNumber() ?? 15,
+    lucroPct: config?.lucroDesejado.toNumber() ?? 20,
     envioPorProduto: envio.porProduto ?? 0,
     despesas: lista,
   };
@@ -38,5 +39,6 @@ export async function carregarParametros(): Promise<ParametrosPrecificacao> {
     markup: markup(base),
     custoMedioEnvio: envio.custoMedio,
     itensPorPedido: envio.itensPorPedido,
+    valorHora: config?.valorHora?.toNumber() ?? null,
   };
 }

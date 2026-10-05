@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 import { erro, getUsuario, naoAutenticado } from "@/lib/auth";
 import { paraDecimal } from "@/lib/financeiro/valores";
 
-// Faturamento medio mensal (base do rateio dos fixos) e lucro desejado.
+// Faturamento medio mensal (base do rateio dos fixos), lucro desejado e valor da hora de producao.
 export async function PATCH(req: Request) {
   if (!(await getUsuario())) return naoAutenticado();
   const body = await req.json();
@@ -28,9 +28,19 @@ export async function PATCH(req: Request) {
     lucro = valor;
   }
 
+  let valorHora: Prisma.Decimal | null | undefined;
+  if ("valorHora" in body) {
+    if (body.valorHora === null || body.valorHora === "") valorHora = null;
+    else {
+      valorHora = paraDecimal(body.valorHora);
+      if (!valorHora || valorHora.isZero()) return erro("Informe o valor da hora, por exemplo 15,00.");
+    }
+  }
+
   const campos = {
     ...(faturamento !== undefined ? { faturamentoMensal: faturamento } : {}),
     ...(lucro ? { lucroDesejado: lucro } : {}),
+    ...(valorHora !== undefined ? { valorHora } : {}),
   };
   await prisma.configuracaoPrecificacao.upsert({
     where: { id: "unica" },

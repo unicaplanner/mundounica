@@ -9,18 +9,18 @@ import { UNIDADES } from "@/lib/financeiro/unidades";
 import { IconeLapis, IconeLixeira, botaoIcone } from "./Icones";
 import { botaoPrimario, botaoSecundario, campo, rotulo } from "./estilos";
 
-type Material = { id: string; nome: string; unidade: string; custoAtual: number };
+type Material = { id: string; nome: string; unidade: string; custoAtual: number; impresso: boolean };
 export type ItemFicha = { id: string; quantidade: number; material: Material };
-export type ItemImpressao = { id: string; folhas: number };
+// Tempo de trabalho manual (minutos por unidade ou pedido) x valor da hora.
+export type MaoDeObra = { minutos: number | null; valorHora: number | null; url: string; campo: string };
 
 const NOVO = "__novo__";
-const IMPRESSAO = "__impressao__"; // id da linha de impressao na tabela
 
-// O que vai pra produzir uma unidade (ou montar um pedido): materiais e a
-// impressao na mesma tabela, porque a folha sem impressao nao e o produto.
-// Impressao = folhas frente e verso com o custo da impressora mais cara.
-// varianteId nulo = composicao do produto inteiro. Pode aparecer varias vezes
-// na mesma pagina (uma por variante), por isso os ids vem de useId.
+// O que vai pra produzir uma unidade (ou montar um pedido). Material marcado
+// como impresso (o papel) ja traz a impressao frente e verso na mesma
+// quantidade, com o custo da impressora mais cara -- nao se lanca impressao
+// separada. varianteId nulo = composicao do produto inteiro. Pode aparecer
+// varias vezes na mesma pagina (uma por variante), por isso os ids vem de useId.
 export function ProducaoEditor({
   produtoId,
   baseUrl,
@@ -28,10 +28,10 @@ export function ProducaoEditor({
   varianteId = null,
   itens,
   materiais,
-  impressao,
   custoFolha,
   impressora,
-  textoVazio = "Nada cadastrado ainda. Adicione o papel, a capa, o saquinho e a impressão de uma unidade.",
+  maoDeObra,
+  textoVazio = "Nada cadastrado ainda. Adicione o papel, a capa e o saquinho de uma unidade.",
   rotuloTotal = "Custo pra produzir uma unidade",
 }: {
   produtoId?: string;
@@ -41,9 +41,9 @@ export function ProducaoEditor({
   varianteId?: string | null;
   itens: ItemFicha[];
   materiais: Material[];
-  impressao: ItemImpressao[];
-  custoFolha: number | null;
+  custoFolha: number | null; // impressao de uma folha frente e verso
   impressora: string | null;
+  maoDeObra?: MaoDeObra;
   textoVazio?: string;
   rotuloTotal?: string;
 }) {
@@ -51,39 +51,38 @@ export function ProducaoEditor({
   const base = baseUrl ?? `/api/financeiro/produtos/${produtoId}`;
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [abrir, setAbrir] = useState<"material" | "impressao" | null>(null);
+  const [abrir, setAbrir] = useState(false);
   const [materialId, setMaterialId] = useState(materiais[0]?.id ?? NOVO);
   const [quantidade, setQuantidade] = useState("");
   const [novoNome, setNovoNome] = useState("");
   const [novaUnidade, setNovaUnidade] = useState("folha");
-  const [folhasNovas, setFolhasNovas] = useState("");
+  const [novoImpresso, setNovoImpresso] = useState(true);
   const [erroMsg, setErroMsg] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
   const [editando, setEditando] = useState<string | null>(null);
   const [qtdEdicao, setQtdEdicao] = useState("");
   const [excluindo, setExcluindo] = useState<string | null>(null);
+  const [editandoTempo, setEditandoTempo] = useState(false);
+  const [tempo, setTempo] = useState("");
 
-  // antes dava pra ter uma linha de impressao por impressora; soma (a rota junta)
-  const folhas = impressao.reduce((acc, i) => acc + i.folhas, 0);
   const criandoMaterial = materialId === NOVO;
   const unidade = criandoMaterial ? novaUnidade : materiais.find((m) => m.id === materialId)?.unidade;
-
   const atualizar = () => startTransition(() => router.refresh());
 
-  async function gravarMaterial(matId: string, qtd: string) {
-    return enviar(`${base}/ficha`, "POST", { materialId: matId, quantidade: normalizarNumero(qtd), varianteId });
-  }
-  async function gravarFolhas(valor: string) {
-    return enviar(`${base}/impressao`, "POST", { folhas: normalizarNumero(valor), varianteId });
-  }
+  const gravar = (matId: string, qtd: string) =>
+    enviar(`${base}/ficha`, "POST", { materialId: matId, quantidade: normalizarNumero(qtd), varianteId });
 
-  async function adicionarMaterial(e: React.FormEvent) {
+  async function adicionar(e: React.FormEvent) {
     e.preventDefault();
     setErroMsg(null);
     setEnviando(true);
     let idParaAdicionar = materialId;
     if (criandoMaterial) {
-      const criado = await enviar("/api/financeiro/materiais", "POST", { nome: novoNome, unidade: novaUnidade });
+      const criado = await enviar("/api/financeiro/materiais", "POST", {
+        nome: novoNome,
+        unidade: novaUnidade,
+        impresso: novaUnidade === "folha" && novoImpresso,
+      });
       if (!criado.ok) {
         setErroMsg(criado.erro);
         setEnviando(false);
@@ -91,7 +90,7 @@ export function ProducaoEditor({
       }
       idParaAdicionar = String(criado.dados.id);
     }
-    const resultado = await gravarMaterial(idParaAdicionar, quantidade);
+    const resultado = await gravar(idParaAdicionar, quantidade);
     setEnviando(false);
     if (!resultado.ok) {
       setErroMsg(resultado.erro);
@@ -100,26 +99,13 @@ export function ProducaoEditor({
     setQuantidade("");
     setNovoNome("");
     setMaterialId(idParaAdicionar);
-    setAbrir(null);
+    setAbrir(false);
     atualizar();
   }
 
-  async function adicionarImpressao(e: React.FormEvent) {
-    e.preventDefault();
+  async function salvarEdicao(item: ItemFicha) {
     setErroMsg(null);
-    const resultado = await gravarFolhas(folhasNovas);
-    if (!resultado.ok) {
-      setErroMsg(resultado.erro);
-      return;
-    }
-    setFolhasNovas("");
-    setAbrir(null);
-    atualizar();
-  }
-
-  async function salvarEdicao(item?: ItemFicha) {
-    setErroMsg(null);
-    const resultado = item ? await gravarMaterial(item.material.id, qtdEdicao) : await gravarFolhas(qtdEdicao);
+    const resultado = await gravar(item.material.id, qtdEdicao);
     if (!resultado.ok) {
       setErroMsg(resultado.erro);
       return;
@@ -128,11 +114,22 @@ export function ProducaoEditor({
     atualizar();
   }
 
-  async function remover(linha: string) {
+  async function salvarTempo() {
+    if (!maoDeObra) return;
+    setErroMsg(null);
+    const resultado = await enviar(maoDeObra.url, "PATCH", { [maoDeObra.campo]: normalizarNumero(tempo) });
+    if (!resultado.ok) {
+      setErroMsg(resultado.erro);
+      return;
+    }
+    setEditandoTempo(false);
+    atualizar();
+  }
+
+  async function remover(itemId: string) {
     setExcluindo(null);
     setErroMsg(null);
-    const resultado =
-      linha === IMPRESSAO ? await gravarFolhas("0") : await enviar(`${base}/ficha/${linha}`, "DELETE");
+    const resultado = await enviar(`${base}/ficha/${itemId}`, "DELETE");
     if (!resultado.ok) {
       setErroMsg(resultado.erro);
       return;
@@ -140,92 +137,19 @@ export function ProducaoEditor({
     atualizar();
   }
 
-  const custoImpressao = folhas * (custoFolha ?? 0);
-  const total = itens.reduce((acc, item) => acc + item.quantidade * item.material.custoAtual, 0) + custoImpressao;
-  const vazio = itens.length === 0 && folhas === 0;
-
-  // Acoes de uma linha: lapis/lixeira, ou salvar/cancelar, ou confirmar exclusao.
-  const acoes = (linha: string, nome: string, valorAtual: number, item?: ItemFicha) =>
-    editando === linha ? (
-      <div className="flex justify-end gap-2 whitespace-nowrap">
-        <button
-          type="button"
-          onClick={() => salvarEdicao(item)}
-          disabled={isPending}
-          className={`${botaoPrimario} px-3 py-1 text-xs`}
-        >
-          Salvar
-        </button>
-        <button type="button" onClick={() => setEditando(null)} className={botaoSecundario}>
-          Cancelar
-        </button>
-      </div>
-    ) : excluindo === linha ? (
-      <div className="flex items-center justify-end gap-2 whitespace-nowrap">
-        <span className="text-xs font-semibold text-alerta">Tirar?</span>
-        <button
-          type="button"
-          onClick={() => remover(linha)}
-          disabled={isPending}
-          className="rounded-full bg-alerta px-3 py-1 text-xs font-semibold text-white hover:opacity-90 disabled:opacity-50"
-        >
-          Tirar
-        </button>
-        <button type="button" onClick={() => setExcluindo(null)} className={botaoSecundario}>
-          Cancelar
-        </button>
-      </div>
-    ) : (
-      <div className="flex justify-end gap-1">
-        <button
-          type="button"
-          onClick={() => {
-            setExcluindo(null);
-            setEditando(linha);
-            setQtdEdicao(paraCampo(valorAtual));
-          }}
-          aria-label={`Editar quantidade de ${nome}`}
-          title="Editar quantidade"
-          className={botaoIcone}
-        >
-          <IconeLapis />
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setEditando(null);
-            setExcluindo(linha);
-          }}
-          aria-label={`Tirar ${nome}`}
-          title="Tirar"
-          className={botaoIcone}
-        >
-          <IconeLixeira />
-        </button>
-      </div>
-    );
-
-  const campoEdicao = (nome: string, sufixo: string) => (
-    <span className="flex items-center gap-1">
-      <input
-        type="text"
-        inputMode="decimal"
-        aria-label={`Quantidade de ${nome}`}
-        value={qtdEdicao}
-        onChange={(e) => setQtdEdicao(e.target.value)}
-        className={`${campo} w-20 py-1 text-xs`}
-      />
-      <span className="text-xs text-muted">{sufixo}</span>
-    </span>
-  );
+  const custoUnidade = (m: Material) => m.custoAtual + (m.impresso ? (custoFolha ?? 0) : 0);
+  const custoMaoDeObra =
+    maoDeObra?.minutos && maoDeObra.valorHora ? (maoDeObra.minutos / 60) * maoDeObra.valorHora : 0;
+  const total = itens.reduce((acc, item) => acc + item.quantidade * custoUnidade(item.material), 0) + custoMaoDeObra;
+  const temImpresso = itens.some((i) => i.material.impresso);
 
   return (
     <div className="space-y-3">
-      {vazio ? (
+      {itens.length === 0 && !maoDeObra ? (
         <p className="text-sm text-muted">{textoVazio}</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[520px] text-sm [&_td]:pr-4 [&_th]:pr-4">
+          <table className="w-full min-w-[560px] text-sm [&_td]:pr-4 [&_th]:pr-4">
             <thead>
               <tr className="text-left text-xs text-muted">
                 <th className="pb-2 font-semibold">Item</th>
@@ -238,57 +162,190 @@ export function ProducaoEditor({
               </tr>
             </thead>
             <tbody>
-              {itens.map((item) => (
-                <tr
-                  key={item.id}
-                  className={`border-t border-border ${editando === item.id ? "bg-accent-soft/60" : ""} ${excluindo === item.id ? "bg-alerta-soft" : ""}`}
-                >
-                  <td className="py-2.5 text-ink">{item.material.nome}</td>
-                  <td className="py-2.5 tabular-nums">
-                    {editando === item.id
-                      ? campoEdicao(item.material.nome, item.material.unidade)
-                      : `${formatarQuantidade(item.quantidade)} ${item.material.unidade}`}
+              {itens.length === 0 && (
+                <tr className="border-t border-border">
+                  <td colSpan={5} className="py-2.5 text-sm text-muted">
+                    {textoVazio}
+                  </td>
+                </tr>
+              )}
+              {itens.map((item) => {
+                const m = item.material;
+                const emEdicao = editando === item.id;
+                const confirmando = excluindo === item.id;
+                return (
+                  <tr
+                    key={item.id}
+                    className={`border-t border-border ${emEdicao ? "bg-accent-soft/60" : ""} ${confirmando ? "bg-alerta-soft" : ""}`}
+                  >
+                    <td className="py-2.5 text-ink">
+                      {m.nome}
+                      {m.impresso && <span className="block text-xs text-muted">+ impressão frente e verso</span>}
+                    </td>
+                    <td className="py-2.5 tabular-nums">
+                      {emEdicao ? (
+                        <span className="flex items-center gap-1">
+                          <input
+                            type="text"
+                            inputMode="decimal"
+                            aria-label={`Quantidade de ${m.nome}`}
+                            value={qtdEdicao}
+                            onChange={(e) => setQtdEdicao(e.target.value)}
+                            className={`${campo} w-20 py-1 text-xs`}
+                          />
+                          <span className="text-xs text-muted">{m.unidade}</span>
+                        </span>
+                      ) : (
+                        `${formatarQuantidade(item.quantidade)} ${m.unidade}`
+                      )}
+                    </td>
+                    <td className="py-2.5 tabular-nums">
+                      {m.custoAtual === 0 ? (
+                        <Link href="/financeiro/compras" className="text-xs text-alerta underline">
+                          sem compra registrada
+                        </Link>
+                      ) : (
+                        <span className="text-muted">{formatarReais(m.custoAtual, 4)}</span>
+                      )}
+                      {m.impresso &&
+                        (custoFolha === null ? (
+                          <Link href="/financeiro/impressoras" className="block text-xs text-alerta underline">
+                            falta páginas/ano da impressora
+                          </Link>
+                        ) : (
+                          <span className="block text-xs text-muted">+ {formatarReais(custoFolha, 4)} impressão</span>
+                        ))}
+                    </td>
+                    <td className="py-2.5 text-right font-semibold tabular-nums">
+                      {formatarReais(item.quantidade * custoUnidade(m))}
+                    </td>
+                    <td className="py-1.5 pl-3 text-right">
+                      {emEdicao ? (
+                        <div className="flex justify-end gap-2 whitespace-nowrap">
+                          <button
+                            type="button"
+                            onClick={() => salvarEdicao(item)}
+                            disabled={isPending}
+                            className={`${botaoPrimario} px-3 py-1 text-xs`}
+                          >
+                            Salvar
+                          </button>
+                          <button type="button" onClick={() => setEditando(null)} className={botaoSecundario}>
+                            Cancelar
+                          </button>
+                        </div>
+                      ) : confirmando ? (
+                        <div className="flex items-center justify-end gap-2 whitespace-nowrap">
+                          <span className="text-xs font-semibold text-alerta">Tirar?</span>
+                          <button
+                            type="button"
+                            onClick={() => remover(item.id)}
+                            disabled={isPending}
+                            className="rounded-full bg-alerta px-3 py-1 text-xs font-semibold text-white hover:opacity-90 disabled:opacity-50"
+                          >
+                            Tirar
+                          </button>
+                          <button type="button" onClick={() => setExcluindo(null)} className={botaoSecundario}>
+                            Cancelar
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex justify-end gap-1">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setExcluindo(null);
+                              setEditando(item.id);
+                              setQtdEdicao(paraCampo(item.quantidade));
+                            }}
+                            aria-label={`Editar quantidade de ${m.nome}`}
+                            title="Editar quantidade"
+                            className={botaoIcone}
+                          >
+                            <IconeLapis />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditando(null);
+                              setExcluindo(item.id);
+                            }}
+                            aria-label={`Tirar ${m.nome}`}
+                            title="Tirar"
+                            className={botaoIcone}
+                          >
+                            <IconeLixeira />
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+              {maoDeObra && (
+                <tr className={`border-t border-border ${editandoTempo ? "bg-accent-soft/60" : ""}`}>
+                  <td className="py-2.5 text-ink">
+                    Mão de obra
+                    <span className="block text-xs text-muted">seu tempo de trabalho manual</span>
                   </td>
                   <td className="py-2.5 tabular-nums">
-                    {item.material.custoAtual === 0 ? (
-                      <Link href="/financeiro/compras" className="text-xs text-alerta underline">
-                        sem compra registrada
-                      </Link>
+                    {editandoTempo ? (
+                      <span className="flex items-center gap-1">
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          aria-label="Minutos de trabalho"
+                          value={tempo}
+                          onChange={(e) => setTempo(e.target.value)}
+                          className={`${campo} w-20 py-1 text-xs`}
+                        />
+                        <span className="text-xs text-muted">min</span>
+                      </span>
+                    ) : maoDeObra.minutos ? (
+                      `${formatarQuantidade(maoDeObra.minutos)} min`
                     ) : (
-                      <span className="text-muted">{formatarReais(item.material.custoAtual, 4)}</span>
+                      <span className="text-xs text-alerta">falta o tempo</span>
+                    )}
+                  </td>
+                  <td className="py-2.5 tabular-nums">
+                    {maoDeObra.valorHora ? (
+                      <span className="text-muted">{formatarReais(maoDeObra.valorHora)}/hora</span>
+                    ) : (
+                      <Link href="/financeiro/custos" className="text-xs text-alerta underline">
+                        defina o valor da hora
+                      </Link>
                     )}
                   </td>
                   <td className="py-2.5 text-right font-semibold tabular-nums">
-                    {formatarReais(item.quantidade * item.material.custoAtual)}
+                    {maoDeObra.minutos && maoDeObra.valorHora ? formatarReais(custoMaoDeObra) : "—"}
                   </td>
-                  <td className="py-1.5 pl-3 text-right">{acoes(item.id, item.material.nome, item.quantidade, item)}</td>
-                </tr>
-              ))}
-              {folhas > 0 && (
-                <tr
-                  className={`border-t border-border ${editando === IMPRESSAO ? "bg-accent-soft/60" : ""} ${excluindo === IMPRESSAO ? "bg-alerta-soft" : ""}`}
-                >
-                  <td className="py-2.5 text-ink">
-                    Impressão <span className="text-xs text-muted">(frente e verso)</span>
-                  </td>
-                  <td className="py-2.5 tabular-nums">
-                    {editando === IMPRESSAO
-                      ? campoEdicao("folhas impressas", "folhas")
-                      : `${formatarQuantidade(folhas)} ${folhas === 1 ? "folha" : "folhas"}`}
-                  </td>
-                  <td className="py-2.5 tabular-nums">
-                    {custoFolha === null ? (
-                      <Link href="/financeiro/impressoras" className="text-xs text-alerta underline">
-                        falta páginas/ano da impressora
-                      </Link>
+                  <td className="py-1.5 pl-3 text-right">
+                    {editandoTempo ? (
+                      <div className="flex justify-end gap-2 whitespace-nowrap">
+                        <button type="button" onClick={salvarTempo} disabled={isPending} className={`${botaoPrimario} px-3 py-1 text-xs`}>
+                          Salvar
+                        </button>
+                        <button type="button" onClick={() => setEditandoTempo(false)} className={botaoSecundario}>
+                          Cancelar
+                        </button>
+                      </div>
                     ) : (
-                      <span className="text-muted" title={`${impressora}, a impressora mais cara — cobre mesmo quando imprime na outra`}>
-                        {formatarReais(custoFolha, 4)}
-                      </span>
+                      <div className="flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setTempo(maoDeObra.minutos ? paraCampo(maoDeObra.minutos) : "");
+                            setEditandoTempo(true);
+                          }}
+                          aria-label="Editar tempo de trabalho"
+                          title="Editar tempo"
+                          className={botaoIcone}
+                        >
+                          <IconeLapis />
+                        </button>
+                      </div>
                     )}
                   </td>
-                  <td className="py-2.5 text-right font-semibold tabular-nums">{formatarReais(custoImpressao)}</td>
-                  <td className="py-1.5 pl-3 text-right">{acoes(IMPRESSAO, "a impressão", folhas)}</td>
                 </tr>
               )}
             </tbody>
@@ -302,24 +359,21 @@ export function ProducaoEditor({
               </tr>
             </tfoot>
           </table>
-        </div>
-      )}
-
-      {abrir === null && (
-        <div className="flex flex-wrap gap-2">
-          <button type="button" onClick={() => setAbrir("material")} className={botaoSecundario}>
-            + Adicionar material
-          </button>
-          {folhas === 0 && (
-            <button type="button" onClick={() => setAbrir("impressao")} className={botaoSecundario}>
-              + Adicionar impressão
-            </button>
+          {temImpresso && custoFolha !== null && (
+            <p className="mt-2 text-xs text-muted">
+              Impressão: {formatarReais(custoFolha, 4)} por folha frente e verso ({impressora}, a impressora mais cara —
+              cobre mesmo quando imprime na outra).
+            </p>
           )}
         </div>
       )}
 
-      {abrir === "material" && (
-        <form onSubmit={adicionarMaterial} className="flex flex-wrap items-end gap-3 rounded-xl bg-accent-soft/50 p-3">
+      {!abrir ? (
+        <button type="button" onClick={() => setAbrir(true)} className={botaoSecundario}>
+          + Adicionar material
+        </button>
+      ) : (
+        <form onSubmit={adicionar} className="flex flex-wrap items-end gap-3 rounded-xl bg-accent-soft/50 p-3">
           <div>
             <label htmlFor={`${id}-material`} className={rotulo}>
               Material
@@ -327,7 +381,8 @@ export function ProducaoEditor({
             <select id={`${id}-material`} value={materialId} onChange={(e) => setMaterialId(e.target.value)} className={campo}>
               {materiais.map((m) => (
                 <option key={m.id} value={m.id}>
-                  {m.nome} ({m.unidade})
+                  {m.nome} ({m.unidade}
+                  {m.impresso ? ", impresso" : ""})
                 </option>
               ))}
               <option value={NOVO}>+ Cadastrar material novo</option>
@@ -342,7 +397,7 @@ export function ProducaoEditor({
                 <input
                   id={`${id}-novo-nome`}
                   type="text"
-                  placeholder="Saquinho PP"
+                  placeholder="Papel A5 120g"
                   value={novoNome}
                   onChange={(e) => setNovoNome(e.target.value)}
                   className={`${campo} w-48`}
@@ -360,6 +415,17 @@ export function ProducaoEditor({
                   ))}
                 </select>
               </div>
+              {novaUnidade === "folha" && (
+                <label className="flex items-center gap-2 pb-2 text-xs text-ink/80">
+                  <input
+                    type="checkbox"
+                    checked={novoImpresso}
+                    onChange={(e) => setNovoImpresso(e.target.checked)}
+                    className="size-4 accent-ink"
+                  />
+                  É impresso (frente e verso)
+                </label>
+              )}
             </>
           )}
           <div>
@@ -380,39 +446,9 @@ export function ProducaoEditor({
           <button type="submit" disabled={enviando || isPending} className={botaoPrimario}>
             {criandoMaterial ? "Criar e adicionar" : "Adicionar"}
           </button>
-          <button type="button" onClick={() => setAbrir(null)} className={botaoSecundario}>
+          <button type="button" onClick={() => setAbrir(false)} className={botaoSecundario}>
             Cancelar
           </button>
-        </form>
-      )}
-
-      {abrir === "impressao" && (
-        <form onSubmit={adicionarImpressao} className="flex flex-wrap items-end gap-3 rounded-xl bg-accent-soft/50 p-3">
-          <div>
-            <label htmlFor={`${id}-folhas`} className={rotulo}>
-              Folhas impressas por {por} (frente e verso)
-            </label>
-            <input
-              id={`${id}-folhas`}
-              type="text"
-              inputMode="decimal"
-              placeholder="40"
-              value={folhasNovas}
-              onChange={(e) => setFolhasNovas(e.target.value)}
-              className={`${campo} w-24`}
-            />
-          </div>
-          <button type="submit" disabled={isPending} className={botaoPrimario}>
-            Adicionar
-          </button>
-          <button type="button" onClick={() => setAbrir(null)} className={botaoSecundario}>
-            Cancelar
-          </button>
-          <p className="w-full text-xs text-muted">
-            {custoFolha !== null
-              ? `Custo da folha: ${formatarReais(custoFolha, 4)} (${impressora}, a impressora mais cara — cobre mesmo quando imprime na outra).`
-              : "Falta informar as páginas por ano de uma impressora na aba Impressoras."}
-          </p>
         </form>
       )}
 

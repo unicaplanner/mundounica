@@ -12,7 +12,7 @@ export async function varianteDoProduto(produtoId: string, varianteId: unknown) 
   return variante ? { ok: true as const, varianteId: variante.id } : { ok: false as const };
 }
 
-// Substitui a composicao (materiais, impressao, produtos do kit e custo de compra) de
+// Substitui a composicao (materiais, produtos do kit e custo de compra) de
 // cada variante de destino por uma copia da origem. origemVarianteId nulo
 // copia a composicao do produto inteiro.
 export async function copiarComposicao(
@@ -21,13 +21,12 @@ export async function copiarComposicao(
   origemVarianteId: string | null,
   destinoVarianteIds: string[]
 ) {
-  const [ficha, impressao, kit, origem] = await Promise.all([
+  const [ficha, kit, origem] = await Promise.all([
     tx.fichaTecnicaItem.findMany({ where: { produtoId, varianteId: origemVarianteId } }),
-    tx.impressaoItem.findMany({ where: { produtoId, varianteId: origemVarianteId } }),
     tx.kitItem.findMany({ where: { kitProdutoId: produtoId, kitVarianteId: origemVarianteId } }),
     origemVarianteId
-      ? tx.variante.findUniqueOrThrow({ where: { id: origemVarianteId }, select: { custoCompra: true } })
-      : tx.produto.findUniqueOrThrow({ where: { id: produtoId }, select: { custoCompra: true } }),
+      ? tx.variante.findUniqueOrThrow({ where: { id: origemVarianteId }, select: { custoCompra: true, minutosProducao: true } })
+      : tx.produto.findUniqueOrThrow({ where: { id: produtoId }, select: { custoCompra: true, minutosProducao: true } }),
   ]);
 
   await tx.fichaTecnicaItem.deleteMany({ where: { produtoId, varianteId: { in: destinoVarianteIds } } });
@@ -37,11 +36,6 @@ export async function copiarComposicao(
   await tx.fichaTecnicaItem.createMany({
     data: destinoVarianteIds.flatMap((varianteId) =>
       ficha.map((f) => ({ produtoId, varianteId, materialId: f.materialId, quantidade: f.quantidade }))
-    ),
-  });
-  await tx.impressaoItem.createMany({
-    data: destinoVarianteIds.flatMap((varianteId) =>
-      impressao.map((i) => ({ produtoId, varianteId, impressoraId: i.impressoraId, folhas: i.folhas }))
     ),
   });
   await tx.kitItem.createMany({
@@ -56,7 +50,7 @@ export async function copiarComposicao(
   });
   await tx.variante.updateMany({
     where: { id: { in: destinoVarianteIds }, produtoId },
-    data: { custoCompra: origem.custoCompra },
+    data: { custoCompra: origem.custoCompra, minutosProducao: origem.minutosProducao },
   });
 }
 
@@ -73,7 +67,6 @@ export async function aplicarModelo(origemId: string, destinoIds: string[]): Pro
     include: {
       variantes: { where: { ativa: true } },
       fichaTecnica: true,
-      impressoes: true,
       componentes: { include: { componente: { select: { produtoId: true } } } },
     },
   });
@@ -104,47 +97,40 @@ export async function aplicarModelo(origemId: string, destinoIds: string[]): Pro
     }
 
     // dono = de onde copiar (variante da origem ou o produto inteiro) -> para onde
-    const pares: { de: string | null; para: string | null; custoCompra: Prisma.Decimal | null }[] = [];
+    const pares: { de: string | null; para: string | null; custoCompra: Prisma.Decimal | null; minutos: Prisma.Decimal | null }[] = [];
     const semPar: string[] = [];
     if (origem.custoPorVariante) {
       for (const v of destino.variantes) {
         const par = variantePorNome.get(normalizarVariante(v.title));
-        if (par) pares.push({ de: par.id, para: v.id, custoCompra: par.custoCompra });
+        if (par) pares.push({ de: par.id, para: v.id, custoCompra: par.custoCompra, minutos: par.minutosProducao });
         else semPar.push(v.title);
       }
     } else {
-      pares.push({ de: null, para: null, custoCompra: origem.custoCompra });
+      pares.push({ de: null, para: null, custoCompra: origem.custoCompra, minutos: origem.minutosProducao });
     }
 
     await prisma.$transaction(async (tx) => {
       await tx.fichaTecnicaItem.deleteMany({ where: { produtoId: destino.id } });
       await tx.impressaoItem.deleteMany({ where: { produtoId: destino.id } });
       await tx.kitItem.deleteMany({ where: { kitProdutoId: destino.id } });
-      await tx.variante.updateMany({ where: { produtoId: destino.id }, data: { custoCompra: null } });
+      await tx.variante.updateMany({ where: { produtoId: destino.id }, data: { custoCompra: null, minutosProducao: null } });
       await tx.produto.update({
         where: { id: destino.id },
         data: {
           tipo: origem.tipo,
           custoPorVariante: origem.custoPorVariante,
           custoCompra: origem.custoPorVariante ? null : origem.custoCompra,
+          minutosProducao: origem.custoPorVariante ? null : origem.minutosProducao,
         },
       });
 
-      for (const { de, para, custoCompra } of pares) {
+      for (const { de, para, custoCompra, minutos } of pares) {
         await tx.fichaTecnicaItem.createMany({
           data: doDono(origem.fichaTecnica, de).map((f) => ({
             produtoId: destino.id,
             varianteId: para,
             materialId: f.materialId,
             quantidade: f.quantidade,
-          })),
-        });
-        await tx.impressaoItem.createMany({
-          data: doDono(origem.impressoes, de).map((i) => ({
-            produtoId: destino.id,
-            varianteId: para,
-            impressoraId: i.impressoraId,
-            folhas: i.folhas,
           })),
         });
         await tx.kitItem.createMany({
@@ -155,7 +141,7 @@ export async function aplicarModelo(origemId: string, destinoIds: string[]): Pro
             quantidade: k.quantidade,
           })),
         });
-        if (para && custoCompra) await tx.variante.update({ where: { id: para }, data: { custoCompra } });
+        if (para && (custoCompra || minutos)) await tx.variante.update({ where: { id: para }, data: { custoCompra, minutosProducao: minutos } });
       }
     });
 
@@ -168,15 +154,13 @@ export async function aplicarModelo(origemId: string, destinoIds: string[]): Pro
 // composicao propria comeca com uma copia da composicao do produto -- ai so
 // precisa ajustar o que muda (ex: o tamanho do papel).
 export async function preencherVariantesVazias(tx: Prisma.TransactionClient, produtoId: string, varianteIds: string[]) {
-  const [comFicha, comImpressao, comKit, comCusto] = await Promise.all([
+  const [comFicha, comKit, comCusto] = await Promise.all([
     tx.fichaTecnicaItem.findMany({ where: { produtoId, varianteId: { not: null } }, select: { varianteId: true } }),
-    tx.impressaoItem.findMany({ where: { produtoId, varianteId: { not: null } }, select: { varianteId: true } }),
     tx.kitItem.findMany({ where: { kitProdutoId: produtoId, kitVarianteId: { not: null } }, select: { kitVarianteId: true } }),
     tx.variante.findMany({ where: { produtoId, custoCompra: { not: null } }, select: { id: true } }),
   ]);
   const jaTem = new Set([
     ...comFicha.map((f) => f.varianteId),
-    ...comImpressao.map((i) => i.varianteId),
     ...comKit.map((k) => k.kitVarianteId),
     ...comCusto.map((v) => v.id),
   ]);

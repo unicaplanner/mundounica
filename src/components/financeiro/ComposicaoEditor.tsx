@@ -1,12 +1,12 @@
 import type { TipoProduto } from "@prisma/client";
 import { CustoCompraForm } from "./CustoCompraForm";
-import { ProducaoEditor, type ItemFicha, type ItemImpressao } from "./ProducaoEditor";
+import { ProducaoEditor, type ItemFicha } from "./ProducaoEditor";
 import { KitEditor, type CandidatoKit, type ItemKit } from "./KitEditor";
 
-type Material = { id: string; nome: string; unidade: string; custoAtual: number };
+type Material = { id: string; nome: string; unidade: string; custoAtual: number; impresso: boolean };
 
 // O que forma o custo, conforme o tipo: custo de compra (revenda), materiais
-// + impressao (producao propria) ou produtos + embalagem + impressao (kit).
+// com a impressao do papel (producao propria) ou produtos + embalagem (kit).
 // varianteId nulo = composicao do produto inteiro.
 export function ComposicaoEditor({
   produtoId,
@@ -15,11 +15,12 @@ export function ComposicaoEditor({
   custoCompra,
   ficha,
   kit,
-  impressao,
   materiais,
   candidatos,
   custoFolha,
   impressora,
+  minutos,
+  valorHora,
 }: {
   produtoId: string;
   varianteId?: string | null;
@@ -27,17 +28,24 @@ export function ComposicaoEditor({
   custoCompra: number | null;
   ficha: ItemFicha[];
   kit: ItemKit[];
-  impressao: ItemImpressao[];
   materiais: Material[];
   candidatos: CandidatoKit[];
   custoFolha: number | null; // folha impressa, com o custo da impressora mais cara
   impressora: string | null;
+  minutos: number | null; // tempo de producao (mao de obra)
+  valorHora: number | null;
 }) {
   if (tipo === "revenda") {
     return <CustoCompraForm produtoId={produtoId} varianteId={varianteId} custoCompra={custoCompra} />;
   }
 
-  const producao = { produtoId, varianteId, itens: ficha, materiais, impressao, custoFolha, impressora };
+  const maoDeObra = {
+    minutos,
+    valorHora,
+    url: varianteId ? `/api/financeiro/variantes/${varianteId}` : `/api/financeiro/produtos/${produtoId}`,
+    campo: "minutosProducao",
+  };
+  const producao = { produtoId, varianteId, itens: ficha, materiais, custoFolha, impressora, maoDeObra };
 
   if (tipo === "producao_propria") {
     return <ProducaoEditor {...producao} />;

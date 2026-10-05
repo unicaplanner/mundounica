@@ -95,7 +95,7 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
         ? "Custo de compra"
         : produto.tipo === "kit"
           ? "Produtos do kit e embalagem"
-          : "Produção (materiais e impressão)",
+          : "Produção (materiais, impressão e mão de obra)",
     envioPorPedido: parametros.custoMedioEnvio,
     itensPorPedido: parametros.itensPorPedido,
   };
@@ -109,6 +109,7 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
     nome: m.nome,
     unidade: m.unidade,
     custoAtual: m.custoAtual.toNumber(),
+    impresso: m.impresso,
   }));
 
   // toda folha impressa usa o custo da impressora mais cara
@@ -120,13 +121,14 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
       .map((f) => ({
         id: f.id,
         quantidade: f.quantidade.toNumber(),
-        material: { id: f.material.id, nome: f.material.nome, unidade: f.material.unidade, custoAtual: f.material.custoAtual.toNumber() },
+        material: {
+          id: f.material.id,
+          nome: f.material.nome,
+          unidade: f.material.unidade,
+          custoAtual: f.material.custoAtual.toNumber(),
+          impresso: f.material.impresso,
+        },
       }));
-
-  const impressaoDe = (varianteId: string | null) =>
-    produto.impressoes
-      .filter((i) => i.varianteId === varianteId)
-      .map((i) => ({ id: i.id, folhas: i.folhas.toNumber() }));
 
   const kitDe = (varianteId: string | null) =>
     produto.componentes
@@ -158,23 +160,24 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
           .sort((a, b) => a.rotulo.localeCompare(b.rotulo, "pt-BR"))
       : [];
 
-  const composicaoProps = (varianteId: string | null, custoCompra: number | null) => ({
+  const composicaoProps = (varianteId: string | null, custoCompra: number | null, minutos: number | null) => ({
     produtoId: produto.id,
     varianteId,
     tipo: produto.tipo!,
     custoCompra,
     ficha: fichaDe(varianteId),
     kit: kitDe(varianteId),
-    impressao: impressaoDe(varianteId),
     materiais: listaMateriais,
     candidatos,
     custoFolha: num(padrao?.custoFolha),
     impressora: padrao?.nome ?? null,
+    minutos,
+    valorHora: parametros.valorHora,
   });
 
   // Outros produtos que podem receber esta composicao como modelo.
-  const temComposicao = (c: { custoCompra: unknown; ficha: unknown[]; kit: unknown[]; impressao: unknown[] }) =>
-    c.custoCompra !== null || c.ficha.length > 0 || c.kit.length > 0 || c.impressao.length > 0;
+  const temComposicao = (c: { custoCompra: unknown; ficha: unknown[]; kit: unknown[] }) =>
+    c.custoCompra !== null || c.ficha.length > 0 || c.kit.length > 0;
   const candidatosModelo: CandidatoModelo[] = [...custos.produtos.values()]
     .filter((c) => c.id !== produto.id)
     .map((c) => {
@@ -297,7 +300,7 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
             <h3 className="mb-3 text-sm font-semibold text-ink">
               {produto.tipo === "revenda" ? "Custo de compra" : produto.tipo === "kit" ? "Composição do kit" : "Para produzir"}
             </h3>
-            <ComposicaoEditor {...composicaoProps(null, num(produto.custoCompra))} />
+            <ComposicaoEditor {...composicaoProps(null, num(produto.custoCompra), num(produto.minutosProducao))} />
           </section>
         </>
       )}
@@ -352,7 +355,7 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
                       </span>
                     </summary>
                     <div className="space-y-6 pb-6 pl-5">
-                      <ComposicaoEditor {...composicaoProps(v.id, num(v.custoCompra))} />
+                      <ComposicaoEditor {...composicaoProps(v.id, num(v.custoCompra), num(v.minutosProducao))} />
                       {custoNum !== null && custoNum > 0 && (
                         <AnalisePreco custo={custoNum} preco={preco} ctx={ctx} />
                       )}

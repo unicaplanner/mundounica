@@ -8,7 +8,7 @@ import { preencherVariantesVazias } from "@/lib/financeiro/composicao";
 const TIPOS = ["revenda", "producao_propria", "kit", "ignorar"] as const;
 
 // Classifica o produto, liga/desliga custo por variante e/ou define o custo
-// de compra unico (revenda). Trocar de tipo nao apaga composicao nenhuma:
+// de compra unico (revenda) e o tempo de producao unico. Trocar de tipo nao apaga composicao nenhuma:
 // so deixa de usar no calculo, entao da pra voltar atras sem perder nada.
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   if (!(await getUsuario())) return naoAutenticado();
@@ -41,6 +41,16 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       const custo = paraDecimal(body.custoCompra);
       if (!custo) return erro("Informe o custo como um número, por exemplo 12,50.");
       data.custoCompra = custo;
+    }
+  }
+
+  if ("minutosProducao" in body) {
+    if (body.minutosProducao === null || body.minutosProducao === "") {
+      data.minutosProducao = null;
+    } else {
+      const minutos = paraDecimal(body.minutosProducao);
+      if (!minutos) return erro("Informe o tempo em minutos, por exemplo 15.");
+      data.minutosProducao = minutos;
     }
   }
 

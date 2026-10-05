@@ -17,15 +17,18 @@ const nomeMes = (m: string) => {
 export function ParametrosPrecificacao({
   faturamentoMensal,
   lucroDesejado,
+  valorHora,
 }: {
   faturamentoMensal: number | null;
   lucroDesejado: number;
+  valorHora: number | null;
 }) {
   const id = useId();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [faturamento, setFaturamento] = useState(faturamentoMensal !== null ? paraCampo(faturamentoMensal, 2) : "");
   const [lucro, setLucro] = useState(paraCampo(lucroDesejado));
+  const [hora, setHora] = useState(valorHora !== null ? paraCampo(valorHora, 2) : "");
   const [meses, setMeses] = useState<Mes[] | null>(null);
   const [buscando, setBuscando] = useState(false);
   const [mensagem, setMensagem] = useState<{ texto: string; erro: boolean } | null>(null);
@@ -58,7 +61,7 @@ export function ParametrosPrecificacao({
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -111,6 +114,43 @@ export function ParametrosPrecificacao({
               Salvar
             </button>
           </div>
+          <p className="text-xs text-muted">
+            É o que sobra pra empresa depois de pagar seu pró-labore, sua mão de obra e todas as contas: reserva pros meses
+            fracos, novos designs, troca de equipamento, reimpressão de erros. Pra um negócio artesanal e personalizado,
+            15% é o mínimo e 20% é a meta saudável.
+          </p>
+        </form>
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            salvar({ valorHora: normalizarNumero(hora) }, "Valor da hora salvo.");
+          }}
+          className="space-y-2"
+        >
+          <label htmlFor={`${id}-hora`} className={rotulo}>
+            Valor da hora de produção (R$)
+          </label>
+          <div className="flex flex-wrap gap-2">
+            <input
+              id={`${id}-hora`}
+              type="text"
+              inputMode="decimal"
+              placeholder="15,00"
+              value={hora}
+              onChange={(e) => setHora(e.target.value)}
+              className={`${campo} w-24`}
+            />
+            <button type="submit" disabled={isPending} className={botaoPrimario}>
+              Salvar
+            </button>
+          </div>
+          <p className="text-xs text-muted">
+            Quanto custaria pagar alguém pra imprimir, furar, encadernar e embalar: salário + encargos ÷ horas produtivas
+            (ex: R$ 2.400 por mês ÷ 160 horas ≈ R$ 15/hora). Cada produto informa os minutos de trabalho e isso entra no
+            custo. Assim, se um dia contratar alguém, o preço já paga essa pessoa. Seu pró-labore continua nos custos
+            fixos: ele paga o que não depende de cada venda (criar designs, atendimento, gestão).
+          </p>
         </form>
       </div>
 

@@ -17,6 +17,7 @@ export default async function EnvioPage() {
     nome: m.nome,
     unidade: m.unidade,
     custoAtual: m.custoAtual.toNumber(),
+    impresso: m.impresso,
   }));
   const somaFora = envio.tipos.length > 0 && Math.abs(envio.percentualTotal - 100) > 0.01;
   const incompletas = envio.tipos.filter((t) => t.incompleto && t.percentual > 0).map((t) => t.nome);
@@ -95,10 +96,10 @@ export default async function EnvioPage() {
                 por="pedido"
                 itens={t.materiais}
                 materiais={listaMateriais}
-                impressao={t.impressoes}
                 custoFolha={envio.custoFolha}
                 impressora={envio.impressora}
-                textoVazio="Nada ainda. Adicione a caixa, o papel de seda, os mimos (adesivo, guia), a etiqueta e as folhas impressas (folhas de bloco pra experimentar, guia)."
+                maoDeObra={{ minutos: t.minutos, valorHora: envio.valorHora, url: `/api/financeiro/envios/${t.id}`, campo: "minutos" }}
+                textoVazio="Nada ainda. Adicione a caixa, o papel de seda, o adesivo, a etiqueta e o papel das folhas de bloco pra experimentar e do guia (a impressão já entra junto)."
                 rotuloTotal="Custo por pedido"
               />
             </div>

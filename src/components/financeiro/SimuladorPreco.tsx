@@ -15,7 +15,7 @@ export function SimuladorPreco({
   custo,
   precoSite,
   parametros,
-  rotuloCusto = "Produção (materiais e impressão)",
+  rotuloCusto = "Produção (materiais, impressão e mão de obra)",
   envioPorPedido = null,
   itensPorPedido = null,
 }: {

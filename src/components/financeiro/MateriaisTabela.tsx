@@ -17,6 +17,7 @@ export type MaterialLinha = {
   usos: number;
   envios: number;
   linkCompra: string | null;
+  impresso: boolean;
 };
 
 function textoUsos(produtos: number, envios: number) {
@@ -35,6 +36,7 @@ export function MateriaisTabela({ materiais }: { materiais: MaterialLinha[] }) {
   const [nome, setNome] = useState("");
   const [unidade, setUnidade] = useState("");
   const [link, setLink] = useState("");
+  const [impresso, setImpresso] = useState(false);
   const [erro, setErro] = useState<{ id: string; texto: string } | null>(null);
 
   function abrirEdicao(m: MaterialLinha) {
@@ -44,11 +46,12 @@ export function MateriaisTabela({ materiais }: { materiais: MaterialLinha[] }) {
     setNome(m.nome);
     setUnidade(m.unidade);
     setLink(m.linkCompra ?? "");
+    setImpresso(m.impresso);
   }
 
   async function salvar(id: string) {
     setErro(null);
-    const resultado = await enviar(`/api/financeiro/materiais/${id}`, "PATCH", { nome, unidade, linkCompra: link });
+    const resultado = await enviar(`/api/financeiro/materiais/${id}`, "PATCH", { nome, unidade, linkCompra: link, impresso });
     if (!resultado.ok) {
       setErro({ id, texto: resultado.erro });
       return;
@@ -129,20 +132,36 @@ export function MateriaisTabela({ materiais }: { materiais: MaterialLinha[] }) {
                 </td>
                 <td className="py-2.5 pr-2 text-muted">
                   {emEdicao ? (
-                    <select
-                      aria-label="Unidade"
-                      value={unidade}
-                      onChange={(e) => setUnidade(e.target.value)}
-                      className={`${campo} py-1 text-xs`}
-                    >
-                      {UNIDADES.map((u) => (
-                        <option key={u.valor} value={u.valor}>
-                          {u.rotulo}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="space-y-1">
+                      <select
+                        aria-label="Unidade"
+                        value={unidade}
+                        onChange={(e) => setUnidade(e.target.value)}
+                        className={`${campo} py-1 text-xs`}
+                      >
+                        {UNIDADES.map((u) => (
+                          <option key={u.valor} value={u.valor}>
+                            {u.rotulo}
+                          </option>
+                        ))}
+                      </select>
+                      {unidade === "folha" && (
+                        <label className="flex items-center gap-1.5 text-xs text-ink/80">
+                          <input
+                            type="checkbox"
+                            checked={impresso}
+                            onChange={(e) => setImpresso(e.target.checked)}
+                            className="size-3.5 accent-ink"
+                          />
+                          impresso
+                        </label>
+                      )}
+                    </div>
                   ) : (
-                    m.unidade
+                    <>
+                      {m.unidade}
+                      {m.impresso && <span className="block text-xs text-ok">impresso</span>}
+                    </>
                   )}
                 </td>
                 <td className="py-2.5 tabular-nums">

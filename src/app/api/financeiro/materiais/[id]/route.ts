@@ -8,7 +8,7 @@ import { paraLink } from "@/lib/financeiro/valores";
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   if (!(await getUsuario())) return naoAutenticado();
   const { id } = await params;
-  const { nome, unidade, linkCompra } = await req.json();
+  const { nome, unidade, linkCompra, impresso } = await req.json();
 
   const nomeLimpo = String(nome ?? "").trim();
   if (!nomeLimpo) return erro("Dê um nome pro material.");
@@ -17,7 +17,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   if (link === undefined) return erro("O link de compra precisa começar com https://, por exemplo o endereço do anúncio.");
 
   try {
-    await prisma.material.update({ where: { id }, data: { nome: nomeLimpo, unidade, linkCompra: link } });
+    await prisma.material.update({ where: { id }, data: { nome: nomeLimpo, unidade, linkCompra: link, impresso: unidade === "folha" && impresso === true } });
     return NextResponse.json({ ok: true });
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {

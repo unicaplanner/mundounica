@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 import { erro, getUsuario, naoAutenticado } from "@/lib/auth";
 import { paraDecimal, paraTexto } from "@/lib/financeiro/valores";
 
-// Atualiza nome, regra de uso e/ou % dos pedidos de uma embalagem.
+// Atualiza nome, regra de uso, % dos pedidos e/ou tempo de embalar de uma embalagem.
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   if (!(await getUsuario())) return naoAutenticado();
   const { id } = await params;
@@ -17,6 +17,14 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     data.nome = nome;
   }
   if ("quando" in body) data.quando = paraTexto(body.quando, 200);
+  if ("minutos" in body) {
+    if (body.minutos === null || body.minutos === "") data.minutos = null;
+    else {
+      const minutos = paraDecimal(body.minutos);
+      if (!minutos) return erro("Informe o tempo em minutos, por exemplo 5.");
+      data.minutos = minutos;
+    }
+  }
   if ("percentual" in body) {
     const percentual = paraDecimal(body.percentual === "" ? "0" : body.percentual);
     if (!percentual || percentual.gt(100)) return erro("O % dos pedidos precisa ser um número de 0 a 100.");

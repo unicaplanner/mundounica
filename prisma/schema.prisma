@@ -32,6 +32,11 @@ model Produto {
   // So pra tipo=revenda com custo unico: custo de compra do produto pronto.
   custoCompra Decimal? @db.Decimal(10, 2)
 
+  // Minutos de trabalho manual pra produzir uma unidade (imprimir, tirar da
+  // impressora, furar, encadernar, embalar o item). Vira custo pelo valor da
+  // hora de producao. Na variante quando custoPorVariante.
+  minutosProducao Decimal? @db.Decimal(8, 2)
+
   variantes    Variante[]
   fichaTecnica FichaTecnicaItem[] // todas as linhas do produto, inclusive as por variante
   componentes  KitItem[]          @relation("KitDoProduto")
@@ -69,6 +74,8 @@ model Variante {
   // So pra tipo=revenda com custo por variante.
   custoCompra Decimal? @db.Decimal(10, 2)
 
+  minutosProducao Decimal? @db.Decimal(8, 2) // so com custoPorVariante (ver Produto)
+
   fichaTecnica FichaTecnicaItem[]
   componentes  KitItem[]          @relation("KitDaVariante")
   usadaEmKits  KitItem[]          @relation("ComponenteDoKit")
@@ -91,6 +98,9 @@ model Material {
   custoAtual Decimal @default(0) @db.Decimal(10, 4)
 
   linkCompra String? // anuncio onde a Lari compra (ex: Mercado Livre), pra recomprar rapido
+  // folha que e impressa (frente e verso): o custo da impressao entra junto,
+  // na mesma quantidade -- nao precisa lancar a impressao separada
+  impresso   Boolean @default(false)
 
   compras      Compra[]
   fichaTecnica FichaTecnicaItem[]
@@ -232,7 +242,10 @@ model DespesaVariavel {
 model ConfiguracaoPrecificacao {
   id                  String    @id @default("unica")
   faturamentoMensal   Decimal?  @db.Decimal(12, 2) // faturamento medio usado pra ratear os fixos
-  lucroDesejado       Decimal   @default(15) @db.Decimal(5, 2) // % sobre o preco
+  lucroDesejado       Decimal   @default(20) @db.Decimal(5, 2) // % sobre o preco, depois de pagar tudo (inclusive pro-labore e mao de obra)
+  // Quanto custa uma hora de producao: o que seria pago a alguem pra imprimir,
+  // furar, encadernar e embalar (salario + encargos / horas produtivas).
+  valorHora           Decimal?  @db.Decimal(10, 2)
   vendasAtualizadasEm DateTime? // ultima vez que as vendas do Shopify foram puxadas
 
   updatedAt DateTime @updatedAt
@@ -263,11 +276,12 @@ model VendaMensal {
 // (Caixa Planner, Caixa Bloco, Caixa A4) tem a sua composicao e o % dos
 // pedidos que usam ele; a media ponderada vira o custo medio por pedido.
 model TipoEnvio {
-  id         String  @id @default(cuid())
-  nome       String  @unique
+  id         String   @id @default(cuid())
+  nome       String   @unique
   quando     String? // regra de uso, ex: "pedidos com case fichario"
-  percentual Decimal @default(0) @db.Decimal(5, 2) // % dos pedidos que vao nessa embalagem
-  ordem      Int     @default(0)
+  percentual Decimal  @default(0) @db.Decimal(5, 2) // % dos pedidos que vao nessa embalagem
+  minutos    Decimal? @db.Decimal(8, 2) // tempo de montar e embalar um pedido (vira custo pelo valor da hora)
+  ordem      Int      @default(0)
 
   materiais  EnvioMaterial[]
   impressoes EnvioImpressao[]

@@ -52,7 +52,6 @@ export async function getProduto(id: string) {
         include: { componente: { include: { produto: { select: { title: true } } } } },
         orderBy: { createdAt: "asc" },
       },
-      impressoes: { orderBy: { createdAt: "asc" } },
     },
   });
 }
