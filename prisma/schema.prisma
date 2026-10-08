@@ -333,4 +333,5 @@ model ResumoMensal {
   mes     String  @id // "2026-09"
   pedidos Int
   receita Decimal @db.Decimal(12, 2)
+  frete   Decimal @default(0) @db.Decimal(12, 2) // frete cobrado dos clientes (pro medidor do MEI)
 }

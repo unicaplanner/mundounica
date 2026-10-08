@@ -16,6 +16,11 @@ export type Mei = {
   pctProjecao: number;
   meses: MesMei[];
   semHistorico: boolean; // faltam meses do ano anterior pra projetar
+  // frete cobrado dos clientes, a parte (se conta ou nao pro MEI, o contador confirma)
+  frete: number;
+  freteProjecao: number;
+  pctComFrete: number;
+  pctProjecaoComFrete: number;
 };
 
 const mesSP = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit" });
@@ -27,18 +32,25 @@ export async function carregarMei(): Promise<Mei> {
   const [ano, mesAtual] = mesSP.format(new Date()).split("-").map(Number);
   const linhas = await prisma.resumoMensal.findMany({
     where: { mes: { gte: `${ano - 1}-01`, lte: `${ano}-12` } },
-    select: { mes: true, receita: true },
+    select: { mes: true, receita: true, frete: true },
   });
   const porMes = new Map(linhas.map((l) => [l.mes, l.receita.toNumber()]));
+  const fretePorMes = new Map(linhas.map((l) => [l.mes, l.frete.toNumber()]));
   const chave = (a: number, m: number) => `${a}-${String(m).padStart(2, "0")}`;
 
   const meses: MesMei[] = [];
   let vendido = 0;
   let projecao = 0;
   let semHistorico = false;
+  let frete = 0;
+  let freteProjecao = 0;
   for (let m = 1; m <= 12; m++) {
     const real = porMes.get(chave(ano, m)) ?? 0;
     const anoPassado = porMes.get(chave(ano - 1, m));
+    const freteReal = fretePorMes.get(chave(ano, m)) ?? 0;
+    const freteAnoPassado = fretePorMes.get(chave(ano - 1, m)) ?? 0;
+    if (m <= mesAtual) frete += freteReal;
+    freteProjecao += m < mesAtual ? freteReal : m === mesAtual ? Math.max(freteReal, freteAnoPassado) : freteAnoPassado;
     if (m < mesAtual) {
       vendido += real;
       projecao += real;
@@ -60,5 +72,9 @@ export async function carregarMei(): Promise<Mei> {
     pctProjecao: (projecao / TETO_MEI) * 100,
     meses,
     semHistorico,
+    frete,
+    freteProjecao,
+    pctComFrete: ((vendido + frete) / TETO_MEI) * 100,
+    pctProjecaoComFrete: ((projecao + freteProjecao) / TETO_MEI) * 100,
   };
 }

@@ -39,6 +39,13 @@ export function MedidorMei({ mei, temSimples }: { mei: Mei; temSimples: boolean 
           {pct(mei.pctProjecao)} do teto), repetindo os meses que faltam do ano passado. A linha marca {ALERTA_SIMPLES}%.
           {mei.semHistorico && " Faltam meses do ano passado: a projeção fica mais baixa do que deve."}
         </p>
+        {mei.frete > 0 && (
+          <p className="text-[11px] text-muted">
+            Com o frete cobrado dos clientes ({formatarReais(mei.frete)} no ano): {formatarReais(mei.vendido + mei.frete)} ·{" "}
+            {pct(mei.pctComFrete)} do teto · projeção {formatarReais(mei.projecao + mei.freteProjecao)} (
+            {pct(mei.pctProjecaoComFrete)}). Se o frete conta pro MEI, o contador confirma.
+          </p>
+        )}
       </div>
 
       {passou ? (
@@ -77,8 +84,8 @@ export function MedidorMei({ mei, temSimples }: { mei: Mei; temSimples: boolean 
         ))}
       </div>
       <p className="text-xs text-muted">
-        Barras escuras: vendido. Claras: projeção. Vendas de produtos já com desconto, sem o frete — confirme com o contador
-        se o frete cobrado entra no faturamento do MEI.
+        Barras escuras: vendido. Claras: projeção. Vendas de produtos já com desconto, sem o frete (o frete aparece à parte,
+        acima).
       </p>
     </section>
   );

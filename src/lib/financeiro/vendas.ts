@@ -12,7 +12,14 @@ type ItemPedido = {
 
 type Itens = { nodes: ItemPedido[]; pageInfo: { hasNextPage: boolean; endCursor: string | null } };
 
-type Pedido = { id: string; createdAt: string; cancelledAt: string | null; test: boolean; lineItems: Itens };
+type Pedido = {
+  id: string;
+  createdAt: string;
+  cancelledAt: string | null;
+  test: boolean;
+  totalShippingPriceSet: { shopMoney: { amount: string } };
+  lineItems: Itens;
+};
 
 interface PedidosResponse {
   orders: { nodes: Pedido[]; pageInfo: { hasNextPage: boolean; endCursor: string | null } };
@@ -52,6 +59,11 @@ const PEDIDOS_QUERY = /* GraphQL */ `
         createdAt
         cancelledAt
         test
+        totalShippingPriceSet {
+          shopMoney {
+            amount
+          }
+        }
         lineItems(first: 100) { ${ITENS} }
       }
       pageInfo {
@@ -91,7 +103,7 @@ export async function sincronizarVendas(): Promise<{ pedidos: number; meses: num
 
   type Linha = { mes: string; chave: string; shopifyVariantId: string | null; shopifyProductId: string | null; titulo: string; quantidade: number; receita: Prisma.Decimal };
   const linhas = new Map<string, Linha>();
-  const resumo = new Map(meses.map((m) => [m, { mes: m, pedidos: 0, receita: new Prisma.Decimal(0) }]));
+  const resumo = new Map(meses.map((m) => [m, { mes: m, pedidos: 0, receita: new Prisma.Decimal(0), frete: new Prisma.Decimal(0) }]));
   let pedidos = 0;
 
   const somar = (mes: string, item: ItemPedido) => {
@@ -130,7 +142,9 @@ export async function sincronizarVendas(): Promise<{ pedidos: number; meses: num
       const mes = mesSP.format(new Date(pedido.createdAt));
       if (!doPeriodo.has(mes)) continue;
       pedidos += 1;
-      resumo.get(mes)!.pedidos += 1;
+      const doMes = resumo.get(mes)!;
+      doMes.pedidos += 1;
+      doMes.frete = doMes.frete.plus(pedido.totalShippingPriceSet.shopMoney.amount);
       pedido.lineItems.nodes.forEach((item) => somar(mes, item));
 
       let itens = pedido.lineItems;
