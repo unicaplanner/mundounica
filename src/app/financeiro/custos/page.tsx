@@ -5,6 +5,8 @@ import { formatarReais, paraCampo } from "@/lib/financeiro/formato";
 import { ParametrosPrecificacao } from "@/components/financeiro/ParametrosPrecificacao";
 import { TabelaEditavel } from "@/components/financeiro/TabelaEditavel";
 import { MetasMargem } from "@/components/financeiro/MetasMargem";
+import { MedidorMei } from "@/components/financeiro/MedidorMei";
+import { carregarMei } from "@/lib/financeiro/mei";
 import { markup } from "@/lib/financeiro/analise";
 import { CATEGORIAS_FIXOS, NOMES_CATEGORIAS, categoriaFixo } from "@/lib/financeiro/categorias";
 
@@ -13,7 +15,7 @@ export const dynamic = "force-dynamic";
 const pct = (n: number) => `${n.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%`;
 
 export default async function CustosPage() {
-  const [custosDb, despesas, p] = await Promise.all([getCustosFixos(), getDespesasVariaveis(), carregarParametros()]);
+  const [custosDb, despesas, p, mei] = await Promise.all([getCustosFixos(), getDespesasVariaveis(), carregarParametros(), carregarMei()]);
 
   // agrupados por categoria (na ordem da lista), maiores primeiro dentro de cada uma
   const ordem = (cat: string) => NOMES_CATEGORIAS.indexOf(cat);
@@ -112,6 +114,8 @@ export default async function CustosPage() {
           </p>
         )}
       </div>
+
+      <MedidorMei mei={mei} temSimples={despesas.some((d) => d.nome.toLowerCase().includes("simples"))} />
 
       <section className="space-y-3">
         <h2 className="font-serif text-xl font-semibold text-ink">Faturamento, lucro e mão de obra</h2>
