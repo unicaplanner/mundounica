@@ -4,7 +4,7 @@ import { carregarCustos, type Custos } from "@/lib/financeiro/custo";
 import { carregarVendas } from "@/lib/financeiro/vendas";
 import { formatarReais } from "@/lib/financeiro/formato";
 import { carregarParametros } from "@/lib/financeiro/precificacao";
-import { precoSugerido } from "@/lib/financeiro/analise";
+import { metaDoTipo, precoSugerido } from "@/lib/financeiro/analise";
 import { ClassificarEmLote } from "@/components/financeiro/ClassificarEmLote";
 import { ClassificarProduto } from "@/components/financeiro/ClassificarProduto";
 import { SincronizarProdutos } from "@/components/financeiro/SincronizarProdutos";
@@ -177,7 +177,7 @@ export default async function ProdutosPage({ searchParams }: PageProps<"/finance
               const unico = r?.modo === "unico" ? r.custo : null;
               const custoNum = unico ? unico.valor.toNumber() : null;
               const nVariantes = produto._count.variantes;
-              const sugerido = custoNum !== null && custoNum > 0 ? precoSugerido(custoNum, parametros) : null;
+              const sugerido = custoNum !== null && custoNum > 0 ? precoSugerido(custoNum, parametros, metaDoTipo(parametros, produto.tipo)) : null;
               const receita = receitaDe(produto.id);
 
               return (

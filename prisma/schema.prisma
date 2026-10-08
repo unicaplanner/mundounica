@@ -246,6 +246,13 @@ model ConfiguracaoPrecificacao {
   // Quanto custa uma hora de producao: o que seria pago a alguem pra imprimir,
   // furar, encadernar e embalar (salario + encargos / horas produtivas).
   valorHora           Decimal?  @db.Decimal(10, 2)
+  // Meta de margem de contribuicao por tipo (% do preco que sobra depois do
+  // custo do produto, embalagem de envio, taxas e imposto). E o que paga os
+  // custos fixos: produto de revenda com margem curta paga menos, a producao
+  // propria compensa. O lucro desejado vale pro negocio como um todo.
+  margemProducao      Decimal   @default(65) @db.Decimal(5, 2)
+  margemRevenda       Decimal   @default(30) @db.Decimal(5, 2)
+  margemKit           Decimal   @default(50) @db.Decimal(5, 2)
   vendasAtualizadasEm DateTime? // ultima vez que as vendas do Shopify foram puxadas
 
   updatedAt DateTime @updatedAt

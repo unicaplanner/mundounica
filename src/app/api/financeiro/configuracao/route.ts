@@ -37,10 +37,19 @@ export async function PATCH(req: Request) {
     }
   }
 
+  const margens: Record<string, Prisma.Decimal> = {};
+  for (const chave of ["margemProducao", "margemRevenda", "margemKit"]) {
+    if (!(chave in body)) continue;
+    const valor = paraDecimal(body[chave]);
+    if (!valor || valor.gte(95)) return erro("A meta de margem precisa ser um percentual entre 0 e 94.");
+    margens[chave] = valor;
+  }
+
   const campos = {
     ...(faturamento !== undefined ? { faturamentoMensal: faturamento } : {}),
     ...(lucro ? { lucroDesejado: lucro } : {}),
     ...(valorHora !== undefined ? { valorHora } : {}),
+    ...margens,
   };
   await prisma.configuracaoPrecificacao.upsert({
     where: { id: "unica" },

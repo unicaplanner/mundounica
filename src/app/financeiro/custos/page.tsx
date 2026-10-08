@@ -4,6 +4,8 @@ import { carregarParametros } from "@/lib/financeiro/precificacao";
 import { formatarReais, paraCampo } from "@/lib/financeiro/formato";
 import { ParametrosPrecificacao } from "@/components/financeiro/ParametrosPrecificacao";
 import { TabelaEditavel } from "@/components/financeiro/TabelaEditavel";
+import { MetasMargem } from "@/components/financeiro/MetasMargem";
+import { markup } from "@/lib/financeiro/analise";
 import { CATEGORIAS_FIXOS, NOMES_CATEGORIAS, categoriaFixo } from "@/lib/financeiro/categorias";
 
 export const dynamic = "force-dynamic";
@@ -26,13 +28,52 @@ export default async function CustosPage() {
   return (
     <div className="space-y-10">
       <div className="rounded-2xl bg-ink px-6 py-5 text-background">
-        <p className="text-xs uppercase tracking-wide text-background/60">Markup</p>
-        <p className="font-serif text-3xl font-semibold">
-          {p.markup !== null ? `${p.markup.toLocaleString("pt-BR", { maximumFractionDigits: 2 })}×` : "—"}
+        <p className="text-xs uppercase tracking-wide text-background/60">Metas de margem de contribuição</p>
+        <p className="mt-1 max-w-2xl text-sm text-background/80">
+          Margem de contribuição é o que sobra de cada venda depois do custo do produto, da embalagem de envio, das taxas
+          e do imposto. A soma delas paga os custos fixos e dá o lucro. Cada tipo tem a sua meta: a revenda, com preço
+          ditado pelo mercado, fica com menos; a produção própria compensa.
         </p>
-        <p className="mt-1 text-sm text-background/80">
-          Preço sugerido = (custo do produto + embalagem de envio por produto) × markup
-        </p>
+        <dl className="mt-4 grid gap-3 sm:grid-cols-3">
+          {(
+            [
+              ["Produção própria", p.margens.producao_propria],
+              ["Kit", p.margens.kit],
+              ["Revenda", p.margens.revenda],
+            ] as const
+          ).map(([nome, meta]) => {
+            const m = markup(p, meta);
+            return (
+              <div key={nome}>
+                <dt className="text-xs text-background/60">{nome}</dt>
+                <dd className="font-serif text-2xl font-semibold">{pct(meta)}</dd>
+                <dd className="text-xs text-background/70">
+                  {m !== null
+                    ? `preço = (custo + envio) × ${m.toLocaleString("pt-BR", { maximumFractionDigits: 2 })}`
+                    : "meta + despesas passam de 100%"}
+                </dd>
+              </div>
+            );
+          })}
+        </dl>
+        <div className="mt-4">
+          <MetasMargem
+            margemProducao={p.margens.producao_propria}
+            margemKit={p.margens.kit}
+            margemRevenda={p.margens.revenda}
+          />
+        </div>
+        {p.fixosPct !== null && (
+          <p className="mt-4 text-xs text-background/80">
+            Pra pagar os custos fixos ({pct(p.fixosPct)} do faturamento médio) e ter {pct(p.lucroPct)} de lucro, o
+            conjunto das vendas precisa deixar, em média, <strong>{pct(p.fixosPct + p.lucroPct)}</strong> de margem de
+            contribuição. Veja se está fechando na aba{" "}
+            <Link href="/financeiro/precificacao" className="underline">
+              Precificação
+            </Link>
+            .
+          </p>
+        )}
         <dl className="mt-4 grid gap-3 text-xs sm:grid-cols-4">
           <div>
             <dt className="text-background/60">Custos fixos</dt>
@@ -67,13 +108,7 @@ export default async function CustosPage() {
         </dl>
         {p.fixosPct === null && (
           <p className="mt-3 text-xs text-accent">
-            Falta o faturamento médio: sem ele os custos fixos ainda não entram no preço sugerido.
-          </p>
-        )}
-        {p.markup === null && (
-          <p className="mt-3 text-xs text-accent">
-            Custos fixos + despesas + lucro passam de 100% do preço: não existe preço que feche essa conta. Revise os
-            valores.
+            Falta o faturamento médio: sem ele não dá pra saber se as vendas estão pagando os custos fixos.
           </p>
         )}
       </div>
@@ -81,8 +116,9 @@ export default async function CustosPage() {
       <section className="space-y-3">
         <h2 className="font-serif text-xl font-semibold text-ink">Faturamento, lucro e mão de obra</h2>
         <p className="max-w-2xl text-sm text-muted">
-          Os custos fixos viram um percentual do faturamento: se você fatura R$ 6.000 e tem R$ 1.500 de fixos, cada
-          venda precisa reservar 25% do preço pra pagar esses fixos.
+          Os custos fixos são pagos pela soma do que as vendas deixam: se você fatura R$ 6.000 e tem R$ 1.500 de fixos,
+          as vendas somadas precisam deixar 25% do faturamento. Não é cobrado igual de cada produto: a revenda deixa menos e
+          a produção própria compensa.
         </p>
         <ParametrosPrecificacao faturamentoMensal={p.faturamentoMensal} lucroDesejado={p.lucroPct} valorHora={p.valorHora} />
       </section>

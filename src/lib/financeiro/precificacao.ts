@@ -1,11 +1,9 @@
 import { prisma } from "@/lib/db";
-import { markup, type ParametrosAnalise } from "./analise";
+import type { ParametrosAnalise } from "./analise";
 import { carregarEnvio } from "./envio";
 
 export type ParametrosPrecificacao = ParametrosAnalise & {
-  totalFixos: number;
   faturamentoMensal: number | null;
-  markup: number | null; // null quando os percentuais somam 100% ou mais
   custoMedioEnvio: number | null; // R$ por pedido
   itensPorPedido: number | null;
   valorHora: number | null; // hora de producao (mao de obra)
@@ -25,18 +23,19 @@ export async function carregarParametros(): Promise<ParametrosPrecificacao> {
   const totalFixos = fixos._sum.valorMensal?.toNumber() ?? 0;
   const faturamentoMensal = config?.faturamentoMensal?.toNumber() ?? null;
   const lista = despesas.map((d) => ({ nome: d.nome, pct: d.percentual.toNumber() }));
-  const base: ParametrosAnalise = {
+  return {
     fixosPct: faturamentoMensal && faturamentoMensal > 0 ? (totalFixos / faturamentoMensal) * 100 : null,
     despesasPct: lista.reduce((acc, d) => acc + d.pct, 0),
     lucroPct: config?.lucroDesejado.toNumber() ?? 20,
     envioPorProduto: envio.porProduto ?? 0,
     despesas: lista,
-  };
-  return {
-    ...base,
+    margens: {
+      producao_propria: config?.margemProducao.toNumber() ?? 65,
+      revenda: config?.margemRevenda.toNumber() ?? 30,
+      kit: config?.margemKit.toNumber() ?? 50,
+    },
     totalFixos,
     faturamentoMensal,
-    markup: markup(base),
     custoMedioEnvio: envio.custoMedio,
     itensPorPedido: envio.itensPorPedido,
     valorHora: config?.valorHora?.toNumber() ?? null,

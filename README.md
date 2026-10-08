@@ -28,7 +28,10 @@ Unica Planner. Módulos ativos:
   Materiais: colocar um material em vários produtos por nome de variante.
   Mão de obra: `ConfiguracaoPrecificacao.valorHora` × `minutosProducao` (produto ou
   variante) entra no custo; `TipoEnvio.minutos` = tempo de embalar o pedido.
-  Lucro desejado padrão: 20%.
+  Lucro desejado padrão: 20% (vale pro negócio). Precificação por margem de
+  contribuição: cada produto contra a meta do seu tipo (`margemProducao`,
+  `margemKit`, `margemRevenda`); os fixos são pagos pela soma das margens
+  (painel de cobertura na aba Precificação).
 
   Regras de precificação (markup divisor, como no Sebrae), tudo em % sobre o
   preço de venda (`src/lib/financeiro/analise.ts`):

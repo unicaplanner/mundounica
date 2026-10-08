@@ -5,7 +5,7 @@ import { carregarCustos, nomeVariante, type Custo } from "@/lib/financeiro/custo
 import { impressoraPadrao } from "@/lib/financeiro/impressao";
 import { carregarParametros } from "@/lib/financeiro/precificacao";
 import { carregarVendas } from "@/lib/financeiro/vendas";
-import { analisarPreco, type ParametrosAnalise } from "@/lib/financeiro/analise";
+import { ROTULO_TIPO, analisarPreco, metaDoTipo, type ParametrosAnalise, type TipoComMeta } from "@/lib/financeiro/analise";
 import { formatarReais } from "@/lib/financeiro/formato";
 import { ClassificarProduto } from "@/components/financeiro/ClassificarProduto";
 import { AplicarModelo, type CandidatoModelo } from "@/components/financeiro/AplicarModelo";
@@ -21,14 +21,14 @@ export const dynamic = "force-dynamic";
 
 const num = (d: { toNumber(): number } | null | undefined) => (d ? d.toNumber() : null);
 
-// Lucro % (depois das despesas por venda e dos custos fixos) com a etiqueta de situacao.
-function Lucro({ preco, custo, p }: { preco: number | null; custo: number | null; p: ParametrosAnalise }) {
-  const a = preco !== null && custo !== null ? analisarPreco(custo, preco, p) : null;
+// Margem de contribuicao % com a etiqueta de situacao (comparada com a meta do tipo).
+function Margem({ preco, custo, ctx }: { preco: number | null; custo: number | null; ctx: ContextoAnalise }) {
+  const a = preco !== null && custo !== null ? analisarPreco(custo, preco, ctx.p, ctx.meta) : null;
   if (!a) return <span className="text-muted">—</span>;
   return (
     <span className="inline-flex items-center gap-2">
-      <span className={`tabular-nums ${a.lucro < 0 ? "font-semibold text-alerta" : ""}`}>
-        {a.lucroPct.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%
+      <span className={`tabular-nums ${a.contribuicao < 0 ? "font-semibold text-alerta" : ""}`}>
+        {a.contribuicaoPct.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%
       </span>
       <StatusPreco status={a.status} />
     </span>
@@ -37,7 +37,8 @@ function Lucro({ preco, custo, p }: { preco: number | null; custo: number | null
 
 type ContextoAnalise = {
   p: ParametrosAnalise;
-  semFixos: boolean;
+  meta: number;
+  rotuloTipo: string;
   rotuloCusto: string;
   envioPorPedido: number | null;
   itensPorPedido: number | null;
@@ -51,19 +52,12 @@ function AnalisePreco({ custo, preco, ctx }: { custo: number; preco: number | nu
         custo={custo}
         precoSite={preco}
         parametros={ctx.p}
+        meta={ctx.meta}
+        rotuloTipo={ctx.rotuloTipo}
         rotuloCusto={ctx.rotuloCusto}
         envioPorPedido={ctx.envioPorPedido}
         itensPorPedido={ctx.itensPorPedido}
       />
-      {ctx.semFixos && (
-        <p className="mt-3 text-xs text-atencao">
-          Os custos fixos ainda não entram na conta: falta o faturamento médio em{" "}
-          <Link href="/financeiro/custos" className="underline">
-            Custos fixos
-          </Link>
-          .
-        </p>
-      )}
     </section>
   );
 }
@@ -86,10 +80,14 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
     lucroPct: parametros.lucroPct,
     envioPorProduto: parametros.envioPorProduto,
     despesas: parametros.despesas,
+    margens: parametros.margens,
+    totalFixos: parametros.totalFixos,
   };
+  const tipoMeta: TipoComMeta = produto.tipo === "revenda" || produto.tipo === "kit" ? produto.tipo : "producao_propria";
   const ctx: ContextoAnalise = {
     p,
-    semFixos: parametros.fixosPct === null,
+    meta: metaDoTipo(p, produto.tipo),
+    rotuloTipo: ROTULO_TIPO[tipoMeta],
     rotuloCusto:
       produto.tipo === "revenda"
         ? "Custo de compra"
@@ -263,14 +261,14 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
 
           {temVariantes && (
             <section>
-              <h3 className="mb-2 text-sm font-semibold text-ink">Preço no site e lucro por variante</h3>
+              <h3 className="mb-2 text-sm font-semibold text-ink">Preço no site e margem de contribuição por variante</h3>
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[420px] text-sm [&_td]:pr-4 [&_th]:pr-4">
                   <thead>
                     <tr className="border-b border-border text-left text-xs text-muted">
                       <th className="py-2 font-semibold">Variante</th>
                       <th className="py-2 font-semibold">Preço no site</th>
-                      <th className="py-2 font-semibold">Lucro</th>
+                      <th className="py-2 font-semibold">Margem de contribuição</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -279,7 +277,7 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
                         <td className="py-2">{v.title}</td>
                         <td className="py-2 tabular-nums">{v.preco ? formatarReais(v.preco.toNumber()) : "—"}</td>
                         <td className="py-2">
-                          <Lucro preco={num(v.preco)} custo={custoUnicoNum} p={p} />
+                          <Margem preco={num(v.preco)} custo={custoUnicoNum} ctx={ctx} />
                         </td>
                       </tr>
                     ))}
@@ -287,7 +285,7 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
                 </table>
               </div>
               <p className="mt-2 text-xs text-muted">
-                Lucro depois do custo, das despesas por venda e da parte dos custos fixos.
+                Margem de contribuição: o que sobra depois do custo, da embalagem de envio, das taxas e do imposto — é o que paga os custos fixos. Meta de {ROTULO_TIPO[tipoMeta]}: {ctx.meta}%.
               </p>
             </section>
           )}
@@ -351,7 +349,7 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
                         )}
                       </span>
                       <span className="w-44">
-                        <Lucro preco={preco} custo={custoNum} p={p} />
+                        <Margem preco={preco} custo={custoNum} ctx={ctx} />
                       </span>
                     </summary>
                     <div className="space-y-6 pb-6 pl-5">
@@ -365,7 +363,7 @@ export default async function ProdutoPage({ params }: PageProps<"/financeiro/pro
               })}
             </div>
             <p className="text-xs text-muted">
-              Colunas: preço no site, custo e lucro (depois das despesas por venda e da parte dos custos fixos).
+              Colunas: preço no site, custo e margem de contribuição (meta de {ROTULO_TIPO[tipoMeta]}: {ctx.meta}%).
             </p>
           </section>
         </>
