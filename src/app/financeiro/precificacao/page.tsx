@@ -13,6 +13,8 @@ import {
 } from "@/lib/financeiro/analise";
 import { formatarReais, normalizarBusca } from "@/lib/financeiro/formato";
 import { StatusPreco } from "@/components/financeiro/StatusPreco";
+import { AlertasMateriais } from "@/components/financeiro/AlertasMateriais";
+import { carregarAlertasMateriais } from "@/lib/financeiro/alertas";
 import { botaoSecundario, campo } from "@/components/financeiro/estilos";
 
 export const dynamic = "force-dynamic";
@@ -46,6 +48,7 @@ export default async function PrecificacaoPage({ searchParams }: PageProps<"/fin
   const busca = typeof sp.busca === "string" ? sp.busca.trim() : "";
   const filtro = (FILTROS.find((f) => f.valor === sp.filtro)?.valor ?? "todos") as Filtro;
   const [custos, p, vendas] = await Promise.all([carregarCustos(), carregarParametros(), carregarVendas()]);
+  const alertas = await carregarAlertasMateriais(custos, p);
 
   const linhas: Linha[] = [];
   for (const produto of custos.produtos.values()) {
@@ -122,6 +125,8 @@ export default async function PrecificacaoPage({ searchParams }: PageProps<"/fin
           Ajustar metas e custos
         </Link>
       </div>
+
+      <AlertasMateriais alertas={alertas} />
 
       <section className="space-y-3 rounded-2xl bg-ink px-6 py-5 text-background">
         <p className="text-xs uppercase tracking-wide text-background/60">Os custos fixos estão sendo pagos?</p>

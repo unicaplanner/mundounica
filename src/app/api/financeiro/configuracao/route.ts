@@ -45,7 +45,23 @@ export async function PATCH(req: Request) {
     margens[chave] = valor;
   }
 
+  // saldo em conta numa data (ponto de partida do fluxo de caixa); pode ser negativo
+  let saldo: { saldoCaixa: Prisma.Decimal | null; saldoCaixaEm: Date | null } | undefined;
+  if ("saldoCaixa" in body) {
+    if (body.saldoCaixa === null || body.saldoCaixa === "") saldo = { saldoCaixa: null, saldoCaixaEm: null };
+    else {
+      const texto = String(body.saldoCaixa).trim();
+      const negativo = texto.startsWith("-");
+      const valor = paraDecimal(negativo ? texto.slice(1) : texto);
+      if (!valor) return erro("Informe o saldo em conta, por exemplo 2.350,00.");
+      const data = body.saldoCaixaData ? new Date(`${body.saldoCaixaData}T12:00:00`) : new Date();
+      if (Number.isNaN(data.getTime())) return erro("Data inválida.");
+      saldo = { saldoCaixa: negativo ? valor.negated() : valor, saldoCaixaEm: data };
+    }
+  }
+
   const campos = {
+    ...(saldo ?? {}),
     ...(faturamento !== undefined ? { faturamentoMensal: faturamento } : {}),
     ...(lucro ? { lucroDesejado: lucro } : {}),
     ...(valorHora !== undefined ? { valorHora } : {}),

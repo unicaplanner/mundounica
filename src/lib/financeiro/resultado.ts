@@ -33,6 +33,8 @@ export type ResultadoMes = {
   sobraProLabore: number;
   proLabore: number;
   lucro: number;
+  margemPct: number | null; // margem de contribuicao real / vendas
+  metaPct: number | null; // meta de margem pela mistura de tipos vendida no mes
 };
 
 export type Resultados = {
@@ -47,14 +49,20 @@ const ehProLabore = (nome: string) => /pr[oó][\s-]?labore/i.test(nome);
 const ehDesconto = (nome: string) => /cupo|cupom|desconto/i.test(nome);
 
 export async function carregarResultados(): Promise<Resultados> {
-  const [resumos, vendas, custos, envio, despesas, fixos] = await Promise.all([
+  const [resumos, vendas, custos, envio, despesas, fixos, config] = await Promise.all([
     prisma.resumoMensal.findMany({ orderBy: { mes: "asc" } }),
     prisma.vendaMensal.findMany({ select: { mes: true, shopifyVariantId: true, quantidade: true, receita: true } }),
     carregarCustos(),
     carregarEnvio(),
     prisma.despesaVariavel.findMany(),
     prisma.custoFixo.findMany(),
+    prisma.configuracaoPrecificacao.findUnique({ where: { id: "unica" } }),
   ]);
+  const metas: Record<string, number> = {
+    producao_propria: config?.margemProducao.toNumber() ?? 65,
+    revenda: config?.margemRevenda.toNumber() ?? 30,
+    kit: config?.margemKit.toNumber() ?? 50,
+  };
 
   // mesmos custos sem a mao de obra, pra separar uma coisa da outra
   const semMaoDeObra = new Custos(custos.produtos, custos.variantes, null);
@@ -68,7 +76,8 @@ export async function carregarResultados(): Promise<Resultados> {
   const envioPorPedido = envio.custoMedio;
 
   // custo por mes das vendas com custo cadastrado
-  type Acum = { comCusto: number; produtos: number; maoDeObra: number };
+  // metaPonderada: soma de receita x meta do tipo (dividida por comCusto = meta da mistura)
+  type Acum = { comCusto: number; produtos: number; maoDeObra: number; metaPonderada: number };
   const porMes = new Map<string, Acum>();
   for (const v of vendas) {
     const receita = v.receita.toNumber();
@@ -80,8 +89,9 @@ export async function carregarResultados(): Promise<Resultados> {
     const total = custos.daVariante(varianteId);
     if (!total) continue;
     const material = semMaoDeObra.daVariante(varianteId)?.valor.toNumber() ?? total.valor.toNumber();
-    const acum = porMes.get(v.mes) ?? { comCusto: 0, produtos: 0, maoDeObra: 0 };
+    const acum = porMes.get(v.mes) ?? { comCusto: 0, produtos: 0, maoDeObra: 0, metaPonderada: 0 };
     acum.comCusto += receita;
+    acum.metaPonderada += receita * (metas[tipo] ?? metas.producao_propria);
     acum.produtos += v.quantidade * material;
     acum.maoDeObra += v.quantidade * (total.valor.toNumber() - material);
     porMes.set(v.mes, acum);
@@ -104,7 +114,7 @@ export async function carregarResultados(): Promise<Resultados> {
   const meses = resumos.map((r): ResultadoMes => {
     const vendasMes = r.receita.toNumber();
     const frete = r.frete.toNumber();
-    const acum = porMes.get(r.mes) ?? { comCusto: 0, produtos: 0, maoDeObra: 0 };
+    const acum = porMes.get(r.mes) ?? { comCusto: 0, produtos: 0, maoDeObra: 0, metaPonderada: 0 };
     const semCustoMes = Math.max(vendasMes - acum.comCusto, 0);
     const estProdutos = semCustoMes * razaoProdutos;
     const estMao = semCustoMes * razaoMao;
@@ -131,6 +141,8 @@ export async function carregarResultados(): Promise<Resultados> {
       sobraProLabore,
       proLabore,
       lucro: sobraProLabore - proLabore,
+      margemPct: vendasMes > 0 ? (margem / vendasMes) * 100 : null,
+      metaPct: acum.comCusto > 0 ? acum.metaPonderada / acum.comCusto : null,
     };
   });
 

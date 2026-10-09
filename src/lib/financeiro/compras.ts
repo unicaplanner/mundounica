@@ -9,7 +9,20 @@ export type DadosCompra = {
   valorTotal: Prisma.Decimal;
   custoUnitario: Prisma.Decimal;
   fornecedor: string | null;
+  fornecedorId: string | null;
 };
+
+// Acha o fornecedor pelo nome (sem diferenciar maiuscula) ou cria um novo.
+export async function ligarFornecedor(nome: string | null): Promise<{ id: string; nome: string } | null> {
+  const limpo = (nome ?? "").trim().replace(/\s+/g, " ").slice(0, 80);
+  if (!limpo) return null;
+  const existente = await prisma.fornecedor.findFirst({
+    where: { nome: { equals: limpo, mode: "insensitive" } },
+    select: { id: true, nome: true },
+  });
+  if (existente) return existente;
+  return prisma.fornecedor.create({ data: { nome: limpo }, select: { id: true, nome: true } });
+}
 
 // Valida o que veio do formulario de compra (criar ou editar).
 export async function lerCompra(
@@ -28,6 +41,7 @@ export async function lerCompra(
     select: { id: true },
   });
   if (!material) return { ok: false, erro: "Escolha um material da lista." };
+  const fornecedor = await ligarFornecedor(String(body.fornecedor ?? ""));
 
   return {
     ok: true,
@@ -37,7 +51,8 @@ export async function lerCompra(
       quantidade,
       valorTotal,
       custoUnitario: valorTotal.dividedBy(quantidade),
-      fornecedor: String(body.fornecedor ?? "").trim() || null,
+      fornecedor: fornecedor?.nome ?? null,
+      fornecedorId: fornecedor?.id ?? null,
     },
   };
 }

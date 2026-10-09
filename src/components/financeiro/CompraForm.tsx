@@ -13,7 +13,7 @@ function hojeEmSaoPaulo() {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" }).format(new Date());
 }
 
-export function CompraForm({ materiais }: { materiais: Material[] }) {
+export function CompraForm({ materiais, fornecedores = [] }: { materiais: Material[]; fornecedores?: string[] }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [materialId, setMaterialId] = useState(materiais[0]?.id ?? "");
@@ -128,10 +128,16 @@ export function CompraForm({ materiais }: { materiais: Material[] }) {
           <input
             id="compra-fornecedor"
             type="text"
+            list="compra-fornecedores"
             value={fornecedor}
             onChange={(e) => setFornecedor(e.target.value)}
             className={`${campo} w-44`}
           />
+          <datalist id="compra-fornecedores">
+            {fornecedores.map((f) => (
+              <option key={f} value={f} />
+            ))}
+          </datalist>
         </div>
       </div>
 

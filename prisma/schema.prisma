@@ -102,6 +102,11 @@ model Material {
   // na mesma quantidade -- nao precisa lancar a impressao separada
   impresso   Boolean @default(false)
 
+  // Contagem de estoque (na unidade do material) e quando foi feita. O
+  // estoque atual = contagem + compras depois dela - consumo pelas vendas.
+  estoqueContado   Decimal?  @db.Decimal(12, 2)
+  estoqueContadoEm DateTime?
+
   compras      Compra[]
   fichaTecnica FichaTecnicaItem[]
   envios       EnvioMaterial[]
@@ -117,14 +122,45 @@ model Compra {
   material   Material @relation(fields: [materialId], references: [id])
 
   data          DateTime // data da compra (pode ser retroativa)
-  quantidade    Decimal  @db.Decimal(10, 2)
-  valorTotal    Decimal  @db.Decimal(10, 2)
-  custoUnitario Decimal  @db.Decimal(10, 4) // valorTotal / quantidade
-  fornecedor    String?
+  quantidade    Decimal     @db.Decimal(10, 2)
+  valorTotal    Decimal     @db.Decimal(10, 2)
+  custoUnitario Decimal     @db.Decimal(10, 4) // valorTotal / quantidade
+  fornecedor    String? // nome digitado (fica igual ao do cadastro quando ligado)
+  fornecedorId  String?
+  fornecedorRef Fornecedor? @relation(fields: [fornecedorId], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
 
   @@index([materialId, data])
+  @@index([fornecedorId])
+}
+
+// Ficha do fornecedor: dados de contato, mensagens importantes e as compras
+// feitas com ele (ultimas compras, precos ao longo do tempo, o que compramos).
+model Fornecedor {
+  id          String  @id @default(cuid())
+  nome        String  @unique
+  whatsapp    String? // so numeros, com DDD (o link wa.me poe o 55)
+  link        String? // loja ou anuncio
+  observacoes String?
+
+  compras   Compra[]
+  mensagens MensagemFornecedor[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MensagemFornecedor {
+  id           String     @id @default(cuid())
+  fornecedorId String
+  fornecedor   Fornecedor @relation(fields: [fornecedorId], references: [id], onDelete: Cascade)
+  data         DateTime   @default(now())
+  texto        String
+
+  createdAt DateTime @default(now())
+
+  @@index([fornecedorId])
 }
 
 // Quanto de um material entra em uma unidade (producao propria, ou
@@ -254,6 +290,9 @@ model ConfiguracaoPrecificacao {
   margemRevenda       Decimal   @default(30) @db.Decimal(5, 2)
   margemKit           Decimal   @default(50) @db.Decimal(5, 2)
   vendasAtualizadasEm DateTime? // ultima vez que as vendas do Shopify foram puxadas
+  // Saldo em conta informado pela Lari (ponto de partida do fluxo de caixa)
+  saldoCaixa          Decimal?  @db.Decimal(12, 2)
+  saldoCaixaEm        DateTime?
 
   updatedAt DateTime @updatedAt
 }

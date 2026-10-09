@@ -108,6 +108,33 @@ export default async function ResultadoPage({ searchParams }: PageProps<"/financ
               <Linha rotulo={atual.lucro >= 0 ? "= Lucro do mês" : "= Faltou no mês"} valor={atual.lucro} forte menos={false} />
             </tbody>
           </table>
+          {atual.margemPct !== null && atual.metaPct !== null && (
+            <div
+              className={`rounded-xl px-4 py-3 text-xs ${
+                atual.margemPct >= atual.metaPct - 1 ? "bg-ok-soft text-ok" : "bg-atencao-soft text-atencao"
+              }`}
+            >
+              <p>
+                <strong>
+                  Margem real: {pct(atual.margemPct)} · prevista: {pct(atual.metaPct)}
+                </strong>
+              </p>
+              <p className="mt-0.5 text-ink/80">
+                {atual.margemPct >= atual.metaPct - 1
+                  ? "As vendas deixaram o que as metas de margem prometiam, pela mistura de produtos vendida."
+                  : `Ficou ${pct(atual.metaPct - atual.margemPct)} abaixo do previsto pela mistura de produtos vendida (${formatarReais(((atual.metaPct - atual.margemPct) / 100) * atual.vendas)} a menos). Costuma ser cupom, preço abaixo da meta ou material que subiu: veja a`}
+                {atual.margemPct < atual.metaPct - 1 && (
+                  <>
+                    {" "}
+                    <Link href="/financeiro/precificacao" className="underline">
+                      Precificação
+                    </Link>
+                    .
+                  </>
+                )}
+              </p>
+            </div>
+          )}
           {atual.coberturaPct < 95 && (
             <p className="rounded-xl bg-atencao-soft px-4 py-3 text-xs text-atencao">
               {pct(100 - atual.coberturaPct)} das vendas deste mês são de produtos sem custo cadastrado. O custo deles foi
@@ -153,6 +180,47 @@ export default async function ResultadoPage({ searchParams }: PageProps<"/financ
           </section>
         </aside>
       </div>
+
+      <section className="space-y-3">
+        <h2 className="font-serif text-xl font-semibold text-ink">Margem real × prevista</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[520px] text-xs [&_td]:pr-3 [&_th]:pr-3">
+            <thead>
+              <tr className="border-b border-border text-left text-muted">
+                <th className="py-1.5 font-semibold">Mês</th>
+                <th className="py-1.5 text-right font-semibold">Vendas</th>
+                <th className="py-1.5 text-right font-semibold">Margem real</th>
+                <th className="py-1.5 text-right font-semibold">Prevista</th>
+                <th className="py-1.5 text-right font-semibold">Diferença</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...ultimos].reverse().map((m) => {
+                const dif = m.margemPct !== null && m.metaPct !== null ? m.margemPct - m.metaPct : null;
+                return (
+                  <tr key={m.mes} className="border-b border-border">
+                    <td className="py-1.5 text-muted">
+                      {nomeMes(m.mes, true)}
+                      {m.parcial ? "*" : ""}
+                    </td>
+                    <td className="py-1.5 text-right tabular-nums">{formatarReais(m.vendas)}</td>
+                    <td className="py-1.5 text-right tabular-nums">{m.margemPct !== null ? pct(m.margemPct) : "—"}</td>
+                    <td className="py-1.5 text-right tabular-nums text-muted">{m.metaPct !== null ? pct(m.metaPct) : "—"}</td>
+                    <td className={`py-1.5 text-right tabular-nums ${dif !== null && dif < -1 ? "text-alerta" : "text-ok"}`}>
+                      {dif === null ? "—" : `${dif > 0 ? "+" : ""}${pct(dif)}`}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-xs text-muted">
+          Prevista: a meta de margem de cada tipo (produção própria, kit, revenda), ponderada pelo quanto cada tipo vendeu
+          no mês. Real: o que sobrou de fato depois de produtos, mão de obra, embalagem e taxas, com os preços que os
+          clientes pagaram (já com cupom).
+        </p>
+      </section>
 
       <section className="space-y-3">
         <h2 className="font-serif text-xl font-semibold text-ink">Sobra pro pró-labore, mês a mês</h2>

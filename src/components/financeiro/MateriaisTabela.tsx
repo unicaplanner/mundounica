@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { enviar } from "@/lib/financeiro/enviar";
@@ -18,7 +19,24 @@ export type MaterialLinha = {
   envios: number;
   linkCompra: string | null;
   impresso: boolean;
+  estoque: number | null;
+  mesesRestantes: number | null;
 };
+
+function textoEstoque(m: MaterialLinha) {
+  if (m.estoque === null) return <span className="text-xs text-muted">sem contagem</span>;
+  const pouco = m.mesesRestantes !== null && m.mesesRestantes < 1;
+  return (
+    <span className={pouco || m.estoque < 0 ? "font-semibold text-alerta" : ""}>
+      {formatarQuantidade(Math.round(m.estoque))} {m.unidade}
+      {m.mesesRestantes !== null && (
+        <span className={`block text-xs ${pouco ? "" : "text-muted"}`}>
+          {pouco ? "acaba em menos de 1 mês" : `~${m.mesesRestantes.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} meses`}
+        </span>
+      )}
+    </span>
+  );
+}
 
 function textoUsos(produtos: number, envios: number) {
   const partes = [
@@ -73,12 +91,13 @@ export function MateriaisTabela({ materiais }: { materiais: MaterialLinha[] }) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[640px] text-sm [&_td]:pr-4 [&_th]:pr-4">
+      <table className="w-full min-w-[760px] text-sm [&_td]:pr-4 [&_th]:pr-4">
         <thead>
           <tr className="border-b border-border text-left text-xs text-muted">
             <th className="py-2 font-semibold">Material</th>
             <th className="py-2 font-semibold">Unidade</th>
             <th className="py-2 font-semibold">Custo atual</th>
+            <th className="py-2 font-semibold">Estoque</th>
             <th className="py-2 font-semibold">Total já comprado</th>
             <th className="py-2 font-semibold">Usado em</th>
             <th className="py-2">
@@ -116,7 +135,9 @@ export function MateriaisTabela({ materiais }: { materiais: MaterialLinha[] }) {
                     </div>
                   ) : (
                     <>
-                      <span className="font-semibold text-ink">{m.nome}</span>
+                      <Link href={`/financeiro/materiais/${m.id}`} className="font-semibold text-ink underline-offset-2 hover:underline">
+                        {m.nome}
+                      </Link>
                       {m.linkCompra && (
                         <a
                           href={m.linkCompra}
@@ -171,6 +192,7 @@ export function MateriaisTabela({ materiais }: { materiais: MaterialLinha[] }) {
                     `${formatarReais(m.custoAtual, 4)} / ${m.unidade}`
                   )}
                 </td>
+                <td className="py-2.5 tabular-nums">{textoEstoque(m)}</td>
                 <td className="py-2.5 tabular-nums text-muted">
                   {formatarQuantidade(m.totalComprado)} {m.unidade}
                 </td>

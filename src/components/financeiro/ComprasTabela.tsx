@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { enviar } from "@/lib/financeiro/enviar";
@@ -17,6 +18,7 @@ export type CompraLinha = {
   valorTotal: number;
   custoUnitario: number;
   fornecedor: string | null;
+  fornecedorId: string | null;
 };
 
 type Material = { id: string; nome: string; unidade: string };
@@ -105,7 +107,15 @@ function LinhaLeitura({
       </td>
       <td className="py-2.5 tabular-nums">{formatarReais(c.valorTotal)}</td>
       <td className="py-2.5 tabular-nums">{formatarReais(c.custoUnitario, 4)}</td>
-      <td className="py-2.5 text-muted">{c.fornecedor ?? "—"}</td>
+      <td className="py-2.5 text-muted">
+        {c.fornecedorId ? (
+          <Link href={`/financeiro/fornecedores/${c.fornecedorId}`} className="text-ink underline hover:opacity-80">
+            {c.fornecedor}
+          </Link>
+        ) : (
+          (c.fornecedor ?? "—")
+        )}
+      </td>
       <td className="py-1.5 text-right">
         {confirmandoExclusao ? (
           <div className="flex items-center justify-end gap-2 whitespace-nowrap">

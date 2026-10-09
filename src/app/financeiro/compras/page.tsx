@@ -1,4 +1,9 @@
 import { getComprasRecentes, getMateriais } from "@/lib/financeiro/queries";
+import { prisma } from "@/lib/db";
+import { carregarCustos } from "@/lib/financeiro/custo";
+import { carregarParametros } from "@/lib/financeiro/precificacao";
+import { carregarAlertasMateriais } from "@/lib/financeiro/alertas";
+import { AlertasMateriais } from "@/components/financeiro/AlertasMateriais";
 import { CompraForm } from "@/components/financeiro/CompraForm";
 import { ComprasTabela } from "@/components/financeiro/ComprasTabela";
 
@@ -7,7 +12,14 @@ export const dynamic = "force-dynamic";
 const dataISO = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" });
 
 export default async function ComprasPage() {
-  const [materiais, compras] = await Promise.all([getMateriais(), getComprasRecentes()]);
+  const [materiais, compras, fornecedores, custos, parametros] = await Promise.all([
+    getMateriais(),
+    getComprasRecentes(),
+    prisma.fornecedor.findMany({ select: { nome: true }, orderBy: { nome: "asc" } }),
+    carregarCustos(),
+    carregarParametros(),
+  ]);
+  const alertas = await carregarAlertasMateriais(custos, parametros);
   const listaMateriais = materiais.map((m) => ({ id: m.id, nome: m.nome, unidade: m.unidade }));
 
   return (
@@ -18,8 +30,10 @@ export default async function ComprasPage() {
         ou a lixeira pra excluir.
       </p>
 
+      <AlertasMateriais alertas={alertas} />
+
       <div className="rounded-2xl border border-dashed border-border p-4">
-        <CompraForm materiais={listaMateriais} />
+        <CompraForm materiais={listaMateriais} fornecedores={fornecedores.map((f) => f.nome)} />
       </div>
 
       {compras.length === 0 ? (
@@ -39,6 +53,7 @@ export default async function ComprasPage() {
             valorTotal: c.valorTotal.toNumber(),
             custoUnitario: c.custoUnitario.toNumber(),
             fornecedor: c.fornecedor,
+            fornecedorId: c.fornecedorId,
           }))}
         />
       )}
