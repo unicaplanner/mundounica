@@ -32,6 +32,11 @@ Unica Planner. Módulos ativos:
   contribuição: cada produto contra a meta do seu tipo (`margemProducao`,
   `margemKit`, `margemRevenda`); os fixos são pagos pela soma das margens
   (painel de cobertura na aba Precificação).
+  Fase 2 (09/10/2026): fornecedores (`/financeiro/fornecedores`, `src/lib/financeiro/fornecedores.ts`),
+  página de cada material com histórico de preço e estoque (`src/lib/financeiro/estoque.ts`:
+  contagem + compras − saída pelas vendas), alerta de material que subiu
+  (`src/lib/financeiro/alertas.ts`), margem real × prevista no Resultado do mês e
+  fluxo de caixa de 90 dias (`/financeiro/caixa`, `src/lib/financeiro/caixa.ts`).
 
   Regras de precificação (markup divisor, como no Sebrae), tudo em % sobre o
   preço de venda (`src/lib/financeiro/analise.ts`):
