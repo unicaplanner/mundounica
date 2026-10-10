@@ -11,7 +11,7 @@ export default async function ImpressorasPage() {
   return (
     <div className="space-y-6">
       <p className="max-w-2xl text-sm text-muted">
-        Custo por página (um lado impresso) = (preço ÷ vida útil + tinta por ano + manutenção por ano) ÷ páginas por
+        Custo por página (um lado impresso) = (preço ÷ vida útil + tinta e caixas de manutenção por ano + consertos por ano) ÷ páginas por
         ano. As páginas por ano você vê no <strong>contador da impressora</strong>: divida o total pelo tempo de uso.
         Nos produtos e nos envios você informa só quantas folhas: toda folha conta <strong>frente e verso</strong> (2 ×
         custo da página) e usa o custo da <strong>impressora mais cara</strong>, pra cobrir mesmo quando a impressão
@@ -28,8 +28,8 @@ export default async function ImpressorasPage() {
           { chave: "modelo", rotulo: "Modelo", placeholder: "Canon GX6010", largura: "w-32" },
           { chave: "precoCompra", rotulo: "Preço (R$)", placeholder: "4.000", numerico: true, largura: "w-24" },
           { chave: "vidaUtilAnos", rotulo: "Vida útil (anos)", placeholder: "6", numerico: true, largura: "w-20" },
-          { chave: "tintaAno", rotulo: "Tinta/ano (R$)", placeholder: "250", numerico: true, largura: "w-24" },
-          { chave: "manutencaoAno", rotulo: "Manutenção/ano (R$)", placeholder: "300", numerico: true, largura: "w-24" },
+          { chave: "tintaAno", rotulo: "Tinta + caixa de manutenção/ano (R$)", placeholder: "250", numerico: true, largura: "w-24" },
+          { chave: "manutencaoAno", rotulo: "Conserto/ano (R$)", placeholder: "300", numerico: true, largura: "w-24" },
           { chave: "paginasAno", rotulo: "Páginas/ano", placeholder: "12000", numerico: true, largura: "w-24" },
         ]}
         colunasExtras={["Custo/ano", "Custo/página", "Custo/folha (frente e verso)", "Nos custos"]}
