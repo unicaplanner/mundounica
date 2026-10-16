@@ -48,6 +48,14 @@ Unica Planner. Módulos ativos:
     por página); custo por página da impressora = (preço ÷ vida útil + tinta/ano +
     manutenção/ano) ÷ páginas por ano
 
+- **Marketing** (`/marketing`) — mapa mental dos braços do marketing, mesmo
+  login. Nó central "Marketing"; tocar num braço abre os sub-braços (ex:
+  Conteúdo → Instagram, TikTok, YouTube…), tocar de novo recolhe, e há o
+  botão "Abrir tudo". No computador os braços ficam dos dois lados do centro;
+  no celular vira uma árvore de cima pra baixo. A lista fica em
+  `src/lib/marketing/mapa.ts` (sem banco): pra mudar um braço, edite só
+  esse arquivo.
+
 Os demais (Leads de criadoras, Propostas de UGC, Feedbacks e ideias de
 produto) aparecem como "em breve" e serão construídos em conversas
 separadas.
@@ -124,6 +132,8 @@ para a visão completa da plataforma e o plano das próximas fases.
   materiais, compras); `src/app/api/financeiro/` — rotas que gravam dados
   (cada uma confere o login de novo, além do proxy).
 - `src/lib/financeiro/` — sync com o Shopify, cálculo de custo, consultas.
+- `src/app/marketing/`, `src/components/marketing/MapaMental.tsx`,
+  `src/lib/marketing/mapa.ts` — módulo Marketing (mapa mental).
 - `prisma/schema.prisma` — tabelas do Financeiro.
 
 ### Regras do Financeiro

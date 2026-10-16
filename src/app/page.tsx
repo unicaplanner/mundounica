@@ -48,6 +48,14 @@ export default async function HubPage() {
           href="/financeiro"
         />
         <ModuleCard
+          className="sm:col-span-6"
+          variant="active"
+          monogram="MK"
+          title="Marketing"
+          description="Mapa mental dos braços: conteúdo, e-mail, campanhas e mais."
+          href="/marketing"
+        />
+        <ModuleCard
           className="sm:col-span-2"
           variant="ghost"
           monogram="LC"

@@ -20,6 +20,12 @@
   --atencao-soft: #f4ead6;
   --ok: #4f5f3e;
   --ok-soft: #e7ecdf;
+
+  /* Tons extras do mapa do Marketing */
+  --rosa: #8e4f63;
+  --rosa-soft: #f5e6eb;
+  --azul: #44596b;
+  --azul-soft: #e4eaef;
 }
 
 @theme inline {
@@ -40,9 +46,21 @@
   --color-atencao-soft: var(--atencao-soft);
   --color-ok: var(--ok);
   --color-ok-soft: var(--ok-soft);
+  --color-rosa: var(--rosa);
+  --color-rosa-soft: var(--rosa-soft);
+  --color-azul: var(--azul);
+  --color-azul-soft: var(--azul-soft);
+
+  --animate-brotar: brotar 180ms ease-out;
 
   --font-sans: var(--font-open-sans);
   --font-serif: var(--font-fraunces);
+}
+
+@keyframes brotar {
+  from {
+    opacity: 0;
+  }
 }
 
 body {
