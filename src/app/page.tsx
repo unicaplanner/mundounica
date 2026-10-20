@@ -48,29 +48,15 @@ export default async function HubPage() {
           href="/financeiro"
         />
         <ModuleCard
-          className="sm:col-span-6"
+          className="sm:col-span-3"
           variant="active"
           monogram="MK"
           title="Marketing"
-          description="Mapa mental dos braços: conteúdo, e-mail, campanhas e mais."
+          description="Conteúdo, calendário e parcerias com criadoras: da captura no feed ao envio e às vendas do cupom."
           href="/marketing"
         />
         <ModuleCard
-          className="sm:col-span-2"
-          variant="ghost"
-          monogram="LC"
-          title="Leads de criadoras"
-          description="Prospecção e triagem de criadoras para parcerias."
-        />
-        <ModuleCard
-          className="sm:col-span-2"
-          variant="ghost"
-          monogram="UG"
-          title="Propostas de UGC"
-          description="Avaliação de propostas de parceria recebidas por DM."
-        />
-        <ModuleCard
-          className="sm:col-span-2"
+          className="sm:col-span-3"
           variant="ghost"
           monogram="FI"
           title="Feedbacks e ideias de produto"

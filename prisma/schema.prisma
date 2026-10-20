@@ -76,10 +76,11 @@ model Variante {
 
   minutosProducao Decimal? @db.Decimal(8, 2) // so com custoPorVariante (ver Produto)
 
-  fichaTecnica FichaTecnicaItem[]
-  componentes  KitItem[]          @relation("KitDaVariante")
-  usadaEmKits  KitItem[]          @relation("ComponenteDoKit")
-  impressoes   ImpressaoItem[]
+  fichaTecnica       FichaTecnicaItem[]
+  componentes        KitItem[]           @relation("KitDaVariante")
+  usadaEmKits        KitItem[]           @relation("ComponenteDoKit")
+  impressoes         ImpressaoItem[]
+  enviadaEmParcerias ItemEnvioParceria[]
 
   lastSyncedAt DateTime @default(now())
   createdAt    DateTime @default(now())
@@ -373,4 +374,366 @@ model ResumoMensal {
   pedidos Int
   receita Decimal @db.Decimal(12, 2)
   frete   Decimal @default(0) @db.Decimal(12, 2) // frete cobrado dos clientes (pro medidor do MEI)
+}
+
+// ---------------------------------------------------------------------------
+// Modulo Parcerias (criadoras / influenciadoras). Um cadastro so de criadora
+// pra prospeccao ativa (Leads) e propostas recebidas por DM (UGC), separados
+// pela origem. Depois que fecha, a mesma ficha acompanha envio, posts
+// combinados, pagamento e as vendas do cupom dela.
+
+enum StatusCriadora {
+  nova // acabou de ser capturada, ainda nao revisada
+  pra_contatar
+  contatada
+  respondeu
+  negociando
+  fechada
+  nao_seguiu // recusou ou nao respondeu
+  descartada // a Lari decidiu nao seguir
+}
+
+enum OrigemCriadora {
+  prospeccao // a Lari achou rolando o feed
+  proposta // a criadora mandou proposta por DM
+  indicacao
+}
+
+enum TipoAcordo {
+  presente // seeding: sem obrigacao de postar
+  permuta // produto em troca de conteudo combinado
+  pago // cache
+  afiliada // comissao por venda do cupom
+}
+
+enum Recomendacao {
+  aprovar
+  investigar
+  recusar
+}
+
+model Campanha {
+  id        String    @id @default(cuid())
+  nome      String    @unique // "Onda 1"
+  descricao String?
+  inicio    DateTime?
+  fim       DateTime?
+
+  criadoras Criadora[]
+  tarefas   TarefaCampanha[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TarefaCampanha {
+  id          String   @id @default(cuid())
+  campanhaId  String
+  campanha    Campanha @relation(fields: [campanhaId], references: [id], onDelete: Cascade)
+  fase        String // "Preparação", "Abordagem"...
+  texto       String
+  dica        String?
+  responsavel String? // "lari" ou "claude"
+  feita       Boolean  @default(false)
+  posicao     Int      @default(0)
+
+  createdAt DateTime @default(now())
+
+  @@index([campanhaId])
+}
+
+model Criadora {
+  id           String  @id @default(cuid())
+  nome         String? // como chamar na DM ("Camile")
+  nomeCompleto String? // vem do formulario
+  instagram    String? @unique // handle sem @, minusculo
+  tiktok       String?
+  youtube      String? // handle, link ou "tem canal"
+  linkOrigem   String? // o link colado na captura
+
+  seguidoresInstagram Int?
+  seguidoresTiktok    Int?
+  seguidoresYoutube   Int?
+
+  nicho       String?
+  motivo      String? // por que achou interessante
+  alerta      String? // ponto de atencao ("bio em ingles", "e mentora")
+  observacoes String?
+  gancho      String? // frase pessoal que entra na DM
+
+  origem     OrigemCriadora @default(prospeccao)
+  status     StatusCriadora @default(nova)
+  statusEm   DateTime       @default(now()) // quando entrou no status atual
+  campanhaId String?
+  campanha   Campanha?      @relation(fields: [campanhaId], references: [id], onDelete: SetNull)
+  lote       Int?
+  kit        String? // "Case Início", "Premium", "Reserva"...
+
+  email    String?
+  whatsapp String? // so numeros, com DDD
+  endereco String? // pro envio (vem do formulario)
+
+  acordo          TipoAcordo?
+  valorCombinado  Decimal?    @db.Decimal(10, 2) // cache, quando pago
+  comissaoPct     Decimal?    @db.Decimal(5, 2) // afiliada
+  pago            Boolean     @default(false)
+  pagoEm          DateTime?
+  autorizaAnuncio Boolean     @default(false) // pode usar o video como anuncio
+  anuncioAte      DateTime?
+
+  cupom             String?   @unique // codigo do Shopify, maiusculo
+  cupomPedidos      Int?
+  cupomVendas       Decimal?  @db.Decimal(12, 2)
+  cupomAtualizadoEm DateTime?
+
+  registros RegistroCriadora[]
+  propostas PropostaUgc[]
+  envios    EnvioParceria[]
+  entregas  EntregaParceria[]
+  respostas RespostaFormulario[]
+  producao  ItemProducaoParceria[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([campanhaId])
+}
+
+// Historico de conversa com a criadora (o que ela respondeu, o que foi combinado).
+model RegistroCriadora {
+  id         String   @id @default(cuid())
+  criadoraId String
+  criadora   Criadora @relation(fields: [criadoraId], references: [id], onDelete: Cascade)
+  data       DateTime @default(now())
+  texto      String
+
+  createdAt DateTime @default(now())
+
+  @@index([criadoraId])
+}
+
+// Proposta recebida por DM, com a avaliacao (checklist manual ou Claude).
+model PropostaUgc {
+  id         String   @id @default(cuid())
+  criadoraId String
+  criadora   Criadora @relation(fields: [criadoraId], references: [id], onDelete: Cascade)
+  recebidaEm DateTime @default(now())
+  texto      String // a DM colada
+
+  pedido      String? // "permuta", "pago" ou null (nao disse)
+  valorPedido Decimal? @db.Decimal(10, 2)
+
+  checklist     Json? // respostas da Lari: { estetica: "sim", ... }
+  recomendacao  Recomendacao?
+  justificativa String?
+  perguntas     String? // o que ainda falta saber (uma por linha)
+  analisadaPor  String? // "manual" ou "claude"
+  analisadaEm   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([criadoraId])
+}
+
+model EnvioParceria {
+  id         String    @id @default(cuid())
+  criadoraId String
+  criadora   Criadora  @relation(fields: [criadoraId], references: [id], onDelete: Cascade)
+  data       DateTime  @default(now())
+  rastreio   String?
+  custoFrete Decimal?  @db.Decimal(10, 2)
+  entregueEm DateTime?
+  observacao String?
+
+  itens ItemEnvioParceria[]
+
+  createdAt DateTime @default(now())
+
+  @@index([criadoraId])
+}
+
+// Produto mandado. O custo e copiado do Financeiro na hora de lancar (pra
+// nao mudar depois se o material subir) e pode ser corrigido a mao.
+model ItemEnvioParceria {
+  id            String        @id @default(cuid())
+  envioId       String
+  envio         EnvioParceria @relation(fields: [envioId], references: [id], onDelete: Cascade)
+  varianteId    String?
+  variante      Variante?     @relation(fields: [varianteId], references: [id], onDelete: SetNull)
+  descricao     String
+  quantidade    Int           @default(1)
+  custoUnitario Decimal?      @db.Decimal(10, 2)
+
+  @@index([envioId])
+}
+
+// Post/video combinado com a criadora.
+model EntregaParceria {
+  id          String    @id @default(cuid())
+  criadoraId  String
+  criadora    Criadora  @relation(fields: [criadoraId], references: [id], onDelete: Cascade)
+  formato     String // Reels, Stories, TikTok, YouTube, Post, Review...
+  prazo       DateTime?
+  publicadoEm DateTime?
+  link        String?
+  sinalizou   Boolean   @default(false) // "recebi de presente" / #publi
+  observacao  String?
+
+  createdAt DateTime @default(now())
+
+  @@index([criadoraId])
+}
+
+// Checklist de producao do envio: o que a Lari precisa preparar pra cada
+// criadora que fechou (cupom, case, blocos impressos, cartao a mao, caixa,
+// despacho). Mesma ideia da Central de Producao: lista agrupada por etapa,
+// um quadradinho por criadora. Os itens nascem de um modelo e podem ser
+// ajustados a mao na ficha.
+model ItemProducaoParceria {
+  id         String    @id @default(cuid())
+  criadoraId String
+  criadora   Criadora  @relation(fields: [criadoraId], references: [id], onDelete: Cascade)
+  etapa      String // cupom, kit, blocos, cartao, embalar, enviar ou outro (ver lib/parcerias/producao.ts)
+  texto      String // o que fazer pra ela ("Cartão para Camile com o cupom CAMILE10")
+  feito      Boolean   @default(false)
+  feitoEm    DateTime?
+  posicao    Int       @default(0)
+
+  createdAt DateTime @default(now())
+
+  @@index([criadoraId])
+  @@index([etapa, feito])
+}
+
+// Resposta do Google Forms de permuta, recebida pelo Apps Script. Fica guardada
+// inteira; quando o @ bate com uma criadora, os dados de contato vao pra ficha.
+model RespostaFormulario {
+  id         String    @id @default(cuid())
+  criadoraId String?
+  criadora   Criadora? @relation(fields: [criadoraId], references: [id], onDelete: SetNull)
+  enviadaEm  DateTime  @default(now())
+  instagram  String? // como ela digitou
+  respostas  Json // [{ pergunta, resposta }]
+  chave      String    @unique // evita duplicar quando o script reenvia tudo
+
+  createdAt DateTime @default(now())
+}
+
+// Modelos de DM. Variaveis: {nome}, {gancho}, {cupom}.
+model ModeloMensagem {
+  id      String @id @default(cuid())
+  titulo  String
+  texto   String
+  posicao Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Modulo Marketing: calendario de conteudo em lotes de 15 dias e a lista de
+// tarefas da Lari. Os conteudos entram pelo script
+// scripts/marketing-importar.mjs (um JSON por lote, em marketing/lotes/);
+// a tela aprova, pede ajuste e marca o andamento. Prefixo Mkt pra nao
+// colidir com nomes de outros modulos.
+
+enum MktCanal {
+  stories
+  instagram
+  tiktok
+  youtube
+  email
+  blog
+}
+
+// realista: o essencial do ritmo que a Lari da conta sozinha.
+// extra: o que completa ate o ritmo do plano estrategico.
+enum MktNivel {
+  realista
+  extra
+}
+
+enum MktStatus {
+  roteiro // escrito, esperando a aprovacao da Lari
+  ajustar // a Lari pediu mudanca (ver notaLari)
+  aprovado // pode gravar/fotografar
+  gravado // material pronto, falta postar
+  publicado
+}
+
+model MktLote {
+  id            String   @id @default(cuid())
+  numero        Int      @unique
+  titulo        String
+  foco          String? // tema/campanha do lote
+  inicio        DateTime @db.Date
+  fim           DateTime @db.Date
+  pastaDriveUrl String? // pasta onde a Lari sobe fotos e videos do lote
+
+  conteudos MktConteudo[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MktConteudo {
+  id     String  @id @default(cuid())
+  codigo String  @unique // chave estavel do JSON: reimportar atualiza em vez de duplicar
+  loteId String
+  lote   MktLote @relation(fields: [loteId], references: [id], onDelete: Cascade)
+
+  data     DateTime @db.Date
+  horario  String? // "19h"
+  canal    MktCanal
+  formato  String // Reels, Carrossel, Sequencia de stories, Short, Video, E-mail...
+  nivel    MktNivel
+  pilar    String?
+  campanha String?
+
+  titulo      String
+  objetivo    String?
+  gancho      String?
+  // [{ "cena": "...", "fala": "...", "tela": "...", "imagem": "..." }]
+  roteiro     Json?
+  legenda     String? @db.Text
+  cta         String?
+  hashtags    String?
+  producao    String? @db.Text // o que gravar/fotografar, uma linha por item
+  produtos    String? // produtos que aparecem, com link quando houver
+  reaproveita String? // codigo do conteudo de origem (ex: TikTok do Reels)
+  observacao  String? @db.Text
+
+  status        MktStatus @default(roteiro)
+  notaLari      String?   @db.Text
+  linkPublicado String?
+  statusEm      DateTime?
+
+  tarefas MktTarefa[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([loteId, data])
+}
+
+// Tarefas avulsas que dependem da Lari (decidir, criar pasta, mandar algo).
+// Aprovar, gravar e postar conteudo nao viram linha aqui: saem do status de
+// cada MktConteudo na hora de montar a lista.
+model MktTarefa {
+  id         String       @id @default(cuid())
+  codigo     String       @unique
+  titulo     String
+  detalhe    String?      @db.Text
+  tipo       String // decidir, foto, video, aprovar, publicar, configurar, outro
+  prazo      DateTime?    @db.Date
+  link       String?
+  linkRotulo String?
+  conteudoId String?
+  conteudo   MktConteudo? @relation(fields: [conteudoId], references: [id], onDelete: SetNull)
+  feita      Boolean      @default(false)
+  feitaEm    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

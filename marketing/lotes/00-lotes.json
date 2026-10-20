@@ -1,0 +1,46 @@
+{
+  "lotes": [
+    {
+      "numero": 1,
+      "titulo": "Lote 1 · Planejar 2027 sem pressão",
+      "foco": "Planners 2027 (Essencial Vertical, Semanal Vertical, Mensal Datado), Método ALA, encontro de Curitiba (13/11) e aquecimento da Black Friday.",
+      "inicio": "2026-10-19",
+      "fim": "2026-11-02"
+    },
+    {
+      "numero": 2,
+      "titulo": "Lote 2 · Encontro de Curitiba e lista VIP",
+      "foco": "Encontro de Curitiba (13/11), lista VIP da Black Friday, presentes de fim de ano começando.",
+      "inicio": "2026-11-03",
+      "fim": "2026-11-17"
+    },
+    {
+      "numero": 3,
+      "titulo": "Lote 3 · Black Friday do jeito Unica",
+      "foco": "Semana da Black Friday (27/11) sem pressão: oferta escolhida, prova social, UPExpress.",
+      "inicio": "2026-11-18",
+      "fim": "2026-12-02"
+    },
+    {
+      "numero": 4,
+      "titulo": "Lote 4 · Natal: presentear quem te inspira",
+      "foco": "Guia de presentes, Kit Planner 2027 GIFT, último dia pra chegar antes do Natal.",
+      "inicio": "2026-12-03",
+      "fim": "2026-12-17"
+    },
+    {
+      "numero": 5,
+      "titulo": "Lote 5 · Desacelerar pra sentir",
+      "foco": "Fim de ano leve: retrospectiva, ritual de fechar o ano, planejamento de janeiro.",
+      "inicio": "2026-12-18",
+      "fim": "2027-01-01"
+    },
+    {
+      "numero": 6,
+      "titulo": "Lote 6 · Recomece no seu ritmo",
+      "foco": "Ano novo sem culpa, volta às aulas (estudos/concurseiras), montar o planner de 2027.",
+      "inicio": "2027-01-02",
+      "fim": "2027-01-17"
+    }
+  ]
+}

@@ -3,7 +3,15 @@ import { NextResponse, type NextRequest } from "next/server";
 
 const PUBLIC_PATHS = ["/login"];
 
+// Chamadas de fora (sem login), protegidas por token na propria rota:
+// o Apps Script do Google Forms de permuta.
+const WEBHOOK_PATHS = ["/api/parcerias/formulario"];
+
 export async function proxy(request: NextRequest) {
+  if (WEBHOOK_PATHS.includes(request.nextUrl.pathname)) {
+    return NextResponse.next();
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(

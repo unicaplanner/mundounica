@@ -1,0 +1,1351 @@
+{
+  "lote": 1,
+  "conteudos": [
+    {
+      "codigo": "l1-1019-st",
+      "data": "2026-10-19",
+      "horario": "9h",
+      "canal": "stories",
+      "formato": "Sequência de 4 stories",
+      "nivel": "realista",
+      "pilar": "Organização sem culpa",
+      "campanha": "Planejar 2027",
+      "titulo": "Bom dia + o “L” do Método ALA",
+      "objetivo": "Levar quem vê os stories pro carrossel do dia e começar a conversa sobre planejar 2027.",
+      "gancho": "Você anota tudo e mesmo assim sente que não dá conta?",
+      "roteiro": [
+        {
+          "cena": "Story 1 · você com café e o planner aberto",
+          "fala": "Bom dia! Hoje eu quero falar de um passo que quase todo mundo pula.",
+          "tela": "Você anota tudo e mesmo assim sente que não dá conta?"
+        },
+        {
+          "cena": "Story 2 · close na página com a lista riscada",
+          "tela": "No Método ALA: 1º você Anota. 2º você LISTA, que é escolher o que entra.",
+          "imagem": "Página do bloco Tarefas e Notas com 3 itens circulados"
+        },
+        {
+          "cena": "Story 3 · enquete",
+          "tela": "Quantas coisas cabem no seu dia de verdade?",
+          "imagem": "Enquete: “3 a 5” / “Eu tento 15 😅”"
+        },
+        {
+          "cena": "Story 4 · compartilhar o carrossel",
+          "tela": "Mostrei as 2 perguntas que eu faço pra cada item 👇",
+          "imagem": "Repost do carrossel de hoje com o adesivo “novo post”"
+        }
+      ],
+      "cta": "Ver o carrossel no feed (repost no story 4).",
+      "producao": "Gravar 2 vídeos curtos (5 s): você com café e o planner aberto; close na página com 3 itens circulados.",
+      "produtos": "Tarefas e Notas (https://www.unicaplanner.com.br/products/tarefas-e-notas)"
+    },
+    {
+      "codigo": "l1-1019-ig-carrossel-ala",
+      "data": "2026-10-19",
+      "horario": "12h",
+      "canal": "instagram",
+      "formato": "Carrossel (5 lâminas)",
+      "nivel": "realista",
+      "pilar": "Organização sem culpa",
+      "campanha": "Série Método ALA",
+      "titulo": "Método ALA · Listar",
+      "objetivo": "Continuar a série do ALA (o Anotar foi em 08/10). Conteúdo salvável que ensina e mostra o bloco.",
+      "gancho": "Listar não é fazer uma lista enorme.",
+      "roteiro": [
+        {
+          "cena": "Lâmina 1 (capa)",
+          "tela": "Listar não é fazer uma lista enorme.",
+          "imagem": "Foto do planner aberto com uma lista curta"
+        },
+        {
+          "cena": "Lâmina 2",
+          "tela": "No Método ALA, você primeiro Anota tudo o que está na cabeça. Listar é o passo seguinte: escolher o que entra."
+        },
+        {
+          "cena": "Lâmina 3",
+          "tela": "Pergunta 1: isso precisa ser feito esta semana? Se não, volta pro Anotar sem culpa."
+        },
+        {
+          "cena": "Lâmina 4",
+          "tela": "Pergunta 2: isso cabe no tempo que eu tenho de verdade? Se não, divida em um passo menor."
+        },
+        {
+          "cena": "Lâmina 5",
+          "tela": "O que sobrou é a sua lista. Curta, possível, sua. Semana que vem: o A de Agendar.",
+          "imagem": "Foto do bloco com 3 a 5 itens"
+        }
+      ],
+      "legenda": "O L do Método ALA é Listar: escolher, do que você anotou, o que realmente entra na sua semana.\n\nNas lâminas eu mostro as duas perguntas que eu faço pra cada item. Se ele não passa, ele não some: volta pro Anotar e espera a vez dele, sem culpa.\n\nSalva pra usar no domingo à noite. E me conta: quantos itens tem a sua lista de hoje?",
+      "hashtags": "#metodoala #planner #rotinaleve #organizacaopessoal #unicaplanner",
+      "cta": "Salvar o post e comentar quantos itens tem a lista de hoje.",
+      "producao": "2 fotos: planner aberto com lista curta (capa) e close do bloco com 3 a 5 itens (lâmina 5). Luz natural, fundo claro.",
+      "produtos": "Tarefas e Notas (https://www.unicaplanner.com.br/products/tarefas-e-notas)",
+      "observacao": "Texto vindo do plano da semana da conversa CONTENT (17–23/10). Se você já postou, só marque “Postei”."
+    },
+    {
+      "codigo": "l1-1020-st",
+      "data": "2026-10-20",
+      "horario": "9h",
+      "canal": "stories",
+      "formato": "Sequência de 3 stories",
+      "nivel": "realista",
+      "pilar": "Histórias e comunidade",
+      "campanha": "Planejar 2027",
+      "titulo": "Caixinha: o que trava o seu 2027?",
+      "objetivo": "Pesquisa com a comunidade: as respostas viram pauta dos próximos lotes e dos e-mails.",
+      "gancho": "O que mais trava o seu planejamento de 2027?",
+      "roteiro": [
+        {
+          "cena": "Story 1 · você falando pra câmera",
+          "fala": "Tô preparando os conteúdos de fim de ano e quero saber de você, de verdade.",
+          "tela": "Pergunta sincera ☕"
+        },
+        {
+          "cena": "Story 2 · caixinha de perguntas",
+          "tela": "O que mais trava o seu planejamento de 2027?",
+          "imagem": "Caixinha de perguntas com fundo bege"
+        },
+        {
+          "cena": "Story 3 · bastidor da mesa",
+          "tela": "Vou responder várias no sábado 💛",
+          "imagem": "Mesa de trabalho com planners 2027"
+        }
+      ],
+      "cta": "Responder a caixinha.",
+      "producao": "Vídeo de 10 s falando pra câmera (story 1). Foto da mesa com planners 2027.",
+      "observacao": "Guarde as respostas: no sábado (24/10) a gente responde 3 nos stories."
+    },
+    {
+      "codigo": "l1-1020-ig-reel-culpa",
+      "data": "2026-10-20",
+      "horario": "19h",
+      "canal": "instagram",
+      "formato": "Reels (20–30 s)",
+      "nivel": "realista",
+      "pilar": "Organização sem culpa",
+      "titulo": "Se o seu planner te dá culpa, o problema não é você",
+      "objetivo": "Reel de alcance com o posicionamento da marca: planejar é clareza, não cobrança.",
+      "gancho": "Se o seu planner te faz sentir culpa, o problema não é você.",
+      "roteiro": [
+        {
+          "cena": "0–3 s · close numa página cheia, com várias tarefas não feitas",
+          "tela": "Se o seu planner te faz sentir culpa…"
+        },
+        {
+          "cena": "3–8 s · sua mão passando a seta “→” numa tarefa (mover pra amanhã)",
+          "fala": "Tarefa não feita não é fracasso. É informação.",
+          "tela": "…o problema não é você."
+        },
+        {
+          "cena": "8–15 s · você riscando metade da lista com calma",
+          "fala": "Eu planejo pra ter clareza, não pra me cobrar.",
+          "tela": "Planejar é clareza, não cobrança."
+        },
+        {
+          "cena": "15–25 s · página nova, só 3 itens, café do lado",
+          "fala": "Hoje cabe isso. E tudo bem.",
+          "tela": "Hoje cabe isso. E tudo bem 💛"
+        }
+      ],
+      "legenda": "Já abriu o planner e sentiu um peso em vez de alívio?\n\nTarefa que não foi feita não é fracasso. É informação: talvez coube coisa demais no dia, talvez a vida aconteceu. Você move pra frente, risca o que não faz mais sentido e segue.\n\nPlanejar é ser mais leve. Se não está leve, a gente ajusta o planner, não você.",
+      "hashtags": "#rotinaleve #produtividadesemculpa #planner #unicaplanner",
+      "cta": "Mandar pra uma amiga que precisa ouvir isso.",
+      "producao": "Gravar na vertical (9:16), luz natural: 1) página cheia de tarefas; 2) sua mão desenhando uma seta numa tarefa; 3) riscando com calma; 4) página nova só com 3 itens + café.\nMúsica calma (sem letra) escolhida no próprio Instagram.",
+      "produtos": "Tarefas e Notas · Case Argolada Clássica A5 (https://www.unicaplanner.com.br/products/case-argolada-a5)",
+      "status": "aprovado"
+    },
+    {
+      "codigo": "l1-1021-st",
+      "data": "2026-10-21",
+      "horario": "9h",
+      "canal": "stories",
+      "formato": "Sequência de 4 stories",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Planejar 2027",
+      "titulo": "Vertical ou horizontal? Enquete + link",
+      "objetivo": "Ajudar a decidir o layout semanal de 2027 e levar pro blog e pra loja.",
+      "gancho": "Você é time vertical ou horizontal?",
+      "roteiro": [
+        {
+          "cena": "Story 1 · as duas páginas lado a lado",
+          "tela": "Você é time vertical ou horizontal?",
+          "imagem": "Enquete: Vertical / Horizontal"
+        },
+        {
+          "cena": "Story 2 · close no vertical",
+          "tela": "Vertical: dias com horário, compromissos, agenda cheia."
+        },
+        {
+          "cena": "Story 3 · close no horizontal",
+          "tela": "Horizontal: listas e anotações, semana mais livre."
+        },
+        {
+          "cena": "Story 4 · link",
+          "tela": "Escrevi o guia completo pra você escolher 👇",
+          "imagem": "Adesivo de link pro post do blog"
+        }
+      ],
+      "cta": "Votar na enquete e abrir o guia no blog.",
+      "producao": "Foto das duas páginas semanais lado a lado (vertical e horizontal), uma foto de cada em close."
+    },
+    {
+      "codigo": "l1-1021-ig-reel-vertical",
+      "data": "2026-10-21",
+      "horario": "19h",
+      "canal": "instagram",
+      "formato": "Reels (15–25 s)",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Planejar 2027",
+      "titulo": "Semanal vertical ou horizontal? 15 segundos pra decidir",
+      "objetivo": "Mostrar o produto que mais vende no anúncio e tirar a dúvida nº 1 sobre o 2027.",
+      "gancho": "Vertical ou horizontal? A pergunta que eu mais recebo sobre o planner de 2027.",
+      "roteiro": [
+        {
+          "cena": "0–3 s · você segurando as duas páginas, uma em cada mão",
+          "tela": "Vertical ou horizontal?"
+        },
+        {
+          "cena": "3–9 s · folheando o Semanal Vertical",
+          "fala": "Se a sua semana tem horário (reunião, aula, consulta), vai de vertical.",
+          "tela": "Tem horário? Vertical."
+        },
+        {
+          "cena": "9–15 s · folheando o semanal horizontal",
+          "fala": "Se a sua semana é mais lista do que agenda, horizontal.",
+          "tela": "Mais lista? Horizontal."
+        },
+        {
+          "cena": "15–20 s · as duas no fichário",
+          "fala": "E se não decidir, dá pra ter os dois no mesmo fichário.",
+          "tela": "Ou os dois 😉 Link na bio"
+        }
+      ],
+      "legenda": "Vertical ou horizontal? A pergunta que eu mais recebo sobre o planner de 2027.\n\nVertical: cada dia é uma coluna, como uma agenda de horários. Bom pra quem tem compromisso marcado.\nHorizontal: cada dia é uma faixa, com espaço pra listas e anotações.\n\nComo é fichário, você não precisa acertar de primeira: troca o miolo quando a vida mudar. Escrevi um guia completo no blog, link na bio.",
+      "hashtags": "#planner2027 #plannersemanal #planner #unicaplanner",
+      "cta": "Comentar “vertical” ou “horizontal”. Link na bio pro guia e pra loja.",
+      "producao": "Vídeo vertical: você segurando as duas páginas; folheando o Semanal Vertical 2027; folheando o semanal horizontal; os dois dentro da case.",
+      "produtos": "Semanal Vertical 2027 (https://www.unicaplanner.com.br/products/semanal-vertical-2027) · Visão Mensal Datada 2027 + Semana Horizontal (https://www.unicaplanner.com.br/products/visao-mensal-datada-2027-semana-horizontal)",
+      "observacao": "Tema que veio do plano da semana da CONTENT (lá estava como post estático). Aqui virou Reels, porque o vídeo mostra as duas páginas melhor."
+    },
+    {
+      "codigo": "l1-1021-tt-culpa",
+      "data": "2026-10-21",
+      "horario": "20h",
+      "canal": "tiktok",
+      "formato": "Vídeo (reaproveitado)",
+      "nivel": "realista",
+      "pilar": "Organização sem culpa",
+      "titulo": "Se o seu planner te dá culpa (versão TikTok)",
+      "reaproveita": "l1-1020-ig-reel-culpa",
+      "gancho": "Se o seu planner te faz sentir culpa, o problema não é você.",
+      "legenda": "Tarefa não feita não é fracasso, é informação 💛 #planner #rotinaleve #organizacao #produtividade #papelaria",
+      "cta": "Seguir pra mais rotina leve.",
+      "observacao": "Baixe o Reels de 20/10 sem marca d'água (salve o vídeo original do seu celular) e poste no TikTok com som em alta, volume baixo."
+    },
+    {
+      "codigo": "l1-1021-email-encontro",
+      "data": "2026-10-21",
+      "horario": "10h",
+      "canal": "email",
+      "formato": "E-mail",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Encontro Curitiba (13/11)",
+      "titulo": "E-mail 3 do encontro (base de clientes)",
+      "objetivo": "Convidar a base pro Café da Tarde Planejando 2027.",
+      "cta": "Garantir o lugar no encontro.",
+      "produtos": "Ingresso do encontro (https://www.unicaplanner.com.br/products/cafe-da-tarde-planejando-2027-encontro-unica-em-curitiba)",
+      "observacao": "Texto já escrito pela conversa CONTENT: arquivo eventos/workshop-curitiba-2027/emails-convite.md, na pasta MKT IA UP. Aqui é só pra você ver no calendário.",
+      "status": "aprovado"
+    },
+    {
+      "codigo": "l1-1021-blog-vertical",
+      "data": "2026-10-21",
+      "horario": "12h",
+      "canal": "blog",
+      "formato": "Post de blog",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Planejar 2027",
+      "titulo": "Planner semanal vertical ou horizontal: qual escolher em 2027",
+      "objetivo": "Post que aparece no Google (busca é o canal que mais converte na loja: 2,4%).",
+      "cta": "Ver o Semanal Vertical 2027 e o horizontal na loja.",
+      "observacao": "Texto já escrito pela conversa CONTENT (blog Rotina Única). Pra publicar: abra https://admin.shopify.com/store/rm01s1-0a/articles › Adicionar post de blog. Depois copie o link do post e cole na descrição do vídeo do YouTube de 22/10 e no e-mail de 28/10.",
+      "status": "aprovado"
+    },
+    {
+      "codigo": "l1-1022-st",
+      "data": "2026-10-22",
+      "horario": "9h",
+      "canal": "stories",
+      "formato": "Sequência de 4 stories",
+      "nivel": "realista",
+      "pilar": "Bastidores",
+      "campanha": "Encontro Curitiba (13/11)",
+      "titulo": "Como vai ser o café da tarde de 13/11",
+      "objetivo": "Mostrar o encontro de Curitiba por dentro e levar pro ingresso.",
+      "gancho": "Imagina uma tarde inteira só pra planejar o seu 2027, com café.",
+      "roteiro": [
+        {
+          "cena": "Story 1 · você falando",
+          "fala": "No dia 13 de novembro vai ter um café da tarde aqui em Curitiba pra gente planejar 2027 juntas.",
+          "tela": "Sexta, 13/11 · 14h30 · Batel"
+        },
+        {
+          "cena": "Story 2 · fotos do espaço (Casa di Angel)",
+          "tela": "Café da tarde, moodboard personalizado e materiais inclusos."
+        },
+        {
+          "cena": "Story 3 · bastidor separando materiais",
+          "tela": "São 15 lugares. Tô preparando cada kit com carinho."
+        },
+        {
+          "cena": "Story 4 · link",
+          "tela": "Quer vir? 👇",
+          "imagem": "Adesivo de link pro ingresso"
+        }
+      ],
+      "cta": "Abrir o link do ingresso.",
+      "producao": "Vídeo de 10 s falando pra câmera. Fotos do espaço (se tiver do site da Casa di Angel, pode usar com crédito). Vídeo de 5 s separando os materiais.",
+      "produtos": "Ingresso (https://www.unicaplanner.com.br/products/cafe-da-tarde-planejando-2027-encontro-unica-em-curitiba)"
+    },
+    {
+      "codigo": "l1-1022-tt-vertical",
+      "data": "2026-10-22",
+      "horario": "20h",
+      "canal": "tiktok",
+      "formato": "Vídeo (reaproveitado)",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "titulo": "Vertical ou horizontal? (versão TikTok)",
+      "reaproveita": "l1-1021-ig-reel-vertical",
+      "gancho": "Vertical ou horizontal? Me diz a sua semana que eu te digo o planner.",
+      "legenda": "Tem horário marcado? Vertical. Mais lista? Horizontal 🤍 #planner2027 #planner #papelaria #organizacao",
+      "cta": "Comentar a sua resposta.",
+      "observacao": "Mesmo vídeo do Reels de 21/10. No TikTok, troque o texto do começo pela frase do gancho."
+    },
+    {
+      "codigo": "l1-1022-yt-vertical",
+      "data": "2026-10-22",
+      "horario": "18h",
+      "canal": "youtube",
+      "formato": "Vídeo (6–8 min)",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Planejar 2027",
+      "titulo": "Planner semanal vertical ou horizontal: qual escolher em 2027",
+      "objetivo": "Vídeo de busca no YouTube, par do post do blog. Fica gerando visita por meses.",
+      "gancho": "Se você está em dúvida entre o semanal vertical e o horizontal, em 7 minutos você sai daqui sabendo qual é o seu.",
+      "roteiro": [
+        {
+          "cena": "0:00 · abertura com as duas páginas na mesa",
+          "fala": "Se você está em dúvida entre o semanal vertical e o horizontal, em 7 minutos você sai daqui sabendo qual é o seu."
+        },
+        {
+          "cena": "0:30 · quem é você",
+          "fala": "Eu sou a Lari, da Unica Planner. Eu uso planner todo dia e ajudo outras mulheres a planejar sem culpa."
+        },
+        {
+          "cena": "1:00 · o semanal vertical",
+          "fala": "Mostre a página, explique: cada dia uma coluna, bom pra horários. Preencha uma semana real sua (consulta, aula, reunião).",
+          "imagem": "Câmera de cima (mesa)"
+        },
+        {
+          "cena": "3:00 · o semanal horizontal",
+          "fala": "Mostre a página: cada dia uma faixa, bom pra listas. Preencha com tarefas e anotações.",
+          "imagem": "Câmera de cima"
+        },
+        {
+          "cena": "5:00 · 3 perguntas pra decidir",
+          "fala": "1) A sua semana tem horário marcado? 2) Você escreve mais lista ou mais agenda? 3) Você precisa ver a semana inteira de uma vez?",
+          "tela": "As 3 perguntas"
+        },
+        {
+          "cena": "6:30 · fichário: dá pra ter os dois",
+          "fala": "Como é fichário, dá pra trocar o miolo quando a vida mudar, ou ter os dois."
+        },
+        {
+          "cena": "7:00 · fechamento",
+          "fala": "Os links dos dois estão aqui na descrição. Me conta nos comentários qual você escolheu."
+        }
+      ],
+      "legenda": "Vertical ou horizontal? Neste vídeo eu mostro os dois layouts semanais do planner 2027, preenchidos com uma semana real, e faço 3 perguntas pra você descobrir qual combina com a sua rotina.\n\nSemanal Vertical 2027: https://www.unicaplanner.com.br/products/semanal-vertical-2027\nMensal + Semana Horizontal 2027: https://www.unicaplanner.com.br/products/visao-mensal-datada-2027-semana-horizontal\nGuia completo no blog: (link do post de 21/10)\n\n00:00 Abertura\n01:00 Semanal vertical\n03:00 Semanal horizontal\n05:00 As 3 perguntas\n06:30 Dá pra ter os dois",
+      "hashtags": "#planner2027 #plannersemanal #organizacao",
+      "cta": "Links na descrição; comentar qual layout escolheu.",
+      "producao": "Gravar na horizontal (16:9). Câmera de cima pra mesa (celular num tripé ou pilha de livros) + 2 trechos falando de frente.\nPreencher antes uma semana real em cada página (pode ser a sua desta semana).\nThumbnail: foto das duas páginas lado a lado + texto “Vertical ou horizontal?”.",
+      "produtos": "Semanal Vertical 2027 · Visão Mensal Datada 2027 + Semana Horizontal"
+    },
+    {
+      "codigo": "l1-1022-ig-extra-frase",
+      "data": "2026-10-22",
+      "horario": "12h",
+      "canal": "instagram",
+      "formato": "Post estático (frase)",
+      "nivel": "extra",
+      "pilar": "Rotina leve e real",
+      "titulo": "“Planejar é ser mais leve.”",
+      "objetivo": "Post de marca, rápido de fazer, que segura o feed num dia sem Reels.",
+      "roteiro": [
+        {
+          "cena": "Imagem única",
+          "tela": "Planejar é ser mais leve.",
+          "imagem": "Fundo bege liso ou foto do planner fechado com luz da janela; frase centralizada na fonte da marca"
+        }
+      ],
+      "legenda": "Planejar não é encher o dia. É tirar da cabeça o que pesa e escolher o que cabe.\n\nSalva pra lembrar numa segunda-feira difícil 💛",
+      "hashtags": "#rotinaleve #unicaplanner",
+      "cta": "Salvar o post.",
+      "producao": "Montar no Canva com o modelo de frase da marca (ou foto do planner fechado + frase)."
+    },
+    {
+      "codigo": "l1-1023-st",
+      "data": "2026-10-23",
+      "horario": "10h",
+      "canal": "stories",
+      "formato": "Sequência de 4 stories",
+      "nivel": "realista",
+      "pilar": "Bastidores",
+      "titulo": "Bastidor UPExpress: embalando pedidos",
+      "objetivo": "Mostrar o prazo de 3 dias úteis (a maior vantagem sobre a concorrência) e o carinho na embalagem.",
+      "gancho": "Seu pedido sai daqui em até 3 dias úteis. Olha como ele fica.",
+      "roteiro": [
+        {
+          "cena": "Story 1 · mesa com pedidos do dia",
+          "tela": "Sexta de embalar pedidos 📦"
+        },
+        {
+          "cena": "Story 2 · close montando uma caixa (papel, bilhete escrito à mão)",
+          "fala": "Cada pedido vai com um bilhetinho escrito por mim."
+        },
+        {
+          "cena": "Story 3 · pilha de caixas prontas",
+          "tela": "UPExpress: postado em até 3 dias úteis, com rastreio por e-mail."
+        },
+        {
+          "cena": "Story 4 · enquete",
+          "tela": "Você também guarda os bilhetinhos? 🙈",
+          "imagem": "Enquete: “Guardo todos” / “Alguns”"
+        }
+      ],
+      "cta": "Responder a enquete.",
+      "producao": "Vídeos curtos (5 s cada): mesa com pedidos, você escrevendo um bilhete, caixa sendo fechada, pilha pronta. (Os mesmos vídeos servem pro Reels de hoje.)"
+    },
+    {
+      "codigo": "l1-1023-ig-reel-upexpress",
+      "data": "2026-10-23",
+      "horario": "19h",
+      "canal": "instagram",
+      "formato": "Reels (15–20 s)",
+      "nivel": "realista",
+      "pilar": "Bastidores",
+      "titulo": "Do pedido ao correio em 3 dias",
+      "objetivo": "Prova de entrega rápida e de carinho (o setor fala em 8 dias úteis).",
+      "gancho": "Do clique ao correio em até 3 dias úteis.",
+      "roteiro": [
+        {
+          "cena": "0–2 s · notificação de pedido no celular",
+          "tela": "Chegou um pedido 🔔"
+        },
+        {
+          "cena": "2–7 s · separando as peças (case, blocos)",
+          "tela": "Dia 1: separo e confiro peça por peça"
+        },
+        {
+          "cena": "7–12 s · escrevendo o bilhete e embalando",
+          "tela": "Dia 2: embalo com carinho (e um bilhete meu)"
+        },
+        {
+          "cena": "12–17 s · entregando no correio / pilha de caixas",
+          "tela": "Até o dia 3: postado, com rastreio no seu e-mail"
+        }
+      ],
+      "legenda": "Um planner bonito que demora um mês pra chegar perde a graça, né?\n\nAqui o seu pedido é separado, conferido e embalado por mim, com bilhete escrito à mão, e sai em até 3 dias úteis. Você recebe o rastreio por e-mail.\n\nEsse é o UPExpress 💛",
+      "hashtags": "#bastidores #pequenonegocio #papelaria #unicaplanner",
+      "cta": "Comentar “quero” que eu mando o link da loja no direct.",
+      "producao": "Usar os mesmos vídeos dos stories de hoje + print da notificação de pedido (sem o nome da cliente) + 1 vídeo no correio, se for postar no dia.",
+      "observacao": "No plano da CONTENT, a sexta tinha “prova social OU bastidor”. Se um depoimento for autorizado até hoje, ele vai pro post extra de 28/10."
+    },
+    {
+      "codigo": "l1-1024-st",
+      "data": "2026-10-24",
+      "horario": "10h",
+      "canal": "stories",
+      "formato": "Sequência de 4 stories",
+      "nivel": "realista",
+      "pilar": "Histórias e comunidade",
+      "titulo": "Respondendo a caixinha do que trava 2027",
+      "objetivo": "Responder 3 perguntas da caixinha de terça e mostrar que a marca escuta.",
+      "gancho": "Vocês me contaram o que trava o planejamento de 2027. Vamos por partes?",
+      "roteiro": [
+        {
+          "cena": "Story 1 · você falando",
+          "fala": "Vocês me contaram o que trava o planejamento de 2027. Separei 3 respostas."
+        },
+        {
+          "cena": "Story 2 · resposta 1 (print da caixinha)",
+          "fala": "Responda em até 15 s, com uma dica prática."
+        },
+        {
+          "cena": "Story 3 · resposta 2",
+          "fala": "Idem."
+        },
+        {
+          "cena": "Story 4 · resposta 3 + convite",
+          "fala": "Idem, e: “A melhor parte do planejamento é começar pequeno.”",
+          "tela": "Qual mais te ajudou? (enquete)"
+        }
+      ],
+      "cta": "Responder a enquete final.",
+      "producao": "Escolher 3 respostas da caixinha de 20/10 e gravar uma resposta curta pra cada (pode ser só sua voz em cima da página do planner).",
+      "observacao": "Se quiser, me mande as respostas da caixinha no chat que eu escrevo o que falar em cada uma."
+    },
+    {
+      "codigo": "l1-1024-tt-upexpress",
+      "data": "2026-10-24",
+      "horario": "11h",
+      "canal": "tiktok",
+      "formato": "Vídeo (reaproveitado)",
+      "nivel": "realista",
+      "pilar": "Bastidores",
+      "titulo": "Do pedido ao correio (versão TikTok)",
+      "reaproveita": "l1-1023-ig-reel-upexpress",
+      "gancho": "POV: você comprou um planner e ele sai em 3 dias com bilhete escrito à mão.",
+      "legenda": "Embalando pedidos com carinho 📦💛 #pequenonegocio #packingorders #papelaria #planner",
+      "cta": "Seguir pra ver mais bastidores.",
+      "observacao": "Vídeo de embalar pedido costuma ir bem no TikTok. Coloque o texto do gancho no começo."
+    },
+    {
+      "codigo": "l1-1024-ig-extra-papel",
+      "data": "2026-10-24",
+      "horario": "12h",
+      "canal": "instagram",
+      "formato": "Carrossel (4 fotos)",
+      "nivel": "extra",
+      "pilar": "Lançamentos",
+      "titulo": "Teste da caneta: o papel que não borra",
+      "objetivo": "Comunicar o papel offset 90g/120g, um diferencial que quase ninguém do setor fala.",
+      "gancho": "Fiz o teste da caneta gel no nosso papel.",
+      "roteiro": [
+        {
+          "cena": "Foto 1",
+          "tela": "Fiz o teste da caneta gel no nosso papel.",
+          "imagem": "Página escrita com caneta gel, marca-texto e brush"
+        },
+        {
+          "cena": "Foto 2",
+          "tela": "Frente: caneta gel, marca-texto e brush pen.",
+          "imagem": "Close da frente"
+        },
+        {
+          "cena": "Foto 3",
+          "tela": "Verso: nada vazou.",
+          "imagem": "Close do verso contra a luz"
+        },
+        {
+          "cena": "Foto 4",
+          "tela": "Papel offset branco 90g e 120g em toda a linha. Nada de pólen."
+        }
+      ],
+      "legenda": "A pergunta que mais chega no direct: “o papel vaza caneta?”\n\nFiz o teste com caneta gel, marca-texto e brush pen. Toda a linha Unica usa papel offset branco 90g e 120g, que segura a tinta sem marcar o verso.\n\nQual caneta você quer que eu teste na próxima?",
+      "hashtags": "#papelaria #canetagel #planner #unicaplanner",
+      "cta": "Comentar qual caneta testar na próxima.",
+      "producao": "4 fotos: página escrita com caneta gel + marca-texto + brush; close da frente; verso contra a luz da janela; bloco fechado."
+    },
+    {
+      "codigo": "l1-1025-st",
+      "data": "2026-10-25",
+      "horario": "19h",
+      "canal": "stories",
+      "formato": "Sequência de 4 stories",
+      "nivel": "realista",
+      "pilar": "Rotina leve e real",
+      "titulo": "Domingo de planejar a semana",
+      "objetivo": "Quadro fixo de domingo: mostrar o ALA na prática e criar hábito na audiência.",
+      "gancho": "Domingo à noite, 15 minutos e a semana fica mais leve.",
+      "roteiro": [
+        {
+          "cena": "Story 1 · chá + planner fechado",
+          "tela": "Domingo de planejar ☕ 15 minutos"
+        },
+        {
+          "cena": "Story 2 · Anotar: despejando tudo numa página",
+          "tela": "1. Anoto tudo o que está na cabeça"
+        },
+        {
+          "cena": "Story 3 · Listar: circulando 3 a 5 itens",
+          "tela": "2. Listo o que cabe nesta semana"
+        },
+        {
+          "cena": "Story 4 · Agendar: passando pro Semanal Vertical",
+          "tela": "3. Agendo nos dias. Pronto. Bora junto? Me marca no seu 💛"
+        }
+      ],
+      "cta": "Planejar junto e marcar a @ nos stories dela.",
+      "producao": "Vídeos curtos (5 s cada) de cima da mesa: chá + planner; escrevendo uma lista; circulando itens; passando pro semanal.",
+      "observacao": "Quadro de todo domingo. Se alguém te marcar, compartilhe (isso é conteúdo de cliente de graça)."
+    },
+    {
+      "codigo": "l1-1025-ig-extra-ritual",
+      "data": "2026-10-25",
+      "horario": "18h",
+      "canal": "instagram",
+      "formato": "Carrossel (4 fotos)",
+      "nivel": "extra",
+      "pilar": "Rotina leve e real",
+      "titulo": "Meu ritual de domingo em 4 fotos",
+      "objetivo": "Post de feed do quadro de domingo, reaproveitando as fotos dos stories.",
+      "gancho": "Meu ritual de domingo em 4 fotos (e 15 minutos).",
+      "roteiro": [
+        {
+          "cena": "Foto 1",
+          "tela": "Meu ritual de domingo em 4 fotos"
+        },
+        {
+          "cena": "Foto 2",
+          "tela": "Anoto tudo."
+        },
+        {
+          "cena": "Foto 3",
+          "tela": "Listo o que cabe."
+        },
+        {
+          "cena": "Foto 4",
+          "tela": "Agendo nos dias. E fecho o planner."
+        }
+      ],
+      "legenda": "Não precisa de uma tarde inteira. Eu planejo a semana em uns 15 minutos, no domingo à noite, com um chá.\n\nAnotar, Listar, Agendar. O método ALA cabe no seu domingo também.",
+      "hashtags": "#metodoala #domingodeplanejar #rotinaleve #unicaplanner",
+      "cta": "Salvar pra fazer no próximo domingo.",
+      "producao": "Usar fotos (não vídeo) das mesmas etapas dos stories de hoje."
+    },
+    {
+      "codigo": "l1-1026-st",
+      "data": "2026-10-26",
+      "horario": "9h",
+      "canal": "stories",
+      "formato": "Sequência de 4 stories",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Planejar 2027",
+      "titulo": "O que vem no Planner 2027 Essencial",
+      "objetivo": "Mostrar o kit por dentro e levar pra página do produto.",
+      "gancho": "Abrindo o Planner 2027 Essencial com você.",
+      "roteiro": [
+        {
+          "cena": "Story 1 · kit fechado na mesa",
+          "tela": "Abrindo o Planner 2027 Essencial com você 🤍"
+        },
+        {
+          "cena": "Story 2 · tirando as peças uma a uma",
+          "fala": "Fale o nome de cada peça e pra que ela serve, em uma frase."
+        },
+        {
+          "cena": "Story 3 · tudo montado na case",
+          "tela": "Tudo já sai montado daqui."
+        },
+        {
+          "cena": "Story 4 · link",
+          "tela": "Ver o kit 👇",
+          "imagem": "Adesivo de link do produto"
+        }
+      ],
+      "cta": "Abrir o link do produto.",
+      "producao": "Vídeos curtos: kit fechado; tirando cada peça; tudo montado na case.",
+      "produtos": "Planner 2027 Essencial Vertical (https://www.unicaplanner.com.br/products/planner-2027-essencial-vertical)",
+      "observacao": "Antes de postar: o preço e o prazo do kit estão certos no site? (ver tarefa “Conferir o Planner 2027 Essencial no Shopify”)."
+    },
+    {
+      "codigo": "l1-1026-ig-carrossel-montar",
+      "data": "2026-10-26",
+      "horario": "12h",
+      "canal": "instagram",
+      "formato": "Carrossel (7 lâminas)",
+      "nivel": "realista",
+      "pilar": "Organização sem culpa",
+      "campanha": "Planejar 2027",
+      "titulo": "Como montar o seu planner 2027 em 4 passos (sem gastar à toa)",
+      "objetivo": "Conteúdo salvável que ajuda a decidir a compra (mata a paralisia de escolha).",
+      "gancho": "Antes de comprar qualquer planner 2027, responda 4 perguntas.",
+      "roteiro": [
+        {
+          "cena": "Lâmina 1 (capa)",
+          "tela": "Antes de comprar qualquer planner 2027, responda 4 perguntas.",
+          "imagem": "Foto da case aberta com refis espalhados"
+        },
+        {
+          "cena": "Lâmina 2",
+          "tela": "1. Que tamanho cabe na sua bolsa e na sua mesa? A5 (mais espaço) ou Personal (mais leve)."
+        },
+        {
+          "cena": "Lâmina 3",
+          "tela": "2. Você precisa ver o mês? Comece pelo Mensal Datado."
+        },
+        {
+          "cena": "Lâmina 4",
+          "tela": "3. Sua semana tem horário? Semanal Vertical. É mais lista? Horizontal."
+        },
+        {
+          "cena": "Lâmina 5",
+          "tela": "4. Você escreve todo dia? Aí sim, o Diário Datado."
+        },
+        {
+          "cena": "Lâmina 6",
+          "tela": "Comece com 2 refis. Fichário é isso: dá pra acrescentar depois, sem jogar nada fora."
+        },
+        {
+          "cena": "Lâmina 7",
+          "tela": "Ficou em dúvida? Me chama no direct que eu te ajudo a montar o seu 💛"
+        }
+      ],
+      "legenda": "Não precisa comprar tudo de uma vez. Planner bom é o que você usa, e fichário cresce com você.\n\nNas lâminas estão as 4 perguntas que eu faço quando alguém me pede ajuda pra montar o planner de 2027.\n\nSalva e, se ficar em dúvida, me chama no direct.",
+      "hashtags": "#planner2027 #comomontarplanner #fichario #unicaplanner",
+      "cta": "Salvar e chamar no direct pra ajuda.",
+      "producao": "1 foto de capa: case aberta com refis espalhados. As outras lâminas podem ser texto no Canva com fotos pequenas de cada refil.",
+      "produtos": "Case Argolada Clássica A5 · Mensal Datado 2027 · Semanal Vertical 2027 · Diário Datado 2027"
+    },
+    {
+      "codigo": "l1-1027-st",
+      "data": "2026-10-27",
+      "horario": "9h",
+      "canal": "stories",
+      "formato": "Sequência de 5 stories",
+      "nivel": "realista",
+      "pilar": "Rotina leve e real",
+      "titulo": "Um dia real comigo (sem perfeição)",
+      "objetivo": "Humanizar a marca: a fundadora usando o planner num dia comum, com imprevistos.",
+      "gancho": "Um dia real, com planner e com imprevisto.",
+      "roteiro": [
+        {
+          "cena": "Story 1 · manhã, café e planner",
+          "tela": "Um dia real comigo ☕ (sem roteiro perfeito)"
+        },
+        {
+          "cena": "Story 2 · a lista do dia",
+          "tela": "Hoje: 4 coisas. Só."
+        },
+        {
+          "cena": "Story 3 · imprevisto",
+          "fala": "Conte um imprevisto real (pedido urgente, criança doente, chuva).",
+          "tela": "E aí a vida aconteceu 😅"
+        },
+        {
+          "cena": "Story 4 · movendo uma tarefa com seta",
+          "tela": "Moveu pra amanhã. Sem culpa."
+        },
+        {
+          "cena": "Story 5 · fim do dia",
+          "tela": "3 de 4. Dia bom. 💛"
+        }
+      ],
+      "cta": "Responder: “e o seu dia, quantas coube?”",
+      "producao": "Gravar ao longo do dia, 5 s cada: café + planner; lista do dia; momento do imprevisto; seta na tarefa; planner fechado à noite."
+    },
+    {
+      "codigo": "l1-1027-ig-reel-montar",
+      "data": "2026-10-27",
+      "horario": "19h",
+      "canal": "instagram",
+      "formato": "Reels (20–30 s, ASMR)",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Planejar 2027",
+      "titulo": "Monte comigo o planner 2027",
+      "objetivo": "Reels de desejo (som de papel e argola), mostrando o planner montado.",
+      "gancho": "Monta comigo o meu planner de 2027?",
+      "roteiro": [
+        {
+          "cena": "0–3 s · case vazia abrindo (som da argola)",
+          "tela": "Monta comigo o meu planner de 2027?"
+        },
+        {
+          "cena": "3–10 s · colocando divisórias",
+          "tela": "Divisórias primeiro"
+        },
+        {
+          "cena": "10–18 s · Mensal Datado e Semanal Vertical entrando",
+          "tela": "Mês → semana"
+        },
+        {
+          "cena": "18–25 s · fechando a case, mão por cima",
+          "tela": "Pronto. 2027, pode vir 🤍"
+        }
+      ],
+      "legenda": "Montei o meu planner de 2027 e deixei o som do papel pra você 🤍\n\nCase Argolada Clássica A5 + Mensal Datado + Semanal Vertical. Nada de mais, nada de menos.\n\nE o seu, já está montado?",
+      "hashtags": "#planner2027 #asmr #montecomigo #papelaria #unicaplanner",
+      "cta": "Comentar como vai ser o seu planner 2027.",
+      "producao": "Gravar de cima, sem falar, com som ambiente (o som da argola e do papel é o atrativo). Ambiente silencioso, luz natural.",
+      "produtos": "Case Argolada Clássica A5 (https://www.unicaplanner.com.br/products/case-argolada-a5) · Mensal Datado 2027 (https://www.unicaplanner.com.br/products/mensal-datado-2027) · Semanal Vertical 2027"
+    },
+    {
+      "codigo": "l1-1028-st",
+      "data": "2026-10-28",
+      "horario": "9h",
+      "canal": "stories",
+      "formato": "Sequência de 5 stories",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Planejar 2027",
+      "titulo": "Quiz: qual planner 2027 combina com você?",
+      "objetivo": "Interação com enquetes que termina numa indicação de produto.",
+      "gancho": "Responde 3 perguntas que eu te digo qual planner 2027 é o seu.",
+      "roteiro": [
+        {
+          "cena": "Story 1",
+          "tela": "Responde 3 perguntas que eu te digo qual planner 2027 é o seu 👇"
+        },
+        {
+          "cena": "Story 2 · enquete",
+          "tela": "Sua semana tem horário marcado?",
+          "imagem": "Enquete: Muito / Pouco"
+        },
+        {
+          "cena": "Story 3 · enquete",
+          "tela": "Você escreve todo dia?",
+          "imagem": "Enquete: Sim / Só às vezes"
+        },
+        {
+          "cena": "Story 4 · enquete",
+          "tela": "Leva o planner na bolsa?",
+          "imagem": "Enquete: Sempre / Fica na mesa"
+        },
+        {
+          "cena": "Story 5 · resultado",
+          "tela": "Muito horário → Semanal Vertical. Escreve todo dia → Diário Datado. Bolsa → Personal. Me chama que eu monto com você 💛",
+          "imagem": "Adesivo de link da coleção 2027"
+        }
+      ],
+      "cta": "Responder as enquetes e chamar no direct.",
+      "producao": "Só fotos dos produtos (já tiradas nos dias anteriores) como fundo."
+    },
+    {
+      "codigo": "l1-1028-tt-montar",
+      "data": "2026-10-28",
+      "horario": "20h",
+      "canal": "tiktok",
+      "formato": "Vídeo (reaproveitado)",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "titulo": "Monte comigo o planner 2027 (versão TikTok)",
+      "reaproveita": "l1-1027-ig-reel-montar",
+      "gancho": "Montando meu planner de 2027 (com som 🔊)",
+      "legenda": "Planner 2027 montado 🤍 #asmr #planner2027 #papelaria #plannercommunity #organizacao",
+      "cta": "Seguir pra ver o planner em uso.",
+      "observacao": "ASMR de papelaria vai muito bem no TikTok. Deixe o som original, sem música."
+    },
+    {
+      "codigo": "l1-1028-email-newsletter",
+      "data": "2026-10-28",
+      "horario": "10h",
+      "canal": "email",
+      "formato": "E-mail (newsletter)",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Planejar 2027",
+      "titulo": "Seu 2027 começa com uma folha em branco (e tudo bem)",
+      "objetivo": "Newsletter da semana pra base: guia vertical × horizontal, vídeo do YouTube, encontro e aviso da Black Friday.",
+      "gancho": "Seu 2027 começa com uma folha em branco (e tudo bem)",
+      "legenda": "Assunto: Seu 2027 começa com uma folha em branco (e tudo bem)\nPré-visualização: 3 coisas pra planejar o ano sem pressa\n\nOi, {{ first_name }}! Aqui é a Lari.\n\nTodo fim de ano bate aquela vontade de ter o ano inteiro decidido até janeiro. Eu queria te lembrar de uma coisa: folha em branco não é atraso. É espaço.\n\nSeparei 3 coisas pra você planejar 2027 com calma:\n\n1. Vertical ou horizontal? Escrevi um guia (e gravei um vídeo) pra você descobrir qual semanal combina com a sua rotina.\n[Ler o guia] [Ver o vídeo]\n\n2. Um café da tarde pra planejar juntas. Dia 13/11, em Curitiba, com moodboard personalizado. Se você é daqui, eu adoraria te ver.\n[Conhecer o encontro]\n\n3. Uma Black Friday do jeito Unica. Está chegando, sem contagem regressiva nem pressão. Quem estiver na lista VIP fica sabendo primeiro.\n[Entrar na lista VIP]\n\nNo seu ritmo, no seu tempo.\nLari",
+      "cta": "Ler o guia / ver o vídeo / conhecer o encontro / lista VIP.",
+      "observacao": "Enviar pelo app de e-mail da loja (Shopify Email). O item 3 depende da decisão da Black Friday: se a oferta não for com lista VIP, eu troco o texto."
+    },
+    {
+      "codigo": "l1-1028-ig-extra-depoimento",
+      "data": "2026-10-28",
+      "horario": "12h",
+      "canal": "instagram",
+      "formato": "Post estático (depoimento)",
+      "nivel": "extra",
+      "pilar": "Histórias e comunidade",
+      "titulo": "“Falei que todo mundo deveria ter um Unica na vida!”",
+      "objetivo": "Prova social de cliente real.",
+      "roteiro": [
+        {
+          "cena": "Imagem única",
+          "tela": "“Estou simplesmente APAIXONADA pelo meu Unica! Superou todas as minhas expectativas!”",
+          "imagem": "Print do depoimento (com autorização) sobre foto do planner, ou texto na fonte da marca"
+        }
+      ],
+      "legenda": "Receber mensagem assim é o que faz cada pedido valer a pena 💛\n\nObrigada, [@ da cliente], por deixar eu dividir aqui. Se você também tem um Unica, me marca: eu adoro ver o seu.",
+      "cta": "Marcar a Unica numa foto do seu planner.",
+      "producao": "Só depois da autorização da cliente (ver tarefa de depoimentos). Montar no Canva.",
+      "observacao": "Sem autorização até 27/10? Troque por outra frase da marca ou pule este extra."
+    },
+    {
+      "codigo": "l1-1029-st",
+      "data": "2026-10-29",
+      "horario": "9h",
+      "canal": "stories",
+      "formato": "Sequência de 4 stories",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Encontro Curitiba (13/11)",
+      "titulo": "Encontro de Curitiba + vídeo novo no YouTube",
+      "objetivo": "Lembrar do encontro (15 lugares) e divulgar o vídeo do dia.",
+      "gancho": "Duas novidades: vídeo novo e um lembrete de Curitiba.",
+      "roteiro": [
+        {
+          "cena": "Story 1 · você falando",
+          "fala": "Saiu vídeo novo no YouTube: monto o meu planner 2027 inteiro.",
+          "imagem": "Adesivo de link pro vídeo"
+        },
+        {
+          "cena": "Story 2 · trecho do vídeo",
+          "tela": "Tá completo, com todas as peças 🤍"
+        },
+        {
+          "cena": "Story 3 · encontro",
+          "tela": "E dia 13/11 tem café da tarde pra planejar 2027 em Curitiba."
+        },
+        {
+          "cena": "Story 4 · link do ingresso",
+          "tela": "Ainda tem lugar. Vem? 👇",
+          "imagem": "Adesivo de link do ingresso"
+        }
+      ],
+      "cta": "Ver o vídeo e abrir o ingresso.",
+      "producao": "Vídeo de 10 s falando. Trecho de 5 s do vídeo do YouTube.",
+      "observacao": "Atualize “ainda tem lugar” com o número real de ingressos vendidos (sem tom de pressa)."
+    },
+    {
+      "codigo": "l1-1029-ig-reel-erros",
+      "data": "2026-10-29",
+      "horario": "19h",
+      "canal": "instagram",
+      "formato": "Reels (25–35 s)",
+      "nivel": "realista",
+      "pilar": "Organização sem culpa",
+      "campanha": "Planejar 2027",
+      "titulo": "3 motivos pra você abandonar o planner em fevereiro",
+      "objetivo": "Reels de alcance e salvamento que já prepara a cliente pra usar o planner de verdade em 2027.",
+      "gancho": "3 motivos pra você abandonar o planner em fevereiro (e como evitar).",
+      "roteiro": [
+        {
+          "cena": "0–3 s · planner largado numa gaveta",
+          "tela": "3 motivos pra você abandonar o planner em fevereiro"
+        },
+        {
+          "cena": "3–10 s · página cheia demais",
+          "fala": "Um: você enche o dia de tarefa. Coloca no máximo cinco.",
+          "tela": "1. Lista grande demais → no máximo 5"
+        },
+        {
+          "cena": "10–18 s · páginas lindas e vazias",
+          "fala": "Dois: você espera ter tempo pra deixar bonito. Feito é melhor que perfeito.",
+          "tela": "2. Esperar ficar bonito → escreva torto mesmo"
+        },
+        {
+          "cena": "18–26 s · semana em branco e depois você reabrindo",
+          "fala": "Três: pulou uma semana e desistiu. Não precisa recuperar nada, só recomeçar na próxima página.",
+          "tela": "3. Pulou uma semana → recomece na próxima página"
+        },
+        {
+          "cena": "26–30 s · você abrindo o planner com café",
+          "tela": "Seu planner te espera. Sem cobrança 💛"
+        }
+      ],
+      "legenda": "Fevereiro é o mês em que muito planner vai pra gaveta. Quase sempre por um destes 3 motivos.\n\nE nenhum deles é “você não é organizada”. Organização não é dom, é prática, e dá pra recomeçar quantas vezes precisar.\n\nSalva pra reler em fevereiro 😉",
+      "hashtags": "#planner2027 #rotinaleve #organizacaopessoal #unicaplanner",
+      "cta": "Salvar pra reler em fevereiro.",
+      "producao": "Vídeos curtos: planner numa gaveta; página cheia demais; páginas bonitas em branco; você reabrindo com café. Fala em off (voz por cima) ou só texto na tela."
+    },
+    {
+      "codigo": "l1-1029-yt-montar",
+      "data": "2026-10-29",
+      "horario": "18h",
+      "canal": "youtube",
+      "formato": "Vídeo (8–12 min)",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Planejar 2027",
+      "titulo": "Monte comigo: meu planner 2027 completo (Case A5 + refis)",
+      "objetivo": "Vídeo de desejo e de busca (“montar planner 2027”), mostrando cada refil e pra que serve.",
+      "gancho": "Vou montar o meu planner de 2027 do zero e te mostrar pra que serve cada parte.",
+      "roteiro": [
+        {
+          "cena": "0:00 · abertura com a case vazia",
+          "fala": "Vou montar o meu planner de 2027 do zero e te mostrar pra que serve cada parte."
+        },
+        {
+          "cena": "0:40 · a case",
+          "fala": "Por que fichário: dá pra trocar, tirar e acrescentar. Tamanho A5 × Personal."
+        },
+        {
+          "cena": "2:00 · divisórias e capa",
+          "fala": "Como eu divido: mês, semana, listas, anotações."
+        },
+        {
+          "cena": "3:30 · Mensal Datado",
+          "fala": "Mostre um mês preenchido com datas importantes."
+        },
+        {
+          "cena": "5:00 · Semanal Vertical",
+          "fala": "Mostre uma semana preenchida (link pro vídeo vertical × horizontal)."
+        },
+        {
+          "cena": "7:00 · Tarefas e Notas + Método ALA",
+          "fala": "Como você usa o bloco no dia a dia com o ALA."
+        },
+        {
+          "cena": "9:00 · fechando",
+          "fala": "Planner bom é o que você usa. Comece com pouco. Links de tudo na descrição. E se você é de Curitiba, dia 13/11 tem café da tarde pra gente planejar junto."
+        }
+      ],
+      "legenda": "Montei o meu planner de 2027 do zero e mostro pra que serve cada parte: case, divisórias, mensal, semanal e o bloco de tarefas com o Método ALA.\n\nCase Argolada Clássica A5: https://www.unicaplanner.com.br/products/case-argolada-a5\nMensal Datado 2027: https://www.unicaplanner.com.br/products/mensal-datado-2027\nSemanal Vertical 2027: https://www.unicaplanner.com.br/products/semanal-vertical-2027\nTarefas e Notas: https://www.unicaplanner.com.br/products/tarefas-e-notas\nEncontro em Curitiba (13/11): https://www.unicaplanner.com.br/products/cafe-da-tarde-planejando-2027-encontro-unica-em-curitiba",
+      "hashtags": "#planner2027 #montecomigo #fichario",
+      "cta": "Links na descrição; inscrever-se no canal.",
+      "producao": "Gravar na horizontal, câmera de cima + abertura de frente. Pode aproveitar a mesma sessão do Reels de 27/10 (grave os dois no mesmo dia).\nThumbnail: case aberta com refis + texto “Meu planner 2027”.",
+      "produtos": "Case Argolada Clássica A5 · Mensal Datado 2027 · Semanal Vertical 2027 · Tarefas e Notas"
+    },
+    {
+      "codigo": "l1-1030-st",
+      "data": "2026-10-30",
+      "horario": "10h",
+      "canal": "stories",
+      "formato": "Sequência de 4 stories",
+      "nivel": "realista",
+      "pilar": "Histórias e comunidade",
+      "campanha": "Black Friday (aquecimento)",
+      "titulo": "Depoimento de cliente + lista VIP da Black Friday",
+      "objetivo": "Prova social e abertura da lista VIP (se a oferta escolhida tiver lista VIP).",
+      "gancho": "Olha a mensagem que eu recebi essa semana 🥹",
+      "roteiro": [
+        {
+          "cena": "Story 1 · print de depoimento autorizado",
+          "tela": "Olha a mensagem que eu recebi essa semana 🥹"
+        },
+        {
+          "cena": "Story 2 · você falando",
+          "fala": "É por isso que eu faço cada pedido com tanto cuidado."
+        },
+        {
+          "cena": "Story 3 · aviso da Black Friday",
+          "tela": "A Black Friday da Unica vai ser do nosso jeito: sem pressa e sem contagem regressiva."
+        },
+        {
+          "cena": "Story 4 · lista VIP",
+          "tela": "Quem entra na lista VIP fica sabendo primeiro 💛",
+          "imagem": "Adesivo de link pra lista VIP (ou caixinha “quero”)"
+        }
+      ],
+      "cta": "Entrar na lista VIP.",
+      "producao": "Print do depoimento autorizado. Vídeo de 8 s falando.",
+      "observacao": "Depende de 2 tarefas suas: autorização de depoimento e decisão da Black Friday. Se a oferta não tiver lista VIP, eu troco os stories 3 e 4."
+    },
+    {
+      "codigo": "l1-1030-ig-reel-encontro",
+      "data": "2026-10-30",
+      "horario": "19h",
+      "canal": "instagram",
+      "formato": "Reels (15–25 s)",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Encontro Curitiba (13/11)",
+      "titulo": "Um café da tarde pra planejar 2027 (Curitiba, 13/11)",
+      "objetivo": "Vender os ingressos restantes do encontro.",
+      "gancho": "E se você tivesse uma tarde inteira só pra planejar o seu 2027?",
+      "roteiro": [
+        {
+          "cena": "0–3 s · mesa posta com café e planners",
+          "tela": "E se você tivesse uma tarde só pra planejar o seu 2027?"
+        },
+        {
+          "cena": "3–10 s · materiais, moodboard, papel",
+          "fala": "Dia 13 de novembro eu vou receber 15 mulheres pra um café da tarde em Curitiba.",
+          "tela": "Sexta, 13/11 · 14h30 · Batel"
+        },
+        {
+          "cena": "10–18 s · você preparando os kits",
+          "fala": "Cada uma sai com o moodboard do ano e o planejamento começado.",
+          "tela": "Café + moodboard + materiais"
+        },
+        {
+          "cena": "18–22 s · convite",
+          "tela": "Link na bio 💛"
+        }
+      ],
+      "legenda": "Uma tarde pra parar, tomar um café e pensar no ano que você quer, sem pressa.\n\nDia 13/11, sexta, às 14h30, no Batel (Curitiba). Café da tarde, moodboard personalizado e materiais inclusos. São 15 lugares.\n\nSe você é de Curitiba ou região, eu adoraria te ver lá. Link na bio.",
+      "hashtags": "#curitiba #eventocuritiba #planner2027 #unicaplanner",
+      "cta": "Link na bio pro ingresso.",
+      "producao": "Montar uma mesa de exemplo (café, planners, materiais do moodboard) e gravar 3 takes de 5 s + você preparando os kits.",
+      "produtos": "Ingresso (https://www.unicaplanner.com.br/products/cafe-da-tarde-planejando-2027-encontro-unica-em-curitiba)",
+      "observacao": "Se os 15 lugares acabarem antes, troque a chamada por “lista de espera pra próxima turma”."
+    },
+    {
+      "codigo": "l1-1030-tt-erros",
+      "data": "2026-10-30",
+      "horario": "20h",
+      "canal": "tiktok",
+      "formato": "Vídeo (reaproveitado)",
+      "nivel": "realista",
+      "pilar": "Organização sem culpa",
+      "titulo": "3 motivos pra abandonar o planner (versão TikTok)",
+      "reaproveita": "l1-1029-ig-reel-erros",
+      "gancho": "Você vai abandonar o seu planner em fevereiro por um destes 3 motivos.",
+      "legenda": "Salva pra reler em fevereiro 📌 #planner #organizacao #produtividade #rotina #planner2027",
+      "cta": "Salvar e seguir.",
+      "observacao": "Mesmo vídeo do Reels de 29/10."
+    },
+    {
+      "codigo": "l1-1031-st",
+      "data": "2026-10-31",
+      "horario": "10h",
+      "canal": "stories",
+      "formato": "Sequência de 3 stories",
+      "nivel": "realista",
+      "pilar": "Rotina leve e real",
+      "titulo": "Sábado lento",
+      "objetivo": "Conteúdo de pausa/autocuidado, sem venda: reforça a marca anti-produtividade-tóxica.",
+      "gancho": "Hoje a lista é curta de propósito.",
+      "roteiro": [
+        {
+          "cena": "Story 1 · chá, livro, planner fechado",
+          "tela": "Sábado lento ☕ Hoje a lista é curta de propósito."
+        },
+        {
+          "cena": "Story 2 · página com 2 itens só (um deles “descansar”)",
+          "tela": "Descansar também vai na lista."
+        },
+        {
+          "cena": "Story 3 · enquete",
+          "tela": "O que tem na sua lista de sábado?",
+          "imagem": "Caixinha de perguntas"
+        }
+      ],
+      "cta": "Responder a caixinha.",
+      "producao": "3 fotos ou vídeos curtos: chá + livro; página com 2 itens; luz da janela."
+    },
+    {
+      "codigo": "l1-1031-tt-encontro",
+      "data": "2026-10-31",
+      "horario": "11h",
+      "canal": "tiktok",
+      "formato": "Vídeo (reaproveitado)",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "titulo": "Café da tarde em Curitiba (versão TikTok)",
+      "reaproveita": "l1-1030-ig-reel-encontro",
+      "gancho": "Curitiba: uma tarde inteira pra planejar 2027 ☕",
+      "legenda": "Sexta 13/11, 14h30, no Batel. Link no perfil 💛 #curitiba #planner2027 #eventocuritiba",
+      "cta": "Link no perfil.",
+      "observacao": "No TikTok, ative a localização “Curitiba” no post."
+    },
+    {
+      "codigo": "l1-1031-ig-extra-frase",
+      "data": "2026-10-31",
+      "horario": "12h",
+      "canal": "instagram",
+      "formato": "Post estático (frase)",
+      "nivel": "extra",
+      "pilar": "Rotina leve e real",
+      "titulo": "“Aos poucos, você chega longe.”",
+      "roteiro": [
+        {
+          "cena": "Imagem única",
+          "tela": "Aos poucos, você chega longe.",
+          "imagem": "Foto do planner com uma página de metas pequenas, ou fundo bege + frase"
+        }
+      ],
+      "legenda": "Meta grande se faz com passo pequeno, repetido.\n\nQual é o seu passo pequeno desta semana?",
+      "hashtags": "#rotinaleve #metas #unicaplanner",
+      "cta": "Comentar o passo pequeno da semana.",
+      "producao": "Canva, modelo de frase da marca."
+    },
+    {
+      "codigo": "l1-1101-st",
+      "data": "2026-11-01",
+      "horario": "19h",
+      "canal": "stories",
+      "formato": "Sequência de 4 stories",
+      "nivel": "realista",
+      "pilar": "Rotina leve e real",
+      "titulo": "Domingo de planejar: novembro inteiro",
+      "objetivo": "Quadro de domingo, desta vez com o mensal: mostrar o Mensal Datado em uso.",
+      "gancho": "Começo de mês: planejando novembro em 10 minutos.",
+      "roteiro": [
+        {
+          "cena": "Story 1 · Mensal Datado aberto em novembro",
+          "tela": "Domingo de planejar: novembro inteiro 🗓️"
+        },
+        {
+          "cena": "Story 2 · marcando datas fixas",
+          "tela": "1. Datas que não mudam (aniversários, contas, 13/11 😉)"
+        },
+        {
+          "cena": "Story 3 · 3 prioridades do mês",
+          "tela": "2. Só 3 prioridades pro mês"
+        },
+        {
+          "cena": "Story 4 · convite",
+          "tela": "Planeja junto e me marca 💛"
+        }
+      ],
+      "cta": "Planejar junto e marcar a Unica.",
+      "producao": "Vídeos curtos de cima: Mensal Datado aberto; marcando datas; escrevendo 3 prioridades.",
+      "produtos": "Mensal Datado 2027 (o de 2026 também serve pra novembro)"
+    },
+    {
+      "codigo": "l1-1101-ig-extra-calendario",
+      "data": "2026-11-01",
+      "horario": "12h",
+      "canal": "instagram",
+      "formato": "Post estático (calendário)",
+      "nivel": "extra",
+      "pilar": "Organização sem culpa",
+      "titulo": "Calendário de novembro pra salvar",
+      "objetivo": "Post útil e salvável com as datas do mês.",
+      "roteiro": [
+        {
+          "cena": "Imagem única",
+          "tela": "Novembro 2026 · com feriados (02/11 e 15/11, 20/11 em alguns estados), 13/11 encontro em Curitiba e a Black Friday (27/11)",
+          "imagem": "Calendário mensal no visual da marca"
+        }
+      ],
+      "legenda": "Novembro chegou. Salva o calendário com os feriados e as datas que importam, e escolhe só 3 prioridades pro mês.\n\nQuais são as suas?",
+      "hashtags": "#novembro #calendario #planner #unicaplanner",
+      "cta": "Salvar e comentar as 3 prioridades.",
+      "producao": "Canva: modelo de calendário mensal (eu posso montar o texto de cada dia se você quiser)."
+    },
+    {
+      "codigo": "l1-1102-st",
+      "data": "2026-11-02",
+      "horario": "10h",
+      "canal": "stories",
+      "formato": "Sequência de 3 stories",
+      "nivel": "realista",
+      "pilar": "Rotina leve e real",
+      "titulo": "Feriado: recomeço de novembro",
+      "objetivo": "Dia de feriado (Finados): conteúdo leve, sem venda.",
+      "gancho": "Feriado também é pra descansar sem culpa.",
+      "roteiro": [
+        {
+          "cena": "Story 1 · manhã calma",
+          "tela": "Feriado também é pra descansar sem culpa."
+        },
+        {
+          "cena": "Story 2 · as 3 prioridades de novembro escritas",
+          "tela": "Deixei as 3 prioridades de novembro escritas e fechei o planner."
+        },
+        {
+          "cena": "Story 3 · caixinha",
+          "tela": "Qual é a sua prioridade nº 1 deste mês?"
+        }
+      ],
+      "cta": "Responder a caixinha.",
+      "producao": "2 fotos: manhã calma; página com as 3 prioridades."
+    },
+    {
+      "codigo": "l1-1102-ig-carrossel-novembro",
+      "data": "2026-11-02",
+      "horario": "18h",
+      "canal": "instagram",
+      "formato": "Carrossel (5 lâminas)",
+      "nivel": "realista",
+      "pilar": "Organização sem culpa",
+      "titulo": "Novembro em 3 prioridades: um mês leve",
+      "objetivo": "Carrossel salvável que ensina a planejar o mês com o Mensal Datado.",
+      "gancho": "Novembro não precisa de 30 metas. Precisa de 3.",
+      "roteiro": [
+        {
+          "cena": "Lâmina 1 (capa)",
+          "tela": "Novembro não precisa de 30 metas. Precisa de 3.",
+          "imagem": "Mensal aberto em novembro"
+        },
+        {
+          "cena": "Lâmina 2",
+          "tela": "1. Anote as datas que não mudam: contas, aniversários, compromissos."
+        },
+        {
+          "cena": "Lâmina 3",
+          "tela": "2. Escolha 3 prioridades: uma de trabalho, uma de casa, uma só sua."
+        },
+        {
+          "cena": "Lâmina 4",
+          "tela": "3. Divida cada prioridade em passos pequenos e espalhe pelas semanas."
+        },
+        {
+          "cena": "Lâmina 5",
+          "tela": "No fim do mês, olhe o que deu. O que não deu volta pro Anotar. Sem culpa 💛"
+        }
+      ],
+      "legenda": "Novembro costuma ser corrido: fim de ano chegando, Black Friday, presentes, cansaço acumulado.\n\nPor isso a sugestão é: 3 prioridades, e só. Uma de trabalho, uma de casa e uma só sua.\n\nSalva e me conta nos comentários qual é a sua prioridade “só sua”.",
+      "hashtags": "#planejamentomensal #metodoala #rotinaleve #unicaplanner",
+      "cta": "Salvar e comentar a prioridade “só sua”.",
+      "producao": "1 foto de capa: Mensal aberto em novembro. As outras lâminas em texto no Canva.",
+      "produtos": "Mensal Datado 2027 (https://www.unicaplanner.com.br/products/mensal-datado-2027)"
+    }
+  ],
+  "tarefas": [
+    {
+      "codigo": "l1-t-pasta-drive",
+      "titulo": "Criar a pasta “Marketing · Lote 1” no Google Drive e colar o link no calendário",
+      "detalhe": "1. Abra o Google Drive e crie a pasta.\n2. Dentro dela, crie 3 subpastas: Fotos, Vídeos, Prontos para postar.\n3. Copie o link da pasta (botão Compartilhar › Copiar link).\n4. No Calendário, no quadro do Lote 1, cole o link e clique em Salvar pasta.",
+      "tipo": "configurar",
+      "prazo": "2026-10-19",
+      "link": "https://drive.google.com/drive/my-drive",
+      "linkRotulo": "Abrir o Google Drive"
+    },
+    {
+      "codigo": "l1-t-sessao-gravacao",
+      "titulo": "Reservar 2 tardes de gravação em lote (os vídeos do Lote 1)",
+      "detalhe": "Gravar tudo de uma vez economiza tempo. Sugestão:\n• Terça 20/10 à tarde: Reels da culpa, vertical × horizontal, bastidor UPExpress e o vídeo do YouTube de 22/10.\n• Segunda 26/10 à tarde: Reels de montar o planner, 3 motivos, encontro + o vídeo do YouTube de 29/10.\nO que gravar em cada um está na ficha (seção “O que gravar”).",
+      "tipo": "video",
+      "prazo": "2026-10-20",
+      "link": "/marketing/calendario?lote=1&modo=realista&canal=instagram",
+      "linkRotulo": "Ver os Reels do lote"
+    },
+    {
+      "codigo": "l1-t-fotos-produto",
+      "titulo": "Tirar 10 fotos de produto 2027 com luz natural",
+      "detalhe": "Servem pra vários carrosséis e stories do lote:\n• Case A5 aberta com refis espalhados (capa do carrossel de 26/10)\n• Semanal Vertical e horizontal lado a lado + uma de cada em close\n• Mensal Datado aberto em novembro\n• Bloco Tarefas e Notas com 3 a 5 itens\n• Página escrita com caneta gel (e o verso contra a luz)\nSuba na pasta Fotos do Lote 1.",
+      "tipo": "foto",
+      "prazo": "2026-10-21"
+    },
+    {
+      "codigo": "l1-t-black-friday",
+      "titulo": "Decidir a oferta da Black Friday (A, B ou C)",
+      "detalhe": "Decisão que a conversa CONTENT pediu até 22/10 (dá tempo de produzir brinde e conteúdo):\nA · Semana Unica (recomendada): de 23 a 30/11, Planejador de Metas de brinde acima de R$ 199 e frete grátis pro Brasil acima de R$ 299. Lista VIP compra um dia antes.\nB · 15% em tudo, exceto cases avulsas.\nC · 3 kits de refis 2027 com preço especial.\nOs stories de 30/10 e o e-mail de 28/10 dependem disso. Responda na conversa CONTENT ou aqui no chat.",
+      "tipo": "decidir",
+      "prazo": "2026-10-22",
+      "link": "https://www.unicaplanner.com.br/products/planejador-de-metas",
+      "linkRotulo": "Ver o Planejador de Metas (brinde da opção A)"
+    },
+    {
+      "codigo": "l1-t-depoimentos",
+      "titulo": "Pedir autorização de depoimento a 3 clientes",
+      "detalhe": "Pra usar nos stories de 30/10 e no post extra de 28/10. Mensagem sugerida:\n“Oi, [nome]! Sua mensagem sobre o planner me deixou tão feliz que eu queria dividir no Instagram da Unica. Posso postar (com o seu @ ou sem, como preferir)?”\nAnote quem autorizou e com qual @.",
+      "tipo": "outro",
+      "prazo": "2026-10-27",
+      "link": "https://www.instagram.com/direct/inbox/",
+      "linkRotulo": "Abrir o direct do Instagram"
+    },
+    {
+      "codigo": "l1-t-conferir-essencial",
+      "titulo": "Conferir o Planner 2027 Essencial no Shopify (preço e prazo)",
+      "detalhe": "Antes dos stories de 26/10: o preço do kit está abaixo das peças avulsas? A página fala “UPExpress: postado em até 3 dias úteis” (e não “10 dias úteis”)? Esses ajustes estavam na lista da CONTENT esperando o seu sim.",
+      "tipo": "configurar",
+      "prazo": "2026-10-25",
+      "link": "https://www.unicaplanner.com.br/products/planner-2027-essencial-vertical",
+      "linkRotulo": "Abrir a página do kit"
+    },
+    {
+      "codigo": "l1-t-bio",
+      "titulo": "Atualizar o link da bio do Instagram e do TikTok",
+      "detalhe": "Deixar na bio: coleção 2027, guia vertical × horizontal (blog) e ingresso do encontro de 13/11. Vários Reels do lote mandam pra “link na bio”.",
+      "tipo": "configurar",
+      "prazo": "2026-10-21",
+      "link": "https://www.instagram.com/accounts/edit/",
+      "linkRotulo": "Editar perfil do Instagram"
+    },
+    {
+      "codigo": "l1-t-youtube-canal",
+      "titulo": "Conferir o canal do YouTube antes do 1º vídeo",
+      "detalhe": "Foto, nome “Unica Planner”, descrição curta e link da loja no canal. Deixe o vídeo de 22/10 agendado no YouTube Studio (aba Conteúdo › Enviar vídeo).",
+      "tipo": "configurar",
+      "prazo": "2026-10-21",
+      "link": "https://studio.youtube.com",
+      "linkRotulo": "Abrir o YouTube Studio"
+    }
+  ]
+}

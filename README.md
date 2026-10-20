@@ -48,17 +48,78 @@ Unica Planner. Módulos ativos:
     por página); custo por página da impressora = (preço ÷ vida útil + tinta/ano +
     manutenção/ano) ÷ páginas por ano
 
-- **Marketing** (`/marketing`) — mapa mental dos braços do marketing, mesmo
-  login. Nó central "Marketing"; tocar num braço abre os sub-braços (ex:
-  Conteúdo → Instagram, TikTok, YouTube…), tocar de novo recolhe, e há o
-  botão "Abrir tudo". No computador os braços ficam dos dois lados do centro;
-  no celular vira uma árvore de cima pra baixo. A lista fica em
-  `src/lib/marketing/mapa.ts` (sem banco): pra mudar um braço, edite só
-  esse arquivo.
+- **Parcerias** (`/marketing/parcerias`, aba dentro do Marketing; os endereços antigos
+  `/parcerias/...` redirecionam) — criadoras e influenciadoras, mesmo login.
+  Junta os antigos "Leads de criadoras" e "Propostas de UGC" num cadastro só
+  (`Criadora`, com `origem` prospecção / proposta / indicação):
+  - **Captura relâmpago** (`/marketing/parcerias/nova`): cola o link do perfil e salva
+    com data. `/marketing/parcerias/nova?link=...` salva sozinho (Atalho do iPhone no
+    botão Compartilhar; o passo a passo está na tela).
+  - **Triagem** (`/marketing/parcerias/triagem`): quadro por status (não revisada → pra
+    contatar → contatada → respondeu → em negociação → fechou; não seguiu e
+    descartada saem do quadro). Mudar status grava `statusEm` e o histórico.
+  - **Ficha** (`/marketing/parcerias/criadoras/[id]`): perfil, gancho pra DM, DM pronta
+    a partir dos modelos (`{nome}`, `{gancho}`, `{cupom}`), histórico,
+    acordo (presente, permuta, pago, afiliada), cachê pago, autorização de
+    anúncio, contato/endereço, **envios** (produtos do catálogo com o custo
+    do Financeiro copiado na hora, ou avulsos, + frete e rastreio), **posts
+    combinados** (prazo, link, sinalizou #publi) e **resultado** (investido ×
+    vendas do cupom).
+  - **Propostas** (`/marketing/parcerias/propostas`): cola a DM, o @ e o pedido
+    (permuta/pago/valor) saem do texto (`src/lib/parcerias/avaliacao.ts`);
+    checklist dos critérios da marca dá a sugestão aprovar / investigar /
+    recusar; a decisão move a criadora no funil. Botão "Analisar com o
+    Claude" (`src/lib/parcerias/claude.ts`) só aparece com
+    `ANTHROPIC_API_KEY` configurada.
+  - **Cupons**: vendas por `discount_code` nos pedidos do Shopify (subtotal
+    sem frete, sem cancelados nem teste), botão no painel e na ficha.
+  - **Formulário de permuta** (Google Forms): o Apps Script da planilha manda
+    cada resposta pra `/api/parcerias/formulario?token=PARCERIAS_FORM_TOKEN`
+    (rota liberada no `proxy.ts`, protegida pelo token). Acha a criadora pelo
+    @, completa só os campos vazios da ficha e marca "fechou"; a resposta
+    inteira fica guardada. O código pronto pra colar está em
+    `/marketing/parcerias/formulario`.
+  - **Campanhas** (ondas de envio) com checklist de tarefas por fase, filtro por
+    lote/kit, estimativa de custo e os "combinados com toda criadora".
+  - **Produção dos envios** (`/marketing/parcerias/producao`): checklist do que
+    preparar pra cada criadora que fechou (cupom, case, blocos, cartão à mão,
+    caixa, despacho), no estilo da Central de Produção. "Por etapa" junta tudo
+    pra fazer em lote (imprimir os blocos de todas de uma vez); "Por criadora"
+    mostra a lista de cada uma e deixa marcar fichas pra imprimir. A lista nasce
+    de um modelo (`src/lib/parcerias/producao.ts`) e pode ser ajustada na ficha.
+    Impressão em A5: lista (`/imprimir/parcerias/producao`) e uma ficha de envio
+    por criadora, com endereço e o que ela pediu no formulário
+    (`/imprimir/parcerias/ficha?id=...`). Tabela `ItemProducaoParceria`.
+  - `scripts/importar-artefato.mjs`: importa o JSON do artefato
+    "Influenciadoras Onda 1" (não versionar o JSON: tem dados pessoais).
 
-Os demais (Leads de criadoras, Propostas de UGC, Feedbacks e ideias de
-produto) aparecem como "em breve" e serão construídos em conversas
-separadas.
+- **Marketing** (`/marketing`), mesmo login. Abas: Minhas tarefas, Calendário,
+  Parcerias (acima) e Mapa.
+  - **Calendário de conteúdo** (`/marketing/calendario`): 90 dias em lotes de 15
+    (`MktLote`), cada conteúdo (`MktConteudo`) com canal (stories, Instagram,
+    TikTok, YouTube, e-mail, blog), nível **realista** (o essencial) ou **extra**
+    (completa até o ritmo do plano estratégico), gancho, roteiro cena a cena,
+    legenda, CTA, o que gravar e produtos. Barra de progresso por nível e link
+    da pasta do Google Drive por lote.
+  - **Ficha** (`/marketing/conteudo/[id]`): aprovar o roteiro, pedir ajuste (com
+    nota), “já gravei”, “postei” (com link) e desfazer o último passo.
+  - **Minhas tarefas** (`/marketing/tarefas`): junta o andamento dos conteúdos
+    (aprovar 3 dias antes, gravar 1 dia antes, postar no dia; só fica atrasada
+    depois da data do post) com as tarefas avulsas (`MktTarefa`, com link).
+  - Os roteiros entram por arquivo: `marketing/lotes/00-lotes.json` (lotes) e
+    `lote-NN.json` (conteúdos e tarefas), carregados com
+    `node scripts/marketing-importar.mjs`. Reimportar atualiza pelo `codigo` e
+    nunca desfaz o que a Lari marcou na tela; um conteúdo com ajuste pedido volta
+    pra “pra aprovar”.
+  - **Mapa**: nó central "Marketing"; tocar num braço abre os sub-braços (ex:
+    Conteúdo → Instagram, TikTok, YouTube…), tocar de novo recolhe, e há o
+    botão "Abrir tudo". No computador os braços ficam dos dois lados do centro;
+    no celular vira uma árvore de cima pra baixo. A lista fica em
+    `src/lib/marketing/mapa.ts` (sem banco): pra mudar um braço, edite só
+    esse arquivo.
+
+Feedbacks e ideias de produto aparece como "em breve" e será construído em
+outra conversa.
 
 Ver [`../Arquitetura - Mundo da Unica.md`](../Arquitetura%20-%20Mundo%20da%20Unica.md)
 para a visão completa da plataforma e o plano das próximas fases.
@@ -74,8 +135,10 @@ para a visão completa da plataforma e o plano das próximas fases.
   sem um schema privado.
 - **Shopify Admin API** (só leitura: produtos e pedidos) para o catálogo e o
   faturamento do Financeiro
-- O mesmo projeto Supabase vai hospedar depois o banco compartilhado de
-  "criadoras" (Leads + Propostas de UGC)
+- As tabelas de Parcerias ficam no mesmo schema privado do Financeiro
+  (`Criadora` usa `Variante` pros produtos enviados)
+- **Anthropic API** (opcional, `ANTHROPIC_API_KEY`) pra análise de
+  propostas pelo Claude
 
 ## Configuração local
 
@@ -92,6 +155,9 @@ para a visão completa da plataforma e o plano das próximas fases.
      (botão Connect → Direct), terminando em `?schema=financeiro_teste`
    - `SHOPIFY_STORE_DOMAIN` e `SHOPIFY_ADMIN_ACCESS_TOKEN`: os mesmos da
      Central de Produção
+   - `PARCERIAS_FORM_TOKEN`: texto longo e aleatório (senha do Apps Script
+     do formulário de permuta)
+   - `ANTHROPIC_API_KEY` (opcional): liga a análise de propostas pelo Claude
 5. Instale as dependências, crie as tabelas no schema de teste e rode o app:
 
    ```bash
@@ -132,9 +198,13 @@ para a visão completa da plataforma e o plano das próximas fases.
   materiais, compras); `src/app/api/financeiro/` — rotas que gravam dados
   (cada uma confere o login de novo, além do proxy).
 - `src/lib/financeiro/` — sync com o Shopify, cálculo de custo, consultas.
+- `src/app/marketing/parcerias/`, `src/app/imprimir/`, `src/app/api/parcerias/`, `src/lib/parcerias/`,
+  `src/components/parcerias/` — módulo Parcerias.
 - `src/app/marketing/`, `src/components/marketing/MapaMental.tsx`,
-  `src/lib/marketing/mapa.ts` — módulo Marketing (mapa mental).
-- `prisma/schema.prisma` — tabelas do Financeiro.
+  `src/lib/marketing/`, `src/app/api/marketing/`, `marketing/lotes/`,
+  `scripts/marketing-importar.mjs` — módulo Marketing (mapa, calendário e tarefas).
+- `prisma/schema.prisma` — tabelas do Financeiro, de Parcerias e do Marketing
+  (`Mkt*`). Mudanças de banco em produção ficam em `prisma/sql/`.
 
 ### Regras do Financeiro
 
@@ -162,5 +232,5 @@ para a visão completa da plataforma e o plano das próximas fases.
 
 - **Fase 2**: login único também para a Central de Produção e para os
   módulos futuros (Supabase Auth substitui a senha própria de cada um).
-- Construção dos módulos Leads de criadoras, Propostas de UGC e Feedbacks —
-  cada um em uma conversa separada, conforme o documento de arquitetura.
+- Construção do módulo Feedbacks e ideias de produto, conforme o documento
+  de arquitetura.
