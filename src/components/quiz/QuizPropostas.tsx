@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { PERGUNTAS, PROPOSTAS, type Pergunta, type PropostaId } from "@/lib/quiz/propostas";
 
@@ -257,9 +256,6 @@ function BotaoRecomecar({ onClick }: { onClick: () => void }) {
       >
         Refazer o quiz
       </button>
-      <Link href="/" className="rounded-xl border border-border px-5 py-2.5 text-sm font-semibold text-ink">
-        Voltar ao início
-      </Link>
     </div>
   );
 }

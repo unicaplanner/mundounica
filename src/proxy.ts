@@ -7,8 +7,15 @@ const PUBLIC_PATHS = ["/login"];
 // o Apps Script do Google Forms de permuta.
 const WEBHOOK_PATHS = ["/api/parcerias/formulario"];
 
+// Paginas abertas pra qualquer um, logado ou nao: o quiz das propostas,
+// feito pra mandar o link pra outras pessoas.
+const OPEN_PATHS = ["/quiz"];
+
 export async function proxy(request: NextRequest) {
   if (WEBHOOK_PATHS.includes(request.nextUrl.pathname)) {
+    return NextResponse.next();
+  }
+  if (OPEN_PATHS.includes(request.nextUrl.pathname)) {
     return NextResponse.next();
   }
 

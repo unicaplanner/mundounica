@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { QuizPropostas } from "@/components/quiz/QuizPropostas";
 import { PERGUNTAS } from "@/lib/quiz/propostas";
 
@@ -11,9 +10,7 @@ export default function QuizPage() {
   return (
     <div className="mx-auto w-full max-w-2xl flex-1 px-6 py-12">
       <header className="mb-8 flex items-center justify-between">
-        <Link href="/" className="brand-mark text-sm text-accent-ink">
-          Mundo da Unica
-        </Link>
+        <p className="brand-mark text-sm text-accent-ink">Mundo da Unica</p>
       </header>
 
       <h1 className="font-serif text-3xl font-semibold text-ink">Qual proposta combina com você?</h1>
