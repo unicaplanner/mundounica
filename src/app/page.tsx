@@ -57,6 +57,14 @@ export default async function HubPage() {
         />
         <ModuleCard
           className="sm:col-span-3"
+          variant="active"
+          monogram="QZ"
+          title="Quiz das propostas"
+          description="Perguntas por área que mostram se suas opiniões estão mais perto do programa do PT ou do PL."
+          href="/quiz"
+        />
+        <ModuleCard
+          className="sm:col-span-3"
           variant="ghost"
           monogram="FI"
           title="Feedbacks e ideias de produto"
