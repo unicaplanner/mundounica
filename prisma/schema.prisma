@@ -737,3 +737,41 @@ model MktTarefa {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// Modulo Tarefas: organizador que junta o que tem pra fazer, aprovar ou
+// conferir em todos os modulos. Aqui so moram as tarefas cadastradas a mao;
+// as automaticas (aprovar roteiro, preparar envio de criadora, comprar
+// material...) sao calculadas na hora a partir de cada modulo
+// (src/lib/tarefas/fontes.ts), entao nunca ficam desatualizadas.
+
+enum TarefaStatus {
+  a_fazer
+  em_andamento
+  concluido
+}
+
+model Tarefa {
+  id        String  @id @default(cuid())
+  titulo    String
+  descricao String? @db.Text
+
+  categoria String // chave de CATEGORIAS em src/lib/tarefas/meta.ts
+  tags      String[] // chaves de TAGS (urgente, prioridade, aguardando...)
+  status    TarefaStatus @default(a_fazer)
+  prazo     DateTime?    @db.Date
+
+  // Link opcional pra mais detalhes: pagina do app (/financeiro/...) ou URL externa.
+  link String?
+
+  // Sub-itens [{ texto, feito }] -- alimentam a barra de progresso.
+  checklist Json?
+
+  // Concluida ha mais de 15 dias e excluida de vez (ver carregar.ts).
+  concluidaEm DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([prazo])
+}
