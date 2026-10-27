@@ -25,6 +25,7 @@ export function lerCriadora(body: Record<string, unknown>): Lido<Prisma.Criadora
 
   for (const k of ["nome", "nomeCompleto", "nicho", "kit"] as const) if (veio(k)) d[k] = paraTexto(body[k], 120);
   for (const k of ["motivo", "alerta", "observacoes", "gancho", "endereco"] as const) if (veio(k)) d[k] = paraTexto(body[k], 2000);
+  for (const k of ["acordoDetalhes", "querReceber"] as const) if (veio(k)) d[k] = paraTexto(body[k], 8000);
   if (veio("youtube")) d.youtube = paraTexto(body.youtube, 200);
 
   for (const k of ["instagram", "tiktok"] as const) {
@@ -58,6 +59,11 @@ export function lerCriadora(body: Record<string, unknown>): Lido<Prisma.Criadora
     const w = String(body.whatsapp ?? "").replace(/\D/g, "");
     if (w && (w.length < 10 || w.length > 13)) return { ok: false, erro: "WhatsApp: digite o número com DDD." };
     d.whatsapp = w || null;
+  }
+  if (veio("pastaDrive")) {
+    const l = paraLink(body.pastaDrive);
+    if (l === undefined) return { ok: false, erro: "O link da pasta precisa começar com https://." };
+    d.pastaDrive = l;
   }
   if (veio("linkOrigem")) {
     const l = paraLink(body.linkOrigem);

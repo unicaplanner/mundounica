@@ -9,6 +9,7 @@ import { formatarSeguidores, linkPerfil, linkWhatsapp } from "@/lib/parcerias/pe
 import { COR_RECOMENDACAO, ROTULO_ACORDO, ROTULO_ORIGEM, ROTULO_RECOMENDACAO } from "@/lib/parcerias/rotulos";
 import { botaoSecundario } from "@/components/financeiro/estilos";
 import { ordemDaEtapa } from "@/lib/parcerias/etapas";
+import { AcordoDetalhado } from "@/components/parcerias/AcordoDetalhado";
 import { BotaoAcao } from "@/components/parcerias/BotaoAcao";
 import { ChecklistFicha } from "@/components/parcerias/ChecklistFicha";
 import { Copiar } from "@/components/parcerias/Copiar";
@@ -156,6 +157,38 @@ export default async function CriadoraPage({ params }: PageProps<"/marketing/par
           />
         </Secao>
       </div>
+
+      <Secao titulo="Acordo detalhado" id="acordo">
+        <div className="grid gap-6 lg:grid-cols-2">
+          <EditorCampos
+            url={url}
+            vazio="Escreva aqui o que foi combinado: pacote, entregas, prazos, uso de imagem."
+            campos={[
+              { chave: "acordoDetalhes", rotulo: "O que foi combinado", tipo: "area", valor: c.acordoDetalhes ?? "" },
+              {
+                chave: "querReceber",
+                rotulo: "O que ela quer receber",
+                tipo: "area",
+                valor: c.querReceber ?? "",
+                dica: "Tamanho, blocos e necessidades que ela pediu.",
+              },
+              { chave: "pastaDrive", rotulo: "Pasta no Google Drive", tipo: "url", valor: c.pastaDrive ?? "", exibicao: c.pastaDrive && "↗ link salvo", largura: "inteira" },
+            ]}
+          />
+          <AcordoDetalhado
+            criadoraId={c.id}
+            pastaDrive={c.pastaDrive}
+            links={c.links.map((l) => ({ id: l.id, titulo: l.titulo, url: l.url }))}
+            pagamentos={c.pagamentos.map((p) => ({
+              id: p.id,
+              descricao: p.descricao,
+              valor: p.valor.toNumber(),
+              vencimento: dataISO(p.vencimento),
+              pagoEm: dataISO(p.pagoEm),
+            }))}
+          />
+        </div>
+      </Secao>
 
       <Secao titulo="DM pronta">
         <DmPronta modelos={modelos} criadora={c} />

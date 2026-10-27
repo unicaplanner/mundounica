@@ -51,7 +51,8 @@ const FASES = {
   acomp: "Acompanhar posts · 20/out a 10/nov",
   nov: "Black Friday e próxima onda · novembro",
 };
-const atualizado = meioDia(estado.updated);
+// o artefato grava "2026-10-10" ou "21/10/2026", dependendo de quem salvou
+const atualizado = meioDia(String(estado.updated).replace(/^(\d{2})\/(\d{2})\/(\d{4})$/, "$3-$2-$1"));
 
 let campanha = await prisma.campanha.findUnique({ where: { nome: "Onda 1" } });
 if (!campanha) {

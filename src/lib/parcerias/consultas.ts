@@ -7,8 +7,15 @@ const DIA = 24 * 60 * 60 * 1000;
 
 type EnvioComItens = { custoFrete: Prisma.Decimal | null; itens: { quantidade: number; custoUnitario: Prisma.Decimal | null }[] };
 
-// Quanto a parceria custou: produtos mandados + frete + cache pago.
-export function investimento(c: { envios: EnvioComItens[]; acordo: string | null; valorCombinado: Prisma.Decimal | null; pago: boolean }) {
+// Quanto a parceria custou: produtos mandados + frete + cache pago. Com
+// parcelas cadastradas, o cache e a soma das parcelas ja pagas.
+export function investimento(c: {
+  envios: EnvioComItens[];
+  acordo: string | null;
+  valorCombinado: Prisma.Decimal | null;
+  pago: boolean;
+  pagamentos?: { valor: Prisma.Decimal; pagoEm: Date | null }[];
+}) {
   let produtos = 0;
   let frete = 0;
   let semCusto = 0;
@@ -19,7 +26,11 @@ export function investimento(c: { envios: EnvioComItens[]; acordo: string | null
       else semCusto += 1;
     }
   }
-  const cache = c.acordo === "pago" && c.pago ? (c.valorCombinado?.toNumber() ?? 0) : 0;
+  const cache = c.pagamentos?.length
+    ? c.pagamentos.filter((p) => p.pagoEm).reduce((a, p) => a + p.valor.toNumber(), 0)
+    : c.acordo === "pago" && c.pago
+      ? (c.valorCombinado?.toNumber() ?? 0)
+      : 0;
   return { produtos, frete, cache, total: produtos + frete + cache, semCusto };
 }
 
@@ -41,6 +52,7 @@ const incluirResumo = {
   campanha: { select: { id: true, nome: true } },
   envios: { select: { custoFrete: true, itens: { select: { quantidade: true, custoUnitario: true } } } },
   entregas: { select: { publicadoEm: true, prazo: true } },
+  pagamentos: { select: { valor: true, pagoEm: true } },
   _count: { select: { propostas: true } },
 } satisfies Prisma.CriadoraInclude;
 
@@ -65,6 +77,8 @@ export async function getCriadora(id: string) {
       entregas: { orderBy: [{ prazo: "asc" }, { createdAt: "asc" }] },
       respostas: { orderBy: { enviadaEm: "desc" } },
       producao: { orderBy: { posicao: "asc" } },
+      links: { orderBy: { createdAt: "asc" } },
+      pagamentos: { orderBy: [{ vencimento: "asc" }, { createdAt: "asc" }] },
     },
   });
 }

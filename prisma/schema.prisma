@@ -481,6 +481,12 @@ model Criadora {
   autorizaAnuncio Boolean     @default(false) // pode usar o video como anuncio
   anuncioAte      DateTime?
 
+  // Acordo detalhado (UGC/pago): o que foi combinado, o que ela quer
+  // receber e a pasta do Drive com termo, guia e os conteudos entregues.
+  pastaDrive     String?
+  acordoDetalhes String?
+  querReceber    String?
+
   cupom             String?   @unique // codigo do Shopify, maiusculo
   cupomPedidos      Int?
   cupomVendas       Decimal?  @db.Decimal(12, 2)
@@ -492,6 +498,8 @@ model Criadora {
   entregas  EntregaParceria[]
   respostas RespostaFormulario[]
   producao  ItemProducaoParceria[]
+  links      LinkCriadora[]
+  pagamentos PagamentoParceria[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -736,4 +744,32 @@ model MktTarefa {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// Documentos e links da parceria (termo assinado, guia, portfolio, midia kit).
+model LinkCriadora {
+  id         String   @id @default(cuid())
+  criadoraId String
+  criadora   Criadora @relation(fields: [criadoraId], references: [id], onDelete: Cascade)
+  titulo     String
+  url        String
+
+  createdAt DateTime @default(now())
+
+  @@index([criadoraId])
+}
+
+// Parcelas do cache (ex: 50% no fechamento, 50% na aprovacao da entrega).
+model PagamentoParceria {
+  id         String    @id @default(cuid())
+  criadoraId String
+  criadora   Criadora  @relation(fields: [criadoraId], references: [id], onDelete: Cascade)
+  descricao  String
+  valor      Decimal   @db.Decimal(10, 2)
+  vencimento DateTime?
+  pagoEm     DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([criadoraId])
 }

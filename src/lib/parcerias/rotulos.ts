@@ -44,7 +44,7 @@ export const COR_RECOMENDACAO: Record<Recomendacao, string> = {
   recusar: "bg-alerta-soft text-alerta",
 };
 
-export const FORMATOS = ["Reels", "Stories", "Post no feed", "TikTok", "YouTube", "Review", "Unboxing", "Outro"];
+export const FORMATOS = ["Vídeo UGC", "Fotos UGC", "Reels", "Stories", "Post no feed", "TikTok", "YouTube", "Review", "Unboxing", "Outro"];
 
 // Contatada ha mais que isso sem resposta: hora do lembrete (um so).
 export const DIAS_LEMBRETE = 5;
