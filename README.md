@@ -118,6 +118,31 @@ Unica Planner. Módulos ativos:
     `src/lib/marketing/mapa.ts` (sem banco): pra mudar um braço, edite só
     esse arquivo.
 
+- **Tarefas** (`/tarefas`), mesmo login, primeiro card do menu. Organizador que
+  junta o que tem pra fazer, aprovar ou conferir em todos os módulos. Abre
+  sempre no **Hoje** (atrasadas, as de hoje, urgentes/prioridade, aguardando
+  retorno e os próximos 7 dias) e tem também **Lista**, **Kanban** e
+  **Calendário**, com filtro por categoria (módulo/departamento), tag
+  (Urgente, Prioridade, Aguardando, Aprovação, Conferir), origem e busca.
+  - **Manuais** (tabela `Tarefa`): título, detalhes, categoria, tags, prazo,
+    link pra mais detalhes e checklist de sub-itens (barra de progresso).
+    Concluída há mais de 15 dias é excluída de vez quando a tela abre.
+  - **Automáticas** (`src/lib/tarefas/fontes.ts`), montadas na hora a partir
+    de cada módulo e com link pro lugar certo; somem sozinhas quando a coisa é
+    resolvida lá (ou pelo botão rápido daqui, que chama a API do módulo):
+    - Marketing: a lista "Minhas tarefas" inteira (aprovar roteiro, gravar,
+      postar, avulsas) + conteúdos esperando ajuste.
+    - Parcerias: revisar capturadas, mandar DM, cobrar resposta (contatada há
+      mais de 5 dias), avaliar proposta, ligar resposta do formulário,
+      preparar envio (próximo item da produção), montar lista de quem fechou,
+      conferir post combinado, pagar cachê e as tarefas das campanhas.
+    - Financeiro: classificar produtos, atualizar o saldo em conta (mais de
+      30 dias) e comprar material que acaba em menos de 1 mês.
+  - A Central de Produção tem banco e login próprios: as tarefas dela ainda
+    não entram aqui (a categoria Produção serve pras tarefas manuais).
+  - Se um módulo der erro ao carregar, o resto aparece e a tela avisa qual
+    ficou de fora.
+
 Feedbacks e ideias de produto aparece como "em breve" e será construído em
 outra conversa.
 
@@ -203,6 +228,8 @@ para a visão completa da plataforma e o plano das próximas fases.
 - `src/app/marketing/`, `src/components/marketing/MapaMental.tsx`,
   `src/lib/marketing/`, `src/app/api/marketing/`, `marketing/lotes/`,
   `scripts/marketing-importar.mjs` — módulo Marketing (mapa, calendário e tarefas).
+- `src/app/tarefas/`, `src/components/tarefas/`, `src/lib/tarefas/`,
+  `src/app/api/tarefas/` — módulo Tarefas (organizador).
 - `prisma/schema.prisma` — tabelas do Financeiro, de Parcerias e do Marketing
   (`Mkt*`). Mudanças de banco em produção ficam em `prisma/sql/`.
 

@@ -32,6 +32,14 @@ export default async function HubPage() {
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-6">
         <ModuleCard
+          className="sm:col-span-6"
+          variant="active"
+          monogram="TF"
+          title="Tarefas"
+          description="O que fazer hoje: aprovações, envios, compras e tudo que os outros módulos pedem, em lista, kanban ou calendário."
+          href="/tarefas"
+        />
+        <ModuleCard
           className="sm:col-span-3"
           variant="active"
           monogram="CP"
