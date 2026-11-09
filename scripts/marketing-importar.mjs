@@ -58,6 +58,8 @@ for (const arquivo of arquivos) {
   for (const c of json.conteudos ?? []) {
     const dados = { loteId: lote.id, data: dia(c.data), canal: c.canal, nivel: c.nivel, roteiro: c.roteiro ?? null };
     for (const k of CAMPOS) dados[k] = c[k] ?? null;
+    // O link do Canva tambem pode ser colado pela tela: o JSON so troca se trouxer um.
+    if (c.linkCanva) dados.linkCanva = c.linkCanva;
 
     const atual = await prisma.mktConteudo.findUnique({ where: { codigo: c.codigo }, select: { status: true } });
     if (!atual) {

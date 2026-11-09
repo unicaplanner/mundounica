@@ -223,3 +223,45 @@ export function CopiarTexto({ texto, rotulo = "Copiar" }: { texto: string; rotul
     </button>
   );
 }
+
+// Link da arte no Canva: abrir, colar ou trocar.
+export function LinkCanva({ id, url }: { id: string; url: string | null }) {
+  const { ocupado, mensagem, rodar } = useAcao();
+  const [editando, setEditando] = useState(false);
+  const [texto, setTexto] = useState(url ?? "");
+
+  if (url && !editando) {
+    return (
+      <span className="flex flex-wrap items-center gap-3">
+        <a href={url} target="_blank" rel="noopener noreferrer" className={botaoPrimario}>
+          Abrir no Canva ↗
+        </a>
+        <button type="button" onClick={() => setEditando(true)} className="text-xs text-muted underline">
+          trocar link
+        </button>
+      </span>
+    );
+  }
+
+  return (
+    <form
+      className="flex flex-col gap-2 sm:flex-row sm:items-center"
+      onSubmit={async (e) => {
+        e.preventDefault();
+        if (await rodar(`/api/marketing/conteudos/${id}`, { acao: "canva", link: texto })) setEditando(false);
+      }}
+    >
+      <input
+        value={texto}
+        onChange={(e) => setTexto(e.target.value)}
+        placeholder="Cole aqui o link do Canva"
+        aria-label="Link do Canva"
+        className={`${campo} sm:flex-1`}
+      />
+      <button type="submit" disabled={ocupado} className={botaoSecundario}>
+        Salvar link
+      </button>
+      {mensagem && <span className="text-xs text-alerta">{mensagem}</span>}
+    </form>
+  );
+}

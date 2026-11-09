@@ -1,0 +1,75 @@
+{
+  "lote": 3,
+  "conteudos": [
+    {
+      "canal": "instagram",
+      "nivel": "realista",
+      "horario": "12h",
+      "pilar": "Organização sem culpa",
+      "campanha": "Série Método ALA (novembro)",
+      "formato": "Carrossel (5 lâminas)",
+      "cta": "Comentar MAIS (a resposta automática manda o próximo passo).",
+      "produtos": "Tarefas e Notas (https://www.unicaplanner.com.br/products/tarefas-e-notas)",
+      "observacao": "Planejado e montado na conversa CONTENT (fork) em 09/11. Série de segundas de novembro: visão geral do Método ALA e depois um capítulo por letra.",
+      "codigo": "l3-1123-ig-carrossel-listar",
+      "data": "2026-11-23",
+      "status": "aprovado",
+      "titulo": "Capítulo 2: Listar",
+      "objetivo": "Aprofundar o Listar: transformar anotação solta em lista que funciona, priorizar, quebrar metas grandes em microtarefas, tipos de lista.",
+      "gancho": "Capítulo 2 de como eu uso meu planner: Listar.",
+      "roteiro": [
+        {
+          "cena": "Lâmina 1 (capa)",
+          "tela": "Capítulo 2: Listar"
+        },
+        {
+          "cena": "Lâminas 2 a 4",
+          "tela": "Separar o que é hoje do que pode esperar. Projeto grande vira pedaços pequenos. Tipos de lista: tarefa, projeto, incubação."
+        },
+        {
+          "cena": "Lâmina 5",
+          "tela": "Comente “mais” aqui"
+        }
+      ],
+      "legenda": "Capítulo 2 de como eu uso meu planner: Listar ✔️\n\nDepois de anotar tudo, a parte boa começa: separar o que é hoje do que pode esperar. Nem tudo é urgente, e tentar listar como se fosse só trava.\n\nProjeto grande? Quebra em pedaços pequenos. Lista não é pra empilhar, é pra escolher.\n\nQuer saber como eu organizo cada tipo de lista? Comenta MAIS que eu te explico 👇",
+      "hashtags": "#metodoala #unicaplanner #planner2027",
+      "producao": "Antes de postar: conferir a foto de fundo da lâmina 2. Na página branca o texto amarelo claro quase some (trocar por foto mais escura ou pôr uma faixa escura atrás do texto).",
+      "linkCanva": "https://www.canva.com/d/eg7duOI0bjquGxt"
+    },
+    {
+      "canal": "instagram",
+      "nivel": "realista",
+      "horario": "12h",
+      "pilar": "Organização sem culpa",
+      "campanha": "Série Método ALA (novembro)",
+      "formato": "Carrossel (5 lâminas)",
+      "cta": "Comentar MAIS (a resposta automática manda o próximo passo).",
+      "produtos": "Tarefas e Notas (https://www.unicaplanner.com.br/products/tarefas-e-notas)",
+      "observacao": "Planejado e montado na conversa CONTENT (fork) em 09/11. Série de segundas de novembro: visão geral do Método ALA e depois um capítulo por letra.",
+      "codigo": "l3-1130-ig-carrossel-agendar",
+      "data": "2026-11-30",
+      "status": "aprovado",
+      "titulo": "Capítulo 3: Agendar",
+      "objetivo": "Aprofundar o Agendar: blocos de horário na prática, agendar também o descanso, o passo que fecha o ciclo.",
+      "gancho": "Capítulo 3 de como eu uso meu planner: Agendar.",
+      "roteiro": [
+        {
+          "cena": "Lâmina 1 (capa)",
+          "tela": "Capítulo 3: Agendar"
+        },
+        {
+          "cena": "Lâminas 2 a 4",
+          "tela": "O passo que fecha o ciclo (só funciona depois de anotar e listar). Um horário certo pra cada coisa, inclusive o descanso."
+        },
+        {
+          "cena": "Lâmina 5",
+          "tela": "Comente “mais” aqui"
+        }
+      ],
+      "legenda": "Capítulo 3 de como eu uso meu planner: Agendar 🗓️\n\nEsse é o passo que fecha o ciclo — e só funciona se os outros dois vierem antes. Sem anotar e listar, agendar é só empilhar compromisso.\n\nReservo um horário certo pra cada coisa, inclusive pro descanso. Se não tá na agenda, alguém esquece (geralmente eu mesma).\n\nComenta MAIS se quiser ver como eu monto minha semana assim 👇",
+      "hashtags": "#metodoala #unicaplanner #planner2027",
+      "producao": "Antes de postar: conferir a foto de fundo da lâmina 2. Na página branca o texto amarelo claro quase some (trocar por foto mais escura ou pôr uma faixa escura atrás do texto).",
+      "linkCanva": "https://www.canva.com/d/wejLKnePblRUdo7"
+    }
+  ]
+}

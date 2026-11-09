@@ -492,12 +492,12 @@ model Criadora {
   cupomVendas       Decimal?  @db.Decimal(12, 2)
   cupomAtualizadoEm DateTime?
 
-  registros RegistroCriadora[]
-  propostas PropostaUgc[]
-  envios    EnvioParceria[]
-  entregas  EntregaParceria[]
-  respostas RespostaFormulario[]
-  producao  ItemProducaoParceria[]
+  registros  RegistroCriadora[]
+  propostas  PropostaUgc[]
+  envios     EnvioParceria[]
+  entregas   EntregaParceria[]
+  respostas  RespostaFormulario[]
+  producao   ItemProducaoParceria[]
   links      LinkCriadora[]
   pagamentos PagamentoParceria[]
 
@@ -711,6 +711,7 @@ model MktConteudo {
   produtos    String? // produtos que aparecem, com link quando houver
   reaproveita String? // codigo do conteudo de origem (ex: TikTok do Reels)
   observacao  String? @db.Text
+  linkCanva   String? // arte pronta no Canva
 
   status        MktStatus @default(roteiro)
   notaLari      String?   @db.Text

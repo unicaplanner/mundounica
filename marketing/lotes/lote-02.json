@@ -1,0 +1,82 @@
+{
+  "lote": 2,
+  "conteudos": [
+    {
+      "canal": "instagram",
+      "nivel": "realista",
+      "horario": "12h",
+      "pilar": "Organização sem culpa",
+      "campanha": "Série Método ALA (novembro)",
+      "formato": "Carrossel (5 lâminas)",
+      "cta": "Comentar MAIS (a resposta automática manda o próximo passo).",
+      "produtos": "Tarefas e Notas (https://www.unicaplanner.com.br/products/tarefas-e-notas)",
+      "observacao": "Planejado e montado na conversa CONTENT (fork) em 09/11. Série de segundas de novembro: visão geral do Método ALA e depois um capítulo por letra.",
+      "codigo": "l2-1109-ig-carrossel-ala-geral",
+      "data": "2026-11-09",
+      "status": "gravado",
+      "titulo": "Como eu uso meu planner: Método ALA (visão geral)",
+      "objetivo": "Carrossel pessoal que junta as 3 letras (Anotar, Listar, Agendar) num post só. Abre a série das segundas.",
+      "gancho": "Como eu uso meu planner no dia a dia — spoiler: é bem mais simples do que parece.",
+      "roteiro": [
+        {
+          "cena": "Lâminas 1 a 4",
+          "tela": "O fluxo “como eu uso meu planner”: anoto tudo, viro em listas, agendo com hora, prazo e prioridade.",
+          "imagem": "Fotos reais do planner em uso (já no Canva)"
+        },
+        {
+          "cena": "Lâmina 5",
+          "tela": "Comente “mais” aqui"
+        }
+      ],
+      "legenda": "Como eu uso meu planner no dia a dia — spoiler: é bem mais simples do que parece 🤎\n\nAnoto tudo que passa pela minha cabeça: tarefa, sonho, medo, loucura, não importa. Depois viro isso em listas — pra tudo mesmo, até pra cafeteria que quero conhecer. E só no final eu agendo, com hora, prazo e prioridade do dia.\n\nNão é sobre ter o método perfeito. É sobre ter um fluxo que você confia.\n\nQuer entender como montar isso no seu planner? Comenta MAIS que eu te explico 👇",
+      "hashtags": "#metodoala #unicaplanner #planner2027",
+      "linkCanva": "https://www.canva.com/d/capc7JnnaffLby_"
+    },
+    {
+      "canal": "instagram",
+      "nivel": "realista",
+      "horario": "12h",
+      "pilar": "Organização sem culpa",
+      "campanha": "Série Método ALA (novembro)",
+      "formato": "Carrossel (5 lâminas)",
+      "cta": "Comentar MAIS (a resposta automática manda o próximo passo).",
+      "produtos": "Tarefas e Notas (https://www.unicaplanner.com.br/products/tarefas-e-notas)",
+      "observacao": "Planejado e montado na conversa CONTENT (fork) em 09/11. Série de segundas de novembro: visão geral do Método ALA e depois um capítulo por letra.",
+      "codigo": "l2-1116-ig-carrossel-anotar",
+      "data": "2026-11-16",
+      "status": "aprovado",
+      "titulo": "Capítulo 1: Anotar",
+      "objetivo": "Aprofundar o Anotar: por que esvaziar a cabeça funciona, onde anotar (bloco ou página do planner) e um dia cheio virando anotação.",
+      "gancho": "Capítulo 1 de como eu uso meu planner: Anotar.",
+      "roteiro": [
+        {
+          "cena": "Lâmina 1 (capa)",
+          "tela": "Capítulo 1: Anotar"
+        },
+        {
+          "cena": "Lâminas 2 a 4",
+          "tela": "Seu cérebro não é HD: tire tudo da cabeça antes que vire ansiedade. Bloco ou página do planner, tanto faz. Exemplo de um dia cheio virando anotação."
+        },
+        {
+          "cena": "Lâmina 5",
+          "tela": "Comente “mais” aqui"
+        }
+      ],
+      "legenda": "Capítulo 1 de como eu uso meu planner: Anotar 🤎\n\nNão é sobre ter letra bonita ou caderno perfeito. É sobre tirar tudo da cabeça antes que vire ansiedade — ideia, recado, aquela coisa boba que você jurou que ia lembrar sozinha.\n\nBloco de notas ou página do planner, tanto faz. O que importa é não deixar nada só na memória.\n\nQuer ver os próximos passos (Listar e Agendar)? Comenta MAIS que eu te mando 👇",
+      "hashtags": "#metodoala #unicaplanner #planner2027",
+      "producao": "Antes de postar: conferir a foto de fundo da lâmina 2. Na página branca o texto amarelo claro quase some (trocar por foto mais escura ou pôr uma faixa escura atrás do texto).",
+      "linkCanva": "https://www.canva.com/d/2OiwD-vO8u4BmEn"
+    }
+  ],
+  "tarefas": [
+    {
+      "codigo": "l2-t-data-encontro",
+      "titulo": "Definir a data do Café da Tarde em Curitiba (13/11 ou 20/11)",
+      "detalhe": "A página do encontro ainda mostra “13/11 ou 20/11” e o ingresso está em rascunho no Shopify. Depois de decidir, avise na conversa CONTENT: lá o ingresso é reativado e o e-mail da data oficial (e-mail C, em eventos/workshop-curitiba-2027/emails-enquete.md) está pronto.",
+      "tipo": "decidir",
+      "prazo": "2026-11-10",
+      "link": "https://www.unicaplanner.com.br/pages/encontro-curitiba-2027",
+      "linkRotulo": "Ver a página do encontro"
+    }
+  ]
+}

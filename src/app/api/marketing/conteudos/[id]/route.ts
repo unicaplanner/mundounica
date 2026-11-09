@@ -41,6 +41,13 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       data = { status: "publicado", ...(link ? { linkPublicado: link } : {}) };
       break;
     }
+    case "canva": {
+      const link = paraLink(body.link);
+      if (link === undefined) return erro("O link precisa começar com https://.");
+      // So guarda o link, sem mexer no andamento.
+      await prisma.mktConteudo.update({ where: { id }, data: { linkCanva: link } });
+      return NextResponse.json({ ok: true });
+    }
     case "voltar": {
       const anterior = VOLTAR[atual.status];
       if (!anterior) return erro("Não tem passo anterior.");
