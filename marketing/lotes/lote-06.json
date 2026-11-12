@@ -1,0 +1,20 @@
+{
+  "lote": 6,
+  "conteudos": [
+    {
+      "codigo": "l1-1021-blog-vertical",
+      "data": "2027-01-07",
+      "horario": "12h",
+      "canal": "blog",
+      "formato": "Post de blog",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Planejar 2027",
+      "titulo": "Planner semanal vertical ou horizontal: qual escolher em 2027",
+      "objetivo": "Post que aparece no Google (busca é o canal que mais converte na loja: 2,4%).",
+      "cta": "Ver o Semanal Vertical 2027 e o horizontal na loja.",
+      "observacao": "Texto já escrito pela conversa CONTENT (blog Rotina Única). Pra publicar: abra https://admin.shopify.com/store/rm01s1-0a/articles › Adicionar post de blog. Depois copie o link do post e cole na descrição do vídeo do YouTube de 22/10 e no e-mail de 28/10. Reagendado no calendário v3 (12/11).",
+      "status": "aprovado"
+    }
+  ]
+}

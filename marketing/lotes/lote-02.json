@@ -30,7 +30,57 @@
       ],
       "legenda": "Como eu uso meu planner no dia a dia — spoiler: é bem mais simples do que parece 🤎\n\nAnoto tudo que passa pela minha cabeça: tarefa, sonho, medo, loucura, não importa. Depois viro isso em listas — pra tudo mesmo, até pra cafeteria que quero conhecer. E só no final eu agendo, com hora, prazo e prioridade do dia.\n\nNão é sobre ter o método perfeito. É sobre ter um fluxo que você confia.\n\nQuer entender como montar isso no seu planner? Comenta MAIS que eu te explico 👇",
       "hashtags": "#metodoala #unicaplanner #planner2027",
-      "linkCanva": "https://www.canva.com/d/capc7JnnaffLby_"
+      "linkCanva": "https://www.canva.com/d/capc7JnnaffLby_",
+      "forcarStatus": "publicado"
+    },
+    {
+      "codigo": "v3-1113-ig-bonito",
+      "data": "2026-11-13",
+      "canal": "instagram",
+      "nivel": "realista",
+      "horario": "12h",
+      "pilar": "Organização sem culpa",
+      "campanha": "Calendário v3 (templates BrandClub)",
+      "formato": "Carrossel (7 lâminas)",
+      "titulo": "Seu planner não precisa ser bonito, precisa ser usado",
+      "status": "aprovado",
+      "observacao": "Perfil: @unicaplanner. Editado no Canva a partir dos templates BrandClub (calendário v3, 12/11).",
+      "linkCanva": "https://www.canva.com/d/SbJT9rtUV5YnoHz",
+      "legenda": "Planner bonito é ótimo, mas planner usado é melhor ainda. Letra torta, página sem decoração e uns dias pulados não estragam nada. Anotar, Listar e Agendar o essencial já muda a semana, sem pressão e sem padrão a seguir.\n\nQual dessas você precisava ouvir hoje? Comente PLANNER pra saber mais.",
+      "producao": "Trocar 2 fotos: livreto Chanel (lâmina 7) e flor amarela (lâmina 2)."
+    },
+    {
+      "codigo": "l1-1025-st",
+      "data": "2026-11-15",
+      "horario": "19h",
+      "canal": "stories",
+      "formato": "Sequência de 4 stories",
+      "nivel": "realista",
+      "pilar": "Rotina leve e real",
+      "titulo": "Domingo de planejar a semana",
+      "objetivo": "Quadro fixo de domingo: mostrar o ALA na prática e criar hábito na audiência.",
+      "gancho": "Domingo à noite, 15 minutos e a semana fica mais leve.",
+      "roteiro": [
+        {
+          "cena": "Story 1 · chá + planner fechado",
+          "tela": "Domingo de planejar ☕ 15 minutos"
+        },
+        {
+          "cena": "Story 2 · Anotar: despejando tudo numa página",
+          "tela": "1. Anoto tudo o que está na cabeça"
+        },
+        {
+          "cena": "Story 3 · Listar: circulando 3 a 5 itens",
+          "tela": "2. Listo o que cabe nesta semana"
+        },
+        {
+          "cena": "Story 4 · Agendar: passando pro Semanal Vertical",
+          "tela": "3. Agendo nos dias. Pronto. Bora junto? Me marca no seu 💛"
+        }
+      ],
+      "cta": "Planejar junto e marcar a @ nos stories dela.",
+      "producao": "Vídeos curtos (5 s cada) de cima da mesa: chá + planner; escrevendo uma lista; circulando itens; passando pro semanal.",
+      "observacao": "Quadro de todo domingo. Se alguém te marcar, compartilhe (isso é conteúdo de cliente de graça). Reagendado no calendário v3 (12/11)."
     },
     {
       "canal": "instagram",
@@ -66,17 +116,76 @@
       "hashtags": "#metodoala #unicaplanner #planner2027",
       "producao": "Antes de postar: conferir a foto de fundo da lâmina 2. Na página branca o texto amarelo claro quase some (trocar por foto mais escura ou pôr uma faixa escura atrás do texto).",
       "linkCanva": "https://www.canva.com/d/2OiwD-vO8u4BmEn"
+    },
+    {
+      "codigo": "v3-1117-ig-lari-trend",
+      "data": "2026-11-17",
+      "canal": "instagram",
+      "nivel": "realista",
+      "horario": "12h",
+      "pilar": "Organização sem culpa",
+      "campanha": "Calendário v3 (templates BrandClub)",
+      "formato": "Carrossel (8 lâminas, trend)",
+      "titulo": "@larirotina · Com certeza eu sou feita de… ai, que vontade de…",
+      "status": "aprovado",
+      "observacao": "Perfil: @larirotina. Editado no Canva a partir dos templates BrandClub (calendário v3, 12/11).",
+      "linkCanva": "https://www.canva.com/d/jmG26mAxodWwfYp",
+      "legenda": "Com certeza eu sou feita de vontades pequenas e muito específicas 😅 Café de domingo com planner aberto, papelaria em viagem, aquela primeira página que dá medo de estragar...\n\nMe conta: qual dessas vontades é sua também?",
+      "producao": "Trocar fotos das lâminas 6 (bar), 7 (TV) e 8 (pedicure) por fotos suas do rolo de câmera."
+    },
+    {
+      "codigo": "l1-1028-st",
+      "data": "2026-11-17",
+      "horario": "9h",
+      "canal": "stories",
+      "formato": "Sequência de 5 stories",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Planejar 2027",
+      "titulo": "Quiz: qual planner 2027 combina com você?",
+      "objetivo": "Interação com enquetes que termina numa indicação de produto.",
+      "gancho": "Responde 3 perguntas que eu te digo qual planner 2027 é o seu.",
+      "roteiro": [
+        {
+          "cena": "Story 1",
+          "tela": "Responde 3 perguntas que eu te digo qual planner 2027 é o seu 👇"
+        },
+        {
+          "cena": "Story 2 · enquete",
+          "tela": "Sua semana tem horário marcado?",
+          "imagem": "Enquete: Muito / Pouco"
+        },
+        {
+          "cena": "Story 3 · enquete",
+          "tela": "Você escreve todo dia?",
+          "imagem": "Enquete: Sim / Só às vezes"
+        },
+        {
+          "cena": "Story 4 · enquete",
+          "tela": "Leva o planner na bolsa?",
+          "imagem": "Enquete: Sempre / Fica na mesa"
+        },
+        {
+          "cena": "Story 5 · resultado",
+          "tela": "Muito horário → Semanal Vertical. Escreve todo dia → Diário Datado. Bolsa → Personal. Me chama que eu monto com você 💛",
+          "imagem": "Adesivo de link da coleção 2027"
+        }
+      ],
+      "cta": "Responder as enquetes e chamar no direct.",
+      "producao": "Só fotos dos produtos (já tiradas nos dias anteriores) como fundo.",
+      "observacao": "Reagendado no calendário v3 (12/11)."
     }
   ],
   "tarefas": [
     {
       "codigo": "l2-t-data-encontro",
       "titulo": "Definir a data do Café da Tarde em Curitiba (13/11 ou 20/11)",
-      "detalhe": "A página do encontro ainda mostra “13/11 ou 20/11” e o ingresso está em rascunho no Shopify. Depois de decidir, avise na conversa CONTENT: lá o ingresso é reativado e o e-mail da data oficial (e-mail C, em eventos/workshop-curitiba-2027/emails-enquete.md) está pronto.",
+      "detalhe": "Encontro cancelado (só uma interessada).",
       "tipo": "decidir",
       "prazo": "2026-11-10",
       "link": "https://www.unicaplanner.com.br/pages/encontro-curitiba-2027",
-      "linkRotulo": "Ver a página do encontro"
+      "linkRotulo": "Ver a página do encontro",
+      "descartada": true
     }
   ]
 }

@@ -20,6 +20,7 @@ export const STATUS: Record<MktStatus, { rotulo: string; chip: string }> = {
   aprovado: { rotulo: "Aprovado · produzir", chip: "bg-azul-soft text-azul" },
   gravado: { rotulo: "Pronto pra postar", chip: "bg-ok-soft text-ok" },
   publicado: { rotulo: "Publicado", chip: "bg-ok text-background" },
+  descartado: { rotulo: "Fora do plano", chip: "bg-atencao-soft text-atencao" },
 };
 
 // Conteudo "produzido" para a barra do lote: material pronto ou ja no ar.

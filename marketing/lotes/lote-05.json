@@ -1,0 +1,103 @@
+{
+  "lote": 5,
+  "conteudos": [
+    {
+      "codigo": "l1-1025-ig-extra-ritual",
+      "data": "2026-12-20",
+      "horario": "18h",
+      "canal": "instagram",
+      "formato": "Carrossel (4 fotos)",
+      "nivel": "extra",
+      "pilar": "Rotina leve e real",
+      "titulo": "Meu ritual de domingo em 4 fotos",
+      "objetivo": "Post de feed do quadro de domingo, reaproveitando as fotos dos stories.",
+      "gancho": "Meu ritual de domingo em 4 fotos (e 15 minutos).",
+      "roteiro": [
+        {
+          "cena": "Foto 1",
+          "tela": "Meu ritual de domingo em 4 fotos"
+        },
+        {
+          "cena": "Foto 2",
+          "tela": "Anoto tudo."
+        },
+        {
+          "cena": "Foto 3",
+          "tela": "Listo o que cabe."
+        },
+        {
+          "cena": "Foto 4",
+          "tela": "Agendo nos dias. E fecho o planner."
+        }
+      ],
+      "legenda": "Não precisa de uma tarde inteira. Eu planejo a semana em uns 15 minutos, no domingo à noite, com um chá.\n\nAnotar, Listar, Agendar. O método ALA cabe no seu domingo também.",
+      "hashtags": "#metodoala #domingodeplanejar #rotinaleve #unicaplanner",
+      "cta": "Salvar pra fazer no próximo domingo.",
+      "producao": "Usar fotos (não vídeo) das mesmas etapas dos stories de hoje.",
+      "observacao": "Reagendado no calendário v3 (12/11)."
+    },
+    {
+      "codigo": "v3-1221-ig-collab-6atitudes",
+      "data": "2026-12-21",
+      "canal": "instagram",
+      "nivel": "realista",
+      "horario": "12h",
+      "pilar": "Organização sem culpa",
+      "campanha": "Calendário v3 (templates BrandClub)",
+      "formato": "Carrossel (7 lâminas)",
+      "titulo": "Collab @unicaplanner + @larirotina · 6 atitudes que me ajudaram a usar o planner o ano inteiro",
+      "status": "aprovado",
+      "observacao": "Perfil: collab @unicaplanner + @larirotina. Editado no Canva a partir dos templates BrandClub (calendário v3, 12/11).",
+      "linkCanva": "https://www.canva.com/d/yLxwva8ZyZOS8qP",
+      "legenda": "Esse ano eu entendi que constância não vem de força de vontade, vem de deixar as coisas fáceis. Planner aberto na mesa, uma caneta só, o mesmo ritual todo domingo. E contar como vitória a semana em que usei só 3 dias foi o que me fez chegar até dezembro com ele.\n\nQual dessas atitudes você quer levar pra 2027?",
+      "producao": "Trocar as fotos (todas de academia) por fotos do planner e da sua rotina."
+    },
+    {
+      "codigo": "l1-1028-email-newsletter",
+      "data": "2026-12-26",
+      "horario": "10h",
+      "canal": "email",
+      "formato": "E-mail (newsletter)",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Planejar 2027",
+      "titulo": "Seu 2027 começa com uma folha em branco (e tudo bem)",
+      "objetivo": "Newsletter da semana pra base: guia vertical × horizontal, vídeo do YouTube, encontro e aviso da Black Friday.",
+      "gancho": "Seu 2027 começa com uma folha em branco (e tudo bem)",
+      "legenda": "Assunto: Seu 2027 começa com uma folha em branco (e tudo bem)\nPré-visualização: 3 coisas pra planejar o ano sem pressa\n\nOi, {{ first_name }}! Aqui é a Lari.\n\nTodo fim de ano bate aquela vontade de ter o ano inteiro decidido até janeiro. Eu queria te lembrar de uma coisa: folha em branco não é atraso. É espaço.\n\nSeparei 3 coisas pra você planejar 2027 com calma:\n\n1. Vertical ou horizontal? Escrevi um guia (e gravei um vídeo) pra você descobrir qual semanal combina com a sua rotina.\n[Ler o guia] [Ver o vídeo]\n\n2. Um café da tarde pra planejar juntas. Dia 13/11, em Curitiba, com moodboard personalizado. Se você é daqui, eu adoraria te ver.\n[Conhecer o encontro]\n\n3. Uma Black Friday do jeito Unica. Está chegando, sem contagem regressiva nem pressão. Quem estiver na lista VIP fica sabendo primeiro.\n[Entrar na lista VIP]\n\nNo seu ritmo, no seu tempo.\nLari",
+      "cta": "Ler o guia / ver o vídeo / conhecer o encontro / lista VIP.",
+      "observacao": "Enviar pelo app de e-mail da loja (Shopify Email). O item 3 depende da decisão da Black Friday: se a oferta não for com lista VIP, eu troco o texto. Reagendado no calendário v3 (12/11)."
+    },
+    {
+      "codigo": "v3-1228-ig-lari-aprendizados",
+      "data": "2026-12-28",
+      "canal": "instagram",
+      "nivel": "realista",
+      "horario": "12h",
+      "pilar": "Organização sem culpa",
+      "campanha": "Calendário v3 (templates BrandClub)",
+      "formato": "Carrossel (9 lâminas)",
+      "titulo": "@larirotina · Meus 8 maiores aprendizados em 2026",
+      "status": "gravado",
+      "observacao": "Perfil: @larirotina. Editado no Canva a partir dos templates BrandClub (calendário v3, 12/11).",
+      "linkCanva": "https://www.canva.com/d/dgmLKSnIZoyYzuI",
+      "legenda": "2026 foi um ano de muito aprendizado por aqui. Empreender com papelaria me ensinou que organização é autocuidado, que descanso também faz parte do negócio e que dá pra crescer sem pressa. E nada se compara ao momento em que você abre a caixa e se reconhece ali 🤎\n\nQual foi o seu maior aprendizado esse ano?",
+      "producao": "Conferir se a descrição da lâmina 2 (feito à mão, capa, folhas, argolas) bate com a linha atual."
+    },
+    {
+      "codigo": "v3-1230-ig-janeiro",
+      "data": "2026-12-30",
+      "canal": "instagram",
+      "nivel": "realista",
+      "horario": "12h",
+      "pilar": "Organização sem culpa",
+      "campanha": "Calendário v3 (templates BrandClub)",
+      "formato": "Post estático",
+      "titulo": "Como acham que vai ser x como realmente é começar um planner em janeiro",
+      "status": "gravado",
+      "observacao": "Perfil: @unicaplanner. Editado no Canva a partir dos templates BrandClub (calendário v3, 12/11).",
+      "linkCanva": "https://www.canva.com/d/kjVAqMpDfnmY_Sj",
+      "legenda": "Em janeiro a gente imagina uma linha reta. Na vida real tem semana cheia, página em branco e recomeço. E tá tudo bem, faz parte. O planner não precisa ser seguido à risca pra funcionar, ele só precisa estar ali quando você voltar.\n\nCom qual dos dois desenhos você se identifica mais?"
+    }
+  ]
+}

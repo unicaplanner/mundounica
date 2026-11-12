@@ -668,6 +668,7 @@ enum MktStatus {
   aprovado // pode gravar/fotografar
   gravado // material pronto, falta postar
   publicado
+  descartado // saiu do plano: some das tarefas e do calendario, mas fica no historico
 }
 
 model MktLote {
