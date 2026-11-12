@@ -12,6 +12,8 @@
 // gravado, publicado), link publicado, tarefa feita e a pasta do Drive. So
 // um conteudo com "ajuste pedido" volta pra "pra aprovar", porque reimportar
 // e justamente entregar o texto reescrito.
+// Excecao: "forcarStatus" no JSON (ex: "descartado" pra tirar do plano, ou
+// "publicado" pro que ja foi ao ar) e "descartada": true numa tarefa.
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { config } from "dotenv";
@@ -67,6 +69,9 @@ for (const arquivo of arquivos) {
       novos++;
     } else {
       const reescrito = atual.status === "ajustar" ? { status: "roteiro", notaLari: null, statusEm: new Date() } : {};
+      // Status que o plano decide (sair do plano, ou marcar o que ja foi ao ar)
+      // vale mesmo sobre o que a Lari mexeu pela tela.
+      if (c.forcarStatus && c.forcarStatus !== atual.status) Object.assign(reescrito, { status: c.forcarStatus, statusEm: new Date() });
       await prisma.mktConteudo.update({ where: { codigo: c.codigo }, data: { ...dados, ...reescrito } });
       atualizados++;
     }
@@ -83,6 +88,8 @@ for (const arquivo of arquivos) {
       linkRotulo: t.linkRotulo ?? null,
       conteudoId: conteudo?.id ?? null,
     };
+    // Tarefa que saiu do plano: marca como feita pra sumir da lista (fica no historico).
+    if (t.descartada) Object.assign(dados, { feita: true, feitaEm: new Date() });
     await prisma.mktTarefa.upsert({ where: { codigo: t.codigo }, create: { codigo: t.codigo, ...dados }, update: dados });
   }
 
