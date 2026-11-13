@@ -64,7 +64,7 @@ export default async function TarefasPage({ searchParams }: PageProps<"/marketin
   const [todas, esperandoClaude] = await Promise.all([
     tarefasDaLari({ incluirFeitas: verFeitas }),
     prisma.mktConteudo.findMany({
-      where: { status: "ajustar" },
+      where: { status: "ajustar", arquivadoEm: null },
       orderBy: { data: "asc" },
       select: { id: true, titulo: true, formato: true, notaLari: true },
     }),

@@ -663,6 +663,7 @@ enum MktNivel {
 }
 
 enum MktStatus {
+  ideia // a escrever (ex: e-mail que depende de uma decisao)
   roteiro // escrito, esperando a aprovacao da Lari
   ajustar // a Lari pediu mudanca (ver notaLari)
   aprovado // pode gravar/fotografar
@@ -712,11 +713,14 @@ model MktConteudo {
   reaproveita String? // codigo do conteudo de origem (ex: TikTok do Reels)
   observacao  String? @db.Text
   linkCanva   String? // arte pronta no Canva
+  perfil      String? // @unicaplanner, @larirotina, Collab, E-mail...
 
   status        MktStatus @default(roteiro)
   notaLari      String?   @db.Text
   linkPublicado String?
   statusEm      DateTime?
+  // Arquivado: some do calendario e das tarefas, mas o historico fica.
+  arquivadoEm   DateTime?
 
   tarefas MktTarefa[]
 
@@ -730,18 +734,19 @@ model MktConteudo {
 // Aprovar, gravar e postar conteudo nao viram linha aqui: saem do status de
 // cada MktConteudo na hora de montar a lista.
 model MktTarefa {
-  id         String       @id @default(cuid())
-  codigo     String       @unique
-  titulo     String
-  detalhe    String?      @db.Text
-  tipo       String // decidir, foto, video, aprovar, publicar, configurar, outro
-  prazo      DateTime?    @db.Date
-  link       String?
-  linkRotulo String?
-  conteudoId String?
-  conteudo   MktConteudo? @relation(fields: [conteudoId], references: [id], onDelete: SetNull)
-  feita      Boolean      @default(false)
-  feitaEm    DateTime?
+  id          String       @id @default(cuid())
+  codigo      String       @unique
+  titulo      String
+  detalhe     String?      @db.Text
+  tipo        String // decidir, foto, video, aprovar, publicar, configurar, outro
+  prazo       DateTime?    @db.Date
+  link        String?
+  linkRotulo  String?
+  conteudoId  String?
+  conteudo    MktConteudo? @relation(fields: [conteudoId], references: [id], onDelete: SetNull)
+  feita       Boolean      @default(false)
+  feitaEm     DateTime?
+  arquivadoEm DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

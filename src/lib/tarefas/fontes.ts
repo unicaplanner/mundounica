@@ -40,7 +40,7 @@ const TAGS_DO_TIPO: Record<string, string[]> = { aprovar: ["aprovacao"], decidir
 export async function tarefasMarketing(hoje: string): Promise<TarefaUnificada[]> {
   const [lista, ajustando] = await Promise.all([
     tarefasDaLari(),
-    prisma.mktConteudo.findMany({ where: { status: "ajustar" }, select: { id: true, formato: true, titulo: true, notaLari: true } }),
+    prisma.mktConteudo.findMany({ where: { status: "ajustar", arquivadoEm: null }, select: { id: true, formato: true, titulo: true, notaLari: true } }),
   ]);
 
   const tarefas: TarefaUnificada[] = lista.map((t) => {

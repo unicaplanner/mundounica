@@ -1,0 +1,204 @@
+{
+  "lote": 4,
+  "conteudos": [
+    {
+      "codigo": "l1-1024-ig-extra-papel",
+      "data": "2026-12-10",
+      "horario": "12h",
+      "canal": "instagram",
+      "formato": "Carrossel (4 fotos)",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "titulo": "Teste da caneta: o papel que não borra",
+      "objetivo": "Comunicar o papel offset 90g/120g, um diferencial que quase ninguém do setor fala.",
+      "gancho": "Fiz o teste da caneta gel no nosso papel.",
+      "roteiro": [
+        {
+          "cena": "Foto 1",
+          "tela": "Fiz o teste da caneta gel no nosso papel.",
+          "imagem": "Página escrita com caneta gel, marca-texto e brush"
+        },
+        {
+          "cena": "Foto 2",
+          "tela": "Frente: caneta gel, marca-texto e brush pen.",
+          "imagem": "Close da frente"
+        },
+        {
+          "cena": "Foto 3",
+          "tela": "Verso: nada vazou.",
+          "imagem": "Close do verso contra a luz"
+        },
+        {
+          "cena": "Foto 4",
+          "tela": "Papel offset branco 90g e 120g em toda a linha. Nada de pólen."
+        }
+      ],
+      "legenda": "A pergunta que mais chega no direct: “o papel vaza caneta?”\n\nFiz o teste com caneta gel, marca-texto e brush pen. Toda a linha Unica usa papel offset branco 90g e 120g, que segura a tinta sem marcar o verso.\n\nQual caneta você quer que eu teste na próxima?",
+      "hashtags": "#papelaria #canetagel #planner #unicaplanner",
+      "cta": "Comentar qual caneta testar na próxima.",
+      "producao": "4 fotos: página escrita com caneta gel + marca-texto + brush; close da frente; verso contra a luz da janela; bloco fechado.",
+      "perfil": "@unicaplanner",
+      "observacao": "Na v3 este dia também leva o e-mail do último dia de pedido com entrega antes do Natal (ver o e-mail de 10/12). Se der pra gravar, pode virar Reel com as mesmas cenas."
+    },
+    {
+      "codigo": "l1-1026-ig-carrossel-montar",
+      "data": "2026-12-17",
+      "horario": "12h",
+      "canal": "instagram",
+      "formato": "Carrossel (7 lâminas)",
+      "nivel": "realista",
+      "pilar": "Organização sem culpa",
+      "campanha": "Planejar 2027",
+      "titulo": "Como montar o seu planner 2027 em 4 passos (sem gastar à toa)",
+      "objetivo": "Conteúdo salvável que ajuda a decidir a compra (mata a paralisia de escolha).",
+      "gancho": "Antes de comprar qualquer planner 2027, responda 4 perguntas.",
+      "roteiro": [
+        {
+          "cena": "Lâmina 1 (capa)",
+          "tela": "Antes de comprar qualquer planner 2027, responda 4 perguntas.",
+          "imagem": "Foto da case aberta com refis espalhados"
+        },
+        {
+          "cena": "Lâmina 2",
+          "tela": "1. Que tamanho cabe na sua bolsa e na sua mesa? A5 (mais espaço) ou Personal (mais leve)."
+        },
+        {
+          "cena": "Lâmina 3",
+          "tela": "2. Você precisa ver o mês? Comece pelo Mensal Datado."
+        },
+        {
+          "cena": "Lâmina 4",
+          "tela": "3. Sua semana tem horário? Semanal Vertical. É mais lista? Horizontal."
+        },
+        {
+          "cena": "Lâmina 5",
+          "tela": "4. Você escreve todo dia? Aí sim, o Diário Datado."
+        },
+        {
+          "cena": "Lâmina 6",
+          "tela": "Comece com 2 refis. Fichário é isso: dá pra acrescentar depois, sem jogar nada fora."
+        },
+        {
+          "cena": "Lâmina 7",
+          "tela": "Ficou em dúvida? Me chama no direct que eu te ajudo a montar o seu 💛"
+        }
+      ],
+      "legenda": "Não precisa comprar tudo de uma vez. Planner bom é o que você usa, e fichário cresce com você.\n\nNas lâminas estão as 4 perguntas que eu faço quando alguém me pede ajuda pra montar o planner de 2027.\n\nSalva e, se ficar em dúvida, me chama no direct.",
+      "hashtags": "#planner2027 #comomontarplanner #fichario #unicaplanner",
+      "cta": "Salvar e chamar no direct pra ajuda.",
+      "producao": "1 foto de capa: case aberta com refis espalhados. As outras lâminas podem ser texto no Canva com fotos pequenas de cada refil.",
+      "produtos": "Case Argolada Clássica A5 · Mensal Datado 2027 · Semanal Vertical 2027 · Diário Datado 2027",
+      "perfil": "@unicaplanner"
+    },
+    {
+      "codigo": "v3-1203-dezembro-leve",
+      "data": "2026-12-03",
+      "canal": "instagram",
+      "nivel": "realista",
+      "status": "gravado",
+      "pilar": "Organização sem culpa",
+      "campanha": "Calendário v3 (nov–dez)",
+      "formato": "Carrossel (8 lâminas)",
+      "perfil": "@unicaplanner",
+      "titulo": "Pequenas mudanças que vão tornar o seu dezembro mais leve",
+      "linkCanva": "https://www.canva.com/d/ryEtUm2gLz_SeEU",
+      "legenda": "Dezembro costuma chegar cheio de compromissos, presentes e listas. Mas dá pra viver esse mês com mais calma com algumas mudanças pequenas na rotina. Separamos 6 ideias simples pra deixar o planner trabalhar por você e sobrar tempo pro que importa. ✨ Qual dessas você vai testar primeiro?",
+      "observacao": "Pendência: fotos de decoração de Natal (podem ficar).\nArte do pack BrandClub, editada no Canva (pasta “Calendário Nov–Dez 2026 (editados)”). Antes de postar: trocar as fotos de banco pelas suas e, se quiser, aplicar as fontes da marca (Baskerville nos títulos, Open Sans no texto).\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    },
+    {
+      "codigo": "v3-1205-top-3-livros",
+      "data": "2026-12-05",
+      "canal": "instagram",
+      "nivel": "realista",
+      "status": "gravado",
+      "pilar": "Rotina leve e real",
+      "campanha": "Calendário v3 (nov–dez)",
+      "formato": "Carrossel (5 lâminas)",
+      "perfil": "@larirotina",
+      "titulo": "Meu top 3 livros que indico a qualquer um",
+      "linkCanva": "https://www.canva.com/d/3ADFveKigNsWAEH",
+      "legenda": "Separei três livros que mudaram a forma como eu enxergo a minha rotina: Hábitos Atômicos (James Clear), Essencialismo (Greg McKeown) e A Coragem de Ser Imperfeito (Brené Brown). Leituras leves, perfeitas pra esse finzinho de ano. Salva pra lembrar quando for montar sua lista de leitura de 2027 📚 Qual deles você ainda não leu?",
+      "observacao": "Pendência: as fotos mostram capas de outros livros; trocar pelas capas certas.\nArte do pack BrandClub, editada no Canva (pasta “Calendário Nov–Dez 2026 (editados)”). Antes de postar: trocar as fotos de banco pelas suas e, se quiser, aplicar as fontes da marca (Baskerville nos títulos, Open Sans no texto).\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    },
+    {
+      "codigo": "v3-1207-7-passos-2027",
+      "data": "2026-12-07",
+      "canal": "instagram",
+      "nivel": "realista",
+      "status": "gravado",
+      "pilar": "Organização sem culpa",
+      "campanha": "Calendário v3 (nov–dez)",
+      "formato": "Post estático (checklist)",
+      "perfil": "@unicaplanner",
+      "titulo": "Checklist: 7 passos pra começar 2027 organizada",
+      "linkCanva": "https://www.canva.com/d/3VU2Qnv_FZYal4V",
+      "legenda": "Começar 2027 organizada não precisa ser difícil nem corrido. São 7 passos simples, seguindo o Método ALA: anotar, listar e agendar, no seu ritmo. Salva esse post e faz um passo de cada vez, com calma 🤎 Qual desses passos você vai fazer primeiro?",
+      "observacao": "Arte do pack BrandClub, editada no Canva (pasta “Calendário Nov–Dez 2026 (editados)”). Antes de postar: trocar as fotos de banco pelas suas e, se quiser, aplicar as fontes da marca (Baskerville nos títulos, Open Sans no texto).\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    },
+    {
+      "codigo": "v3-1209-se-eu-fosse",
+      "data": "2026-12-09",
+      "canal": "instagram",
+      "nivel": "realista",
+      "status": "gravado",
+      "pilar": "Organização sem culpa",
+      "campanha": "Calendário v3 (nov–dez)",
+      "formato": "Carrossel (7 lâminas)",
+      "perfil": "@larirotina",
+      "titulo": "Se eu fosse sua planejadora, gostaria que você soubesse disso",
+      "linkCanva": "https://www.canva.com/d/lgakCQGATuE-Gjm",
+      "legenda": "Se eu pudesse sentar do seu lado antes de 2027 começar, te contaria essas 5 coisas. Nenhuma é complicada, mas juntas deixam o planejamento muito mais leve. Planejar não é encher a agenda, é abrir espaço pro que importa (inclusive pro descanso). Qual delas você já faz e qual vai testar primeiro?",
+      "observacao": "Pendência: foto de bebê na lâmina 4 e outras de ensaio; trocar. Conferir o alinhamento do subtítulo da capa.\nArte do pack BrandClub, editada no Canva (pasta “Calendário Nov–Dez 2026 (editados)”). Antes de postar: trocar as fotos de banco pelas suas e, se quiser, aplicar as fontes da marca (Baskerville nos títulos, Open Sans no texto).\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    },
+    {
+      "codigo": "v3-1210-email-ultimo-dia-natal",
+      "data": "2026-12-10",
+      "canal": "email",
+      "nivel": "realista",
+      "status": "ideia",
+      "pilar": "Organização sem culpa",
+      "campanha": "Natal",
+      "formato": "E-mail",
+      "perfil": "E-mail",
+      "titulo": "Último dia de pedido pro Natal",
+      "observacao": "Vai junto com o post do teste da caneta. Eu escrevo assim que o último dia de pedido com entrega antes do Natal for definido.\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    },
+    {
+      "codigo": "v3-1214-problema-solucao",
+      "data": "2026-12-14",
+      "canal": "instagram",
+      "nivel": "realista",
+      "status": "gravado",
+      "pilar": "Organização sem culpa",
+      "campanha": "Calendário v3 (nov–dez)",
+      "formato": "Carrossel (8 lâminas)",
+      "perfil": "@unicaplanner",
+      "titulo": "Um problema x uma solução que funciona (rotina leve)",
+      "linkCanva": "https://www.canva.com/d/LAyw6PCwzv4hFuE",
+      "legenda": "Rotina leve não é rotina perfeita. É rotina com espaço pra respirar, pro imprevisto e pro descanso. Separamos 6 problemas bem comuns e ajustes simples pra cada um, todos inspirados no Método ALA. Salva esse post pra consultar quando a semana apertar. Qual desses problemas aparece mais aí na sua rotina?",
+      "observacao": "Pendência: fotos de escritório (trocar é opcional).\nArte do pack BrandClub, editada no Canva (pasta “Calendário Nov–Dez 2026 (editados)”). Antes de postar: trocar as fotos de banco pelas suas e, se quiser, aplicar as fontes da marca (Baskerville nos títulos, Open Sans no texto).\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    }
+  ],
+  "tarefas": [
+    {
+      "tipo": "foto",
+      "codigo": "v3-t-fotos-1205",
+      "titulo": "Trocar fotos · Meu top 3 livros que indico a qualquer um",
+      "detalhe": "Pendência: as fotos mostram capas de outros livros; trocar pelas capas certas.",
+      "prazo": "2026-12-03",
+      "link": "https://www.canva.com/d/3ADFveKigNsWAEH",
+      "linkRotulo": "Abrir no Canva",
+      "conteudo": "v3-1205-top-3-livros"
+    },
+    {
+      "tipo": "foto",
+      "codigo": "v3-t-fotos-1209",
+      "titulo": "Trocar fotos · Se eu fosse sua planejadora, gostaria que você soubesse disso",
+      "detalhe": "Pendência: foto de bebê na lâmina 4 e outras de ensaio; trocar. Conferir o alinhamento do subtítulo da capa.",
+      "prazo": "2026-12-07",
+      "link": "https://www.canva.com/d/lgakCQGATuE-Gjm",
+      "linkRotulo": "Abrir no Canva",
+      "conteudo": "v3-1209-se-eu-fosse"
+    }
+  ]
+}

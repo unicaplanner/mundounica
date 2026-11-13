@@ -43,6 +43,7 @@ export function DetalhesConteudo({ c }: { c: ConteudoCompleto }) {
         <span className="flex flex-wrap items-center gap-1.5 text-xs font-semibold">
           <span className={`rounded-full px-2 py-0.5 ${CANAIS[c.canal].chip}`}>{CANAIS[c.canal].rotulo}</span>
           <span className="text-muted">{c.formato}</span>
+          {c.perfil && <span className="rounded-full bg-ink px-2 py-0.5 text-background">{c.perfil}</span>}
           {c.nivel === "extra" && <span className="rounded-full border border-dashed border-muted px-2 py-0.5 text-muted">extra</span>}
           <span className={`rounded-full px-2 py-0.5 ${STATUS[c.status].chip}`}>{STATUS[c.status].rotulo}</span>
         </span>
@@ -54,6 +55,13 @@ export function DetalhesConteudo({ c }: { c: ConteudoCompleto }) {
           {c.campanha && ` · ${c.campanha}`}
         </p>
       </header>
+
+      {c.arquivadoEm && (
+        <p className="rounded-xl bg-alerta-soft p-3 text-sm text-alerta">Arquivado: saiu do calendário e das tarefas. Fica aqui só como histórico.</p>
+      )}
+      {c.status === "ideia" && (
+        <p className="rounded-xl bg-accent-soft p-3 text-sm text-muted">Ainda a escrever. {c.observacao ?? ""}</p>
+      )}
 
       <section className="flex flex-col gap-3 rounded-2xl border border-ink/20 bg-accent-soft p-4 sm:p-5">
         {c.status === "ajustar" && c.notaLari && (

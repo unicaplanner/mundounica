@@ -12,6 +12,8 @@ import { diaISO } from "@/lib/marketing/datas";
 // com tudo (roteiro, legenda, Canva, botoes de aprovar/postar).
 
 const SEMANA = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+// "@unicaplanner" -> "Unica", "@larirotina" -> "Lari", "Collab ..." -> "Collab".
+const PERFIL_CURTO = (p: string) => (/unica/i.test(p) && !/collab/i.test(p) ? "Unica" : /lari/i.test(p) && !/collab/i.test(p) ? "Lari" : p.split(" ")[0]);
 const CURTO: Record<MktCanal, string> = { stories: "Story", instagram: "IG", tiktok: "TT", youtube: "YT", email: "Mail", blog: "Blog" };
 
 export function CalendarioMensal({
@@ -81,17 +83,18 @@ export function CalendarioMensal({
                       key={c.id}
                       type="button"
                       onClick={() => setAberto(c.id)}
-                      title={`${CANAIS[c.canal].rotulo} · ${c.titulo}`}
+                      title={`${CANAIS[c.canal].rotulo}${c.perfil ? ` · ${c.perfil}` : ""} · ${c.titulo}`}
                       className={`relative w-full min-w-0 rounded-[3px] px-1 py-0.5 text-left text-[10px] leading-tight shadow-[0_1px_2px_rgba(43,38,32,0.15)] transition hover:z-10 hover:scale-105 sm:px-1.5 sm:py-1 sm:text-[11px] ${
                         CANAIS[c.canal].chip
                       } ${k % 2 ? "rotate-1" : "-rotate-1"} ${publicado || passou ? "opacity-55" : ""} ${
-                        c.nivel === "extra" ? "border border-dashed border-current/40" : ""
+                        c.nivel === "extra" || c.status === "ideia" ? "border border-dashed border-current/40" : ""
                       }`}
                     >
                       <span className="block truncate font-semibold sm:hidden">{CURTO[c.canal]}</span>
                       <span className="hidden font-semibold sm:block">
                         {publicado ? "✓ " : c.status === "roteiro" ? "• " : ""}
                         {CURTO[c.canal]}
+                        {c.perfil && <span className="font-normal opacity-80"> · {PERFIL_CURTO(c.perfil)}</span>}
                         {c.horario && <span className="font-normal opacity-80"> · {c.horario}</span>}
                       </span>
                       <span className="hidden text-ink sm:line-clamp-2">{c.titulo}</span>

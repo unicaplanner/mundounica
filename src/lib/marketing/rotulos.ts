@@ -15,6 +15,7 @@ export const CANAIS: Record<MktCanal, { rotulo: string; chip: string; ponto: str
 export const ORDEM_CANAIS: MktCanal[] = ["stories", "instagram", "tiktok", "youtube", "email", "blog"];
 
 export const STATUS: Record<MktStatus, { rotulo: string; chip: string }> = {
+  ideia: { rotulo: "A escrever", chip: "bg-accent-soft text-muted" },
   roteiro: { rotulo: "Pra você aprovar", chip: "bg-atencao-soft text-atencao" },
   ajustar: { rotulo: "Ajuste pedido", chip: "bg-alerta-soft text-alerta" },
   aprovado: { rotulo: "Aprovado · produzir", chip: "bg-azul-soft text-azul" },

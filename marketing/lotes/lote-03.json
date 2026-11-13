@@ -10,7 +10,7 @@
       "formato": "Carrossel (5 lâminas)",
       "cta": "Comentar MAIS (a resposta automática manda o próximo passo).",
       "produtos": "Tarefas e Notas (https://www.unicaplanner.com.br/products/tarefas-e-notas)",
-      "observacao": "Planejado e montado na conversa CONTENT (fork) em 09/11. Série de segundas de novembro: visão geral do Método ALA e depois um capítulo por letra.",
+      "observacao": "Planejado e montado na conversa CONTENT (fork) em 09/11. Série de segundas de novembro: visão geral do Método ALA e depois um capítulo por letra.\nAntes de postar: conferir a foto de fundo da lâmina 2 (na página branca o texto amarelo claro quase some).",
       "codigo": "l3-1123-ig-carrossel-listar",
       "data": "2026-11-23",
       "status": "aprovado",
@@ -33,8 +33,10 @@
       ],
       "legenda": "Capítulo 2 de como eu uso meu planner: Listar ✔️\n\nDepois de anotar tudo, a parte boa começa: separar o que é hoje do que pode esperar. Nem tudo é urgente, e tentar listar como se fosse só trava.\n\nProjeto grande? Quebra em pedaços pequenos. Lista não é pra empilhar, é pra escolher.\n\nQuer saber como eu organizo cada tipo de lista? Comenta MAIS que eu te explico 👇",
       "hashtags": "#metodoala #unicaplanner #planner2027",
-      "producao": "Antes de postar: conferir a foto de fundo da lâmina 2. Na página branca o texto amarelo claro quase some (trocar por foto mais escura ou pôr uma faixa escura atrás do texto).",
-      "linkCanva": "https://www.canva.com/d/eg7duOI0bjquGxt"
+      "producao": null,
+      "linkCanva": "https://www.canva.com/d/eg7duOI0bjquGxt",
+      "perfil": "@unicaplanner",
+      "forcarStatus": "gravado"
     },
     {
       "canal": "instagram",
@@ -45,7 +47,7 @@
       "formato": "Carrossel (5 lâminas)",
       "cta": "Comentar MAIS (a resposta automática manda o próximo passo).",
       "produtos": "Tarefas e Notas (https://www.unicaplanner.com.br/products/tarefas-e-notas)",
-      "observacao": "Planejado e montado na conversa CONTENT (fork) em 09/11. Série de segundas de novembro: visão geral do Método ALA e depois um capítulo por letra.",
+      "observacao": "Planejado e montado na conversa CONTENT (fork) em 09/11. Série de segundas de novembro: visão geral do Método ALA e depois um capítulo por letra.\nAntes de postar: conferir a foto de fundo da lâmina 2 (na página branca o texto amarelo claro quase some).",
       "codigo": "l3-1130-ig-carrossel-agendar",
       "data": "2026-11-30",
       "status": "aprovado",
@@ -68,8 +70,304 @@
       ],
       "legenda": "Capítulo 3 de como eu uso meu planner: Agendar 🗓️\n\nEsse é o passo que fecha o ciclo — e só funciona se os outros dois vierem antes. Sem anotar e listar, agendar é só empilhar compromisso.\n\nReservo um horário certo pra cada coisa, inclusive pro descanso. Se não tá na agenda, alguém esquece (geralmente eu mesma).\n\nComenta MAIS se quiser ver como eu monto minha semana assim 👇",
       "hashtags": "#metodoala #unicaplanner #planner2027",
-      "producao": "Antes de postar: conferir a foto de fundo da lâmina 2. Na página branca o texto amarelo claro quase some (trocar por foto mais escura ou pôr uma faixa escura atrás do texto).",
-      "linkCanva": "https://www.canva.com/d/wejLKnePblRUdo7"
+      "producao": null,
+      "linkCanva": "https://www.canva.com/d/wejLKnePblRUdo7",
+      "perfil": "@unicaplanner",
+      "forcarStatus": "gravado"
+    },
+    {
+      "codigo": "l1-1027-ig-reel-montar",
+      "data": "2026-11-18",
+      "horario": "19h",
+      "canal": "instagram",
+      "formato": "Reels (20–30 s, ASMR)",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Planejar 2027",
+      "titulo": "Monte comigo o planner 2027",
+      "objetivo": "Reels de desejo (som de papel e argola), mostrando o planner montado.",
+      "gancho": "Monta comigo o meu planner de 2027?",
+      "roteiro": [
+        {
+          "cena": "0–3 s · case vazia abrindo (som da argola)",
+          "tela": "Monta comigo o meu planner de 2027?"
+        },
+        {
+          "cena": "3–10 s · colocando divisórias",
+          "tela": "Divisórias primeiro"
+        },
+        {
+          "cena": "10–18 s · Mensal Datado e Semanal Vertical entrando",
+          "tela": "Mês → semana"
+        },
+        {
+          "cena": "18–25 s · fechando a case, mão por cima",
+          "tela": "Pronto. 2027, pode vir 🤍"
+        }
+      ],
+      "legenda": "Montei o meu planner de 2027 e deixei o som do papel pra você 🤍\n\nCase Argolada Clássica A5 + Mensal Datado + Semanal Vertical. Nada de mais, nada de menos.\n\nE o seu, já está montado?",
+      "hashtags": "#planner2027 #asmr #montecomigo #papelaria #unicaplanner",
+      "cta": "Comentar como vai ser o seu planner 2027.",
+      "producao": "Gravar na bancada de produção, no meio da própria produção (não precisa de sessão separada).\nGravar de cima, sem falar, com o som da argola e do papel.",
+      "produtos": "Case Argolada Clássica A5 (https://www.unicaplanner.com.br/products/case-argolada-a5) · Mensal Datado 2027 (https://www.unicaplanner.com.br/products/mensal-datado-2027) · Semanal Vertical 2027",
+      "perfil": "@unicaplanner"
+    },
+    {
+      "codigo": "l1-1028-ig-extra-depoimento",
+      "data": "2026-11-20",
+      "horario": "12h",
+      "canal": "instagram",
+      "formato": "Post estático (depoimento)",
+      "nivel": "realista",
+      "pilar": "Histórias e comunidade",
+      "titulo": "“Falei que todo mundo deveria ter um Unica na vida!”",
+      "objetivo": "Prova social de cliente real.",
+      "roteiro": [
+        {
+          "cena": "Imagem única",
+          "tela": "“Estou simplesmente APAIXONADA pelo meu Unica! Superou todas as minhas expectativas!”",
+          "imagem": "Print do depoimento (com autorização) sobre foto do planner, ou texto na fonte da marca"
+        }
+      ],
+      "legenda": "Receber mensagem assim é o que faz cada pedido valer a pena 💛\n\nObrigada, [@ da cliente], por deixar eu dividir aqui. Se você também tem um Unica, me marca: eu adoro ver o seu.",
+      "cta": "Marcar a Unica numa foto do seu planner.",
+      "producao": "Só depois da autorização da cliente (ver tarefa de depoimentos). Montar no Canva.",
+      "observacao": "Sem autorização até 27/10? Troque por outra frase da marca ou pule este extra.",
+      "perfil": "@unicaplanner"
+    },
+    {
+      "codigo": "l1-1030-st",
+      "data": "2026-11-20",
+      "horario": "10h",
+      "canal": "stories",
+      "formato": "Sequência de 4 stories",
+      "nivel": "realista",
+      "pilar": "Histórias e comunidade",
+      "campanha": "Black Friday (aquecimento)",
+      "titulo": "Depoimento de cliente + lista VIP da Black Friday",
+      "objetivo": "Prova social e abertura da lista VIP (se a oferta escolhida tiver lista VIP).",
+      "gancho": "Olha a mensagem que eu recebi essa semana 🥹",
+      "roteiro": [
+        {
+          "cena": "Story 1 · print de depoimento autorizado",
+          "tela": "Olha a mensagem que eu recebi essa semana 🥹"
+        },
+        {
+          "cena": "Story 2 · você falando",
+          "fala": "É por isso que eu faço cada pedido com tanto cuidado."
+        },
+        {
+          "cena": "Story 3 · aviso da Black Friday",
+          "tela": "A Black Friday da Unica vai ser do nosso jeito: sem pressa e sem contagem regressiva."
+        },
+        {
+          "cena": "Story 4 · lista VIP",
+          "tela": "Quem entra na lista VIP fica sabendo primeiro 💛",
+          "imagem": "Adesivo de link pra lista VIP (ou caixinha “quero”)"
+        }
+      ],
+      "cta": "Entrar na lista VIP.",
+      "producao": "Print do depoimento autorizado. Vídeo de 8 s falando.",
+      "observacao": "Depende de 2 tarefas suas: autorização de depoimento e decisão da Black Friday. Se a oferta não tiver lista VIP, eu troco os stories 3 e 4.",
+      "perfil": "@unicaplanner"
+    },
+    {
+      "codigo": "v3-1119-ala-15-minutos",
+      "data": "2026-11-19",
+      "canal": "instagram",
+      "nivel": "realista",
+      "status": "gravado",
+      "pilar": "Organização sem culpa",
+      "campanha": "Calendário v3 (nov–dez)",
+      "formato": "Carrossel (7 lâminas)",
+      "perfil": "Collab @unicaplanner + @larirotina",
+      "titulo": "Como eu planejo minha semana em 15 minutos com o Método ALA",
+      "linkCanva": "https://www.canva.com/d/waI1G8oF0d7nIi8",
+      "legenda": "Planejar a semana não precisa tomar seu domingo inteiro. Eu faço em uns 15 minutos, com café e o Método ALA: Anotar tudo que está na cabeça, Listar as 3 prioridades e Agendar os compromissos e o descanso. Simples, leve e do jeitinho que dá pra manter. Você planeja sua semana de que jeito hoje?",
+      "observacao": "Pendência: trocar as fotos do template.\nArte do pack BrandClub, editada no Canva (pasta “Calendário Nov–Dez 2026 (editados)”). Antes de postar: trocar as fotos de banco pelas suas e, se quiser, aplicar as fontes da marca (Baskerville nos títulos, Open Sans no texto).\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    },
+    {
+      "codigo": "v3-1121-faz-x-deveria",
+      "data": "2026-11-21",
+      "canal": "instagram",
+      "nivel": "realista",
+      "status": "gravado",
+      "pilar": "Organização sem culpa",
+      "campanha": "Calendário v3 (nov–dez)",
+      "formato": "Carrossel (7 lâminas)",
+      "perfil": "@unicaplanner",
+      "titulo": "O que você faz x o que deveria fazer com o seu planner",
+      "linkCanva": "https://www.canva.com/d/pfkjU5_vgBIib7y",
+      "legenda": "Planner bom é planner que acompanha a sua vida real, não o que fica esquecido na gaveta até algo apertar. Pequenos ajustes mudam tudo: anotar num lugar só, listar só o essencial e agendar o descanso também. Organização é autocuidado, e dá pra recomeçar em qualquer segunda-feira. Qual desses “o que você faz” mais parece com você? 👀",
+      "observacao": "Pendência: a lâmina 3 mostra um tablet; trocar por planner de papel.\nSaiu da segunda 16/11 (que ficou com o Capítulo 1 do ALA). Arte do pack BrandClub, editada no Canva (pasta “Calendário Nov–Dez 2026 (editados)”). Antes de postar: trocar as fotos de banco pelas suas e, se quiser, aplicar as fontes da marca (Baskerville nos títulos, Open Sans no texto).\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    },
+    {
+      "codigo": "v3-1122-email-lista-vip",
+      "data": "2026-11-22",
+      "canal": "email",
+      "nivel": "realista",
+      "status": "ideia",
+      "pilar": "Organização sem culpa",
+      "campanha": "Black Friday",
+      "formato": "E-mail",
+      "perfil": "E-mail",
+      "titulo": "Lista VIP: a oferta um dia antes",
+      "observacao": "Eu escrevo assim que a oferta da Black Friday e o prazo de produção forem decididos.\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    },
+    {
+      "codigo": "v3-1124-black-tentei",
+      "data": "2026-11-24",
+      "canal": "instagram",
+      "nivel": "realista",
+      "status": "gravado",
+      "pilar": "Organização sem culpa",
+      "campanha": "Black Friday",
+      "formato": "Carrossel (11 lâminas)",
+      "perfil": "Collab @unicaplanner + @larirotina",
+      "titulo": "Eu tentei não fazer isso na Black, mas…",
+      "linkCanva": "https://www.canva.com/d/XsG6hbl5wFjgBn_",
+      "legenda": "Eu tentei não fazer Black esse ano, mas reli as mensagens de vocês e mudei de ideia. 🖤 Tem muita gente esperando só um empurrãozinho pra começar 2027 com a cabeça mais leve, então resolvi facilitar um pouquinho. [CONDIÇÕES REAIS DA OFERTA], válido de [DATA] a [DATA], enquanto durar o lote [QUANTIDADE REAL]. Comente BLACK que eu te conto tudo no direct!",
+      "cta": "Comentar BLACK.",
+      "observacao": "Pendência: só postar com oferta real. Preencher oferta, datas, lote e depoimentos reais; escolher entre as lâminas 4 e 5 (duas versões de depoimento); trocar as fotos de manicure.\nArte do pack BrandClub, editada no Canva (pasta “Calendário Nov–Dez 2026 (editados)”). Antes de postar: trocar as fotos de banco pelas suas e, se quiser, aplicar as fontes da marca (Baskerville nos títulos, Open Sans no texto).\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    },
+    {
+      "codigo": "v3-1124-email-abertura-black",
+      "data": "2026-11-24",
+      "canal": "email",
+      "nivel": "realista",
+      "status": "ideia",
+      "pilar": "Organização sem culpa",
+      "campanha": "Black Friday",
+      "formato": "E-mail",
+      "perfil": "E-mail",
+      "titulo": "Abertura da Black Friday",
+      "observacao": "Eu escrevo assim que a oferta da Black Friday e o prazo de produção forem decididos.\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    },
+    {
+      "codigo": "v3-1125-momentos-so-seus",
+      "data": "2026-11-25",
+      "canal": "instagram",
+      "nivel": "realista",
+      "status": "gravado",
+      "pilar": "Rotina leve e real",
+      "campanha": "Calendário v3 (nov–dez)",
+      "formato": "Carrossel (7 lâminas)",
+      "perfil": "@larirotina",
+      "titulo": "Ser mulher e priorizar momentos só seus é…",
+      "linkCanva": "https://www.canva.com/d/PJyuIJwjwe6qrNv",
+      "legenda": "Quantas vezes você marcou algo só pra você e acabou riscando no mesmo dia? Priorizar momentos nossos ainda parece um luxo, mas é parte de cuidar de quem cuida de tudo. Hoje eu agendo esse tempo no planner com o mesmo carinho de qualquer compromisso 🤍 E você, quando foi a última vez que reservou um tempo só seu?",
+      "observacao": "Pendência: fotos do template (trocar é opcional).\nArte do pack BrandClub, editada no Canva (pasta “Calendário Nov–Dez 2026 (editados)”). Antes de postar: trocar as fotos de banco pelas suas e, se quiser, aplicar as fontes da marca (Baskerville nos títulos, Open Sans no texto).\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    },
+    {
+      "codigo": "v3-1126-abandona-planner",
+      "data": "2026-11-26",
+      "canal": "instagram",
+      "nivel": "realista",
+      "status": "gravado",
+      "pilar": "Organização sem culpa",
+      "campanha": "Calendário v3 (nov–dez)",
+      "formato": "Carrossel (6 lâminas)",
+      "perfil": "@unicaplanner",
+      "titulo": "O que fazer quando você abandona o planner",
+      "linkCanva": "https://www.canva.com/d/-OgWz0HHwWVoxVz",
+      "legenda": "Abandonar o planner no meio do caminho acontece com todo mundo, e não diz nada sobre a sua disciplina. Pelo Método ALA, o recomeço é simples: Anote o que está pendente, Liste só o essencial e siga daqui. 🤎 O que tem te afastado do seu planner ultimamente?",
+      "observacao": "Pendência: as lâminas 5 e 6 têm tintas e pincéis; trocar.\nSaiu da segunda 23/11 (que ficou com o Capítulo 2 do ALA). Arte do pack BrandClub, editada no Canva (pasta “Calendário Nov–Dez 2026 (editados)”). Antes de postar: trocar as fotos de banco pelas suas e, se quiser, aplicar as fontes da marca (Baskerville nos títulos, Open Sans no texto).\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    },
+    {
+      "codigo": "v3-1127-stories-black",
+      "data": "2026-11-27",
+      "canal": "stories",
+      "nivel": "realista",
+      "status": "ideia",
+      "pilar": "Organização sem culpa",
+      "campanha": "Black Friday",
+      "formato": "Stories",
+      "perfil": "@unicaplanner e @larirotina",
+      "titulo": "Dia da Black: lembrete factual",
+      "observacao": "Ao vivo, sem urgência: o que é a oferta, até quando e o prazo de produção. O texto sai depois que a oferta for decidida.\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    },
+    {
+      "codigo": "v3-1201-falta-1-mes",
+      "data": "2026-12-01",
+      "canal": "instagram",
+      "nivel": "realista",
+      "status": "gravado",
+      "pilar": "Organização sem culpa",
+      "campanha": "Calendário v3 (nov–dez)",
+      "formato": "Carrossel (6 lâminas)",
+      "perfil": "@unicaplanner",
+      "titulo": "Você já percebeu que falta 1 mês pro ano acabar?",
+      "linkCanva": "https://www.canva.com/d/FjDejNFOUWVOEg2",
+      "legenda": "Falta 1 mês pro ano acabar, e tudo bem se 2026 não saiu exatamente como você planejou. Ainda dá tempo de fechar o ano com a cabeça mais leve e escolher com calma como você quer começar o próximo. Organização aqui é autocuidado, nunca cobrança. [PRAZO REAL DE PRODUÇÃO/ENVIO PRO NATAL] Comenta PLANNER que a gente te manda todas as informações do Planner 2027. Como você quer se sentir em janeiro?",
+      "cta": "Comentar PLANNER.",
+      "observacao": "Pendência: preencher o prazo real do Natal (lâmina 6 e legenda); as lâminas 5 e 6 têm maca/cílios, trocar.\nArte do pack BrandClub, editada no Canva (pasta “Calendário Nov–Dez 2026 (editados)”). Antes de postar: trocar as fotos de banco pelas suas e, se quiser, aplicar as fontes da marca (Baskerville nos títulos, Open Sans no texto).\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    },
+    {
+      "codigo": "v3-1201-email-prazo-natal",
+      "data": "2026-12-01",
+      "canal": "email",
+      "nivel": "realista",
+      "status": "ideia",
+      "pilar": "Organização sem culpa",
+      "campanha": "Natal",
+      "formato": "E-mail",
+      "perfil": "E-mail",
+      "titulo": "Prazo de Natal: até quando pedir",
+      "observacao": "Eu escrevo assim que o último dia de pedido com entrega antes do Natal for definido.\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    },
+    {
+      "codigo": "v3-1202-fofocas",
+      "data": "2026-12-02",
+      "canal": "instagram",
+      "nivel": "realista",
+      "status": "gravado",
+      "pilar": "Organização sem culpa",
+      "campanha": "Calendário v3 (nov–dez)",
+      "formato": "Carrossel (7 lâminas)",
+      "perfil": "@larirotina",
+      "titulo": "Amiga, eu preciso te contar umas fofocas sobre planners!",
+      "linkCanva": "https://www.canva.com/d/6VT5PiTJZDqD5gb",
+      "legenda": "Amiga, separei umas fofocas sobre planners que quase ninguém conta. 🤫 Tem mito sobre começar só em janeiro, culpa por pular dias e até a ideia de que planner precisa ser lindo pra funcionar. Spoiler: o que faz diferença é usar do seu jeito. Qual dessas você NUNCA tinha ouvido? Me conta!",
+      "observacao": "Pendência: fotos ainda de cabelo (shampoo, tesoura); trocar por planner.\nArte do pack BrandClub, editada no Canva (pasta “Calendário Nov–Dez 2026 (editados)”). Antes de postar: trocar as fotos de banco pelas suas e, se quiser, aplicar as fontes da marca (Baskerville nos títulos, Open Sans no texto).\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    }
+  ],
+  "tarefas": [
+    {
+      "tipo": "foto",
+      "codigo": "v3-t-fotos-1202",
+      "titulo": "Trocar fotos · Amiga, eu preciso te contar umas fofocas sobre planners!",
+      "detalhe": "Pendência: fotos ainda de cabelo (shampoo, tesoura); trocar por planner.",
+      "prazo": "2026-11-30",
+      "link": "https://www.canva.com/d/6VT5PiTJZDqD5gb",
+      "linkRotulo": "Abrir no Canva",
+      "conteudo": "v3-1202-fofocas"
+    },
+    {
+      "tipo": "outro",
+      "codigo": "v3-t-dados-1124",
+      "titulo": "Preencher os dados reais do carrossel da Black (24/11)",
+      "prazo": "2026-11-22",
+      "detalhe": "Oferta, datas, lote e depoimentos reais (lâminas e legenda). Só postar com oferta real.",
+      "link": "https://www.canva.com/d/XsG6hbl5wFjgBn_",
+      "linkRotulo": "Abrir no Canva",
+      "conteudo": "v3-1124-black-tentei"
+    },
+    {
+      "tipo": "outro",
+      "codigo": "v3-t-dados-1201",
+      "titulo": "Preencher o prazo real de Natal no carrossel de 01/12",
+      "prazo": "2026-11-29",
+      "detalhe": "Lâmina 6 e legenda: até quando dá pra pedir com entrega antes do Natal.",
+      "link": "https://www.canva.com/d/FjDejNFOUWVOEg2",
+      "linkRotulo": "Abrir no Canva",
+      "conteudo": "v3-1201-falta-1-mes"
+    },
+    {
+      "tipo": "decidir",
+      "codigo": "v3-t-ultimo-dia-natal",
+      "titulo": "Definir o último dia de pedido com entrega antes do Natal",
+      "prazo": "2026-11-25",
+      "detalhe": "Entra no carrossel de 01/12 e nos e-mails de 01/12 e 10/12."
     }
   ]
 }

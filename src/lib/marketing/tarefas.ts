@@ -34,7 +34,7 @@ function prazoFolgado(prazo: string, dataDoPost: string, hoje: string) {
 export async function tarefasDaLari({ incluirFeitas = false } = {}): Promise<TarefaLari[]> {
   const [conteudos, avulsas] = await Promise.all([
     prisma.mktConteudo.findMany({
-      where: { status: { in: ["roteiro", "aprovado", "gravado"] } },
+      where: { status: { in: ["roteiro", "aprovado", "gravado"] }, arquivadoEm: null },
       orderBy: [{ data: "asc" }, { canal: "asc" }],
       select: {
         id: true,
@@ -48,7 +48,7 @@ export async function tarefasDaLari({ incluirFeitas = false } = {}): Promise<Tar
       },
     }),
     prisma.mktTarefa.findMany({
-      where: incluirFeitas ? {} : { feita: false },
+      where: incluirFeitas ? { arquivadoEm: null } : { feita: false, arquivadoEm: null },
       orderBy: [{ prazo: "asc" }, { createdAt: "asc" }],
       include: { conteudo: { select: { id: true, titulo: true } } },
     }),
@@ -118,8 +118,8 @@ export async function tarefasDaLari({ incluirFeitas = false } = {}): Promise<Tar
 
 export async function contarPendentes() {
   const [conteudos, avulsas] = await Promise.all([
-    prisma.mktConteudo.count({ where: { status: { in: ["roteiro", "aprovado", "gravado"] } } }),
-    prisma.mktTarefa.count({ where: { feita: false } }),
+    prisma.mktConteudo.count({ where: { status: { in: ["roteiro", "aprovado", "gravado"] }, arquivadoEm: null } }),
+    prisma.mktTarefa.count({ where: { feita: false, arquivadoEm: null } }),
   ]);
   return conteudos + avulsas;
 }

@@ -33,7 +33,7 @@ const PASTA = "marketing/lotes";
 const arquivos = process.argv.length > 2 ? process.argv.slice(2) : readdirSync(PASTA).filter((a) => a.endsWith(".json")).sort().map((a) => join(PASTA, a));
 
 const dia = (iso) => new Date(`${iso}T00:00:00Z`);
-const CAMPOS = ["horario", "formato", "pilar", "campanha", "titulo", "objetivo", "gancho", "legenda", "cta", "hashtags", "producao", "produtos", "reaproveita", "observacao"];
+const CAMPOS = ["horario", "formato", "pilar", "campanha", "titulo", "objetivo", "gancho", "legenda", "cta", "hashtags", "producao", "produtos", "reaproveita", "observacao", "perfil"];
 
 console.log(`Schema: ${schema}`);
 
@@ -57,6 +57,9 @@ for (const arquivo of arquivos) {
   let atualizados = 0;
   for (const c of json.conteudos ?? []) {
     const dados = { loteId: lote.id, data: dia(c.data), canal: c.canal, nivel: c.nivel, roteiro: c.roteiro ?? null };
+    // "arquivado": true tira do calendario e das tarefas sem apagar (guarda a data da 1a vez).
+    if (c.arquivado) dados.arquivadoEm = (await prisma.mktConteudo.findUnique({ where: { codigo: c.codigo }, select: { arquivadoEm: true } }))?.arquivadoEm ?? new Date();
+    else dados.arquivadoEm = null;
     for (const k of CAMPOS) dados[k] = c[k] ?? null;
     // O link do Canva tambem pode ser colado pela tela: o JSON so troca se trouxer um.
     if (c.linkCanva) dados.linkCanva = c.linkCanva;
@@ -67,7 +70,9 @@ for (const arquivo of arquivos) {
       novos++;
     } else {
       const reescrito = atual.status === "ajustar" ? { status: "roteiro", notaLari: null, statusEm: new Date() } : {};
-      await prisma.mktConteudo.update({ where: { codigo: c.codigo }, data: { ...dados, ...reescrito } });
+      // forcarStatus: replanejamento decidido pela Lari (ex: ja foi postado).
+      const forcado = c.forcarStatus && c.forcarStatus !== atual.status ? { status: c.forcarStatus, statusEm: new Date() } : {};
+      await prisma.mktConteudo.update({ where: { codigo: c.codigo }, data: { ...dados, ...reescrito, ...forcado } });
       atualizados++;
     }
   }
@@ -83,6 +88,8 @@ for (const arquivo of arquivos) {
       linkRotulo: t.linkRotulo ?? null,
       conteudoId: conteudo?.id ?? null,
     };
+    if (t.arquivado) dados.arquivadoEm = (await prisma.mktTarefa.findUnique({ where: { codigo: t.codigo }, select: { arquivadoEm: true } }))?.arquivadoEm ?? new Date();
+    else dados.arquivadoEm = null;
     await prisma.mktTarefa.upsert({ where: { codigo: t.codigo }, create: { codigo: t.codigo, ...dados }, update: dados });
   }
 

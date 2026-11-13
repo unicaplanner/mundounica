@@ -61,7 +61,7 @@ export default async function CalendarioPage({ searchParams }: PageProps<"/marke
 
   const [conteudos, lotes] = await Promise.all([
     prisma.mktConteudo.findMany({
-      where: { data: { gte: new Date(`${inicio}T00:00:00Z`), lte: new Date(`${fim}T00:00:00Z`) } },
+      where: { data: { gte: new Date(`${inicio}T00:00:00Z`), lte: new Date(`${fim}T00:00:00Z`) }, arquivadoEm: null },
       include: { lote: { select: { numero: true, pastaDriveUrl: true } } },
       orderBy: [{ data: "asc" }],
     }),

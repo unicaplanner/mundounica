@@ -1,0 +1,129 @@
+{
+  "lote": 5,
+  "conteudos": [
+    {
+      "codigo": "l1-1025-ig-extra-ritual",
+      "data": "2026-12-20",
+      "horario": "18h",
+      "canal": "instagram",
+      "formato": "Carrossel (4 fotos)",
+      "nivel": "realista",
+      "pilar": "Rotina leve e real",
+      "titulo": "Meu ritual de domingo em 4 fotos",
+      "objetivo": "Post de feed do quadro de domingo, reaproveitando as fotos dos stories.",
+      "gancho": "Meu ritual de domingo em 4 fotos (e 15 minutos).",
+      "roteiro": [
+        {
+          "cena": "Foto 1",
+          "tela": "Meu ritual de domingo em 4 fotos"
+        },
+        {
+          "cena": "Foto 2",
+          "tela": "Anoto tudo."
+        },
+        {
+          "cena": "Foto 3",
+          "tela": "Listo o que cabe."
+        },
+        {
+          "cena": "Foto 4",
+          "tela": "Agendo nos dias. E fecho o planner."
+        }
+      ],
+      "legenda": "Não precisa de uma tarde inteira. Eu planejo a semana em uns 15 minutos, no domingo à noite, com um chá.\n\nAnotar, Listar, Agendar. O método ALA cabe no seu domingo também.",
+      "hashtags": "#metodoala #domingodeplanejar #rotinaleve #unicaplanner",
+      "cta": "Salvar pra fazer no próximo domingo.",
+      "producao": "Usar fotos (não vídeo) das mesmas etapas dos stories de hoje.",
+      "perfil": "@larirotina"
+    },
+    {
+      "codigo": "l1-1028-email-newsletter",
+      "data": "2026-12-26",
+      "horario": "10h",
+      "canal": "email",
+      "formato": "E-mail (newsletter)",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Planejar 2027",
+      "titulo": "Seu 2027 começa com uma folha em branco (e tudo bem)",
+      "objetivo": "Newsletter da semana pra base: guia vertical × horizontal, vídeo do YouTube, encontro e aviso da Black Friday.",
+      "gancho": "Seu 2027 começa com uma folha em branco (e tudo bem)",
+      "legenda": "Assunto: Seu 2027 começa com uma folha em branco (e tudo bem)\nPré-visualização: 3 coisas pra planejar o ano sem pressa\n\nOi, {{ first_name }}! Aqui é a Lari.\n\nTodo fim de ano bate aquela vontade de ter o ano inteiro decidido até janeiro. Eu queria te lembrar de uma coisa: folha em branco não é atraso. É espaço.\n\nSeparei 3 coisas pra você planejar 2027 com calma:\n\n1. Vertical ou horizontal? Escrevi um guia pra você descobrir qual semanal combina com a sua rotina.\n[Ler o guia]\n\n2. 7 passos pra começar 2027 organizada, seguindo o Método ALA, um de cada vez.\n[Ver os 7 passos]\n\n3. Planejar não é encher a agenda: é escolher o que vai te sustentar. Reserve na primeira semana de janeiro um horário só pra isso.\n\nNo seu ritmo, no seu tempo.\nLari",
+      "cta": "Ler o guia / ver os 7 passos.",
+      "observacao": "Texto atualizado na v3: saíram o encontro de Curitiba (cancelado) e a Black Friday (já passou nessa data).",
+      "perfil": "E-mail"
+    },
+    {
+      "codigo": "l1-1021-blog-vertical",
+      "data": "2026-12-31",
+      "horario": "12h",
+      "canal": "blog",
+      "formato": "Post de blog",
+      "nivel": "realista",
+      "pilar": "Lançamentos",
+      "campanha": "Planejar 2027",
+      "titulo": "Planner semanal vertical ou horizontal: qual escolher em 2027",
+      "objetivo": "Post que aparece no Google (busca é o canal que mais converte na loja: 2,4%).",
+      "cta": "Ver o Semanal Vertical 2027 e o horizontal na loja.",
+      "observacao": "Sem data fixa na v3: publique quando sobrar tempo e marque “Postei”. Texto já escrito pela conversa CONTENT; pra publicar: https://admin.shopify.com/store/rm01s1-0a/articles › Adicionar post de blog.",
+      "status": "aprovado"
+    },
+    {
+      "codigo": "v3-1221-6-atitudes",
+      "data": "2026-12-21",
+      "canal": "instagram",
+      "nivel": "realista",
+      "status": "gravado",
+      "pilar": "Organização sem culpa",
+      "campanha": "Calendário v3 (nov–dez)",
+      "formato": "Carrossel (7 lâminas)",
+      "perfil": "Collab @unicaplanner + @larirotina",
+      "titulo": "6 atitudes que me ajudaram a usar o planner o ano inteiro",
+      "linkCanva": "https://www.canva.com/d/yLxwva8ZyZOS8qP",
+      "legenda": "Esse ano eu entendi que constância não vem de força de vontade, vem de deixar as coisas fáceis. Planner aberto na mesa, uma caneta só, o mesmo ritual todo domingo. E contar como vitória a semana em que usei só 3 dias foi o que me fez chegar até dezembro com ele. Qual dessas atitudes você quer levar pra 2027?",
+      "observacao": "Pendência: fotos todas de academia; trocar.\nArte do pack BrandClub, editada no Canva (pasta “Calendário Nov–Dez 2026 (editados)”). Antes de postar: trocar as fotos de banco pelas suas e, se quiser, aplicar as fontes da marca (Baskerville nos títulos, Open Sans no texto).\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    },
+    {
+      "codigo": "v3-1228-8-aprendizados",
+      "data": "2026-12-28",
+      "canal": "instagram",
+      "nivel": "realista",
+      "status": "gravado",
+      "pilar": "Bastidores",
+      "campanha": "Calendário v3 (nov–dez)",
+      "formato": "Carrossel (9 lâminas)",
+      "perfil": "@larirotina",
+      "titulo": "Meus 8 maiores aprendizados em 2026",
+      "linkCanva": "https://www.canva.com/d/dgmLKSnIZoyYzuI",
+      "legenda": "2026 foi um ano de muito aprendizado por aqui. Empreender com papelaria me ensinou que organização é autocuidado, que descanso também faz parte do negócio e que dá pra crescer sem pressa. E nada se compara ao momento em que você abre a caixa e se reconhece ali 🤎 Qual foi o seu maior aprendizado esse ano?",
+      "observacao": "Pendência: conferir se a descrição da lâmina 2 (feito à mão, capa, folhas, argolas) bate com a linha atual.\nArte do pack BrandClub, editada no Canva (pasta “Calendário Nov–Dez 2026 (editados)”). Antes de postar: trocar as fotos de banco pelas suas e, se quiser, aplicar as fontes da marca (Baskerville nos títulos, Open Sans no texto).\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    },
+    {
+      "codigo": "v3-1230-acham-x-real",
+      "data": "2026-12-30",
+      "canal": "instagram",
+      "nivel": "realista",
+      "status": "gravado",
+      "pilar": "Organização sem culpa",
+      "campanha": "Calendário v3 (nov–dez)",
+      "formato": "Post estático",
+      "perfil": "@unicaplanner",
+      "titulo": "Como acham que vai ser x como realmente é começar um planner em janeiro",
+      "linkCanva": "https://www.canva.com/d/kjVAqMpDfnmY_Sj",
+      "legenda": "Em janeiro a gente imagina uma linha reta. Na vida real tem semana cheia, página em branco e recomeço. E tá tudo bem, faz parte. O planner não precisa ser seguido à risca pra funcionar, ele só precisa estar ali quando você voltar. Com qual dos dois desenhos você se identifica mais?",
+      "observacao": "Arte do pack BrandClub, editada no Canva (pasta “Calendário Nov–Dez 2026 (editados)”). Antes de postar: trocar as fotos de banco pelas suas e, se quiser, aplicar as fontes da marca (Baskerville nos títulos, Open Sans no texto).\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+    }
+  ],
+  "tarefas": [
+    {
+      "tipo": "foto",
+      "codigo": "v3-t-fotos-1221",
+      "titulo": "Trocar fotos · 6 atitudes que me ajudaram a usar o planner o ano inteiro",
+      "detalhe": "Pendência: fotos todas de academia; trocar.",
+      "prazo": "2026-12-19",
+      "link": "https://www.canva.com/d/yLxwva8ZyZOS8qP",
+      "linkRotulo": "Abrir no Canva",
+      "conteudo": "v3-1221-6-atitudes"
+    }
+  ]
+}
