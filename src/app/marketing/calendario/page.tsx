@@ -149,6 +149,10 @@ export default async function CalendarioPage({ searchParams }: PageProps<"/marke
 
       <AvisosCalendario />
 
+      <Link href="/marketing/importar" className="self-start text-xs text-muted underline">
+        Importar plano de uma conversa do Claude (.json)
+      </Link>
+
       <CalendarioMensal key={`${mes}-${modo}-${canal ?? ""}`} dias={dias} mes={mes} hoje={hoje} itens={visiveis} abrirInicial={abrir} />
 
       <p className="text-xs text-muted">

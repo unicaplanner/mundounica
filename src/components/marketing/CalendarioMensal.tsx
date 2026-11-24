@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import type { MktCanal } from "@prisma/client";
 import { DetalhesConteudo, type ConteudoCompleto } from "@/components/marketing/DetalhesConteudo";
+import { EditarConteudo } from "@/components/marketing/EditarConteudo";
+import { chamarApi } from "@/components/marketing/Acoes";
 import { CANAIS } from "@/lib/marketing/rotulos";
 import { diaISO } from "@/lib/marketing/datas";
 
@@ -32,6 +35,15 @@ export function CalendarioMensal({
   const [aberto, setAberto] = useState<string | null>(abrirInicial ?? null);
   const dialogo = useRef<HTMLDialogElement>(null);
   const atual = itens.find((c) => c.id === aberto) ?? null;
+  // Dia do "Novo post" (null = fechado).
+  const [novoDia, setNovoDia] = useState<string | null>(null);
+  const dialogoNovo = useRef<HTMLDialogElement>(null);
+  // Arrastar o post-it pra outro dia remarca o post.
+  const [arrastando, setArrastando] = useState<string | null>(null);
+  const [alvo, setAlvo] = useState<string | null>(null);
+  const [aviso, setAviso] = useState<string | null>(null);
+  const router = useRouter();
+  const [, startTransition] = useTransition();
 
   useEffect(() => {
     const d = dialogo.current;
@@ -39,6 +51,30 @@ export function CalendarioMensal({
     if (atual && !d.open) d.showModal();
     if (!atual && d.open) d.close();
   }, [atual]);
+
+  useEffect(() => {
+    const d = dialogoNovo.current;
+    if (!d) return;
+    if (novoDia && !d.open) d.showModal();
+    if (!novoDia && d.open) d.close();
+  }, [novoDia]);
+
+  async function soltar(dia: string) {
+    const id = arrastando;
+    setArrastando(null);
+    setAlvo(null);
+    if (!id) return;
+    const c = itens.find((x) => x.id === id);
+    if (!c || diaISO(c.data) === dia) return;
+    setAviso("Remarcando…");
+    try {
+      await chamarApi(`/api/marketing/conteudos/${id}`, { acao: "remarcar", data: dia });
+      setAviso(null);
+      startTransition(() => router.refresh());
+    } catch (e) {
+      setAviso((e as Error).message);
+    }
+  }
 
   const porDia = new Map<string, ConteudoCompleto[]>();
   for (const c of itens) {
@@ -48,6 +84,18 @@ export function CalendarioMensal({
 
   return (
     <>
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={() => setNovoDia(hoje.startsWith(mes) ? hoje : `${mes}-01`)}
+          className="rounded-full bg-ink px-4 py-1.5 text-sm font-semibold text-background transition hover:opacity-90"
+        >
+          ＋ Novo post
+        </button>
+        <span className="hidden text-xs text-muted sm:inline">Dica: arraste um post-it pra outro dia pra remarcar.</span>
+        {aviso && <span className="text-xs text-alerta">{aviso}</span>}
+      </div>
+
       <div className="overflow-hidden rounded-2xl border border-border bg-card">
         <div className="grid grid-cols-7 border-b border-border bg-accent-soft">
           {SEMANA.map((d) => (
@@ -64,16 +112,36 @@ export function CalendarioMensal({
             return (
               <div
                 key={dia}
-                className={`flex min-h-24 min-w-0 flex-col gap-1 border-border-soft p-1 sm:min-h-32 sm:p-1.5 ${i % 7 ? "border-l" : ""} ${
+                onDragOver={(e) => {
+                  if (!arrastando) return;
+                  e.preventDefault();
+                  if (alvo !== dia) setAlvo(dia);
+                }}
+                onDragLeave={() => alvo === dia && setAlvo(null)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  soltar(dia);
+                }}
+                className={`group flex min-h-24 min-w-0 flex-col gap-1 border-border-soft p-1 sm:min-h-32 sm:p-1.5 ${i % 7 ? "border-l" : ""} ${
                   i >= 7 ? "border-t" : ""
-                } ${doMes ? "" : "bg-background/70"}`}
+                } ${alvo === dia ? "bg-accent-soft ring-2 ring-accent-ink ring-inset" : doMes ? "" : "bg-background/70"}`}
               >
+                <span className="flex items-start justify-between gap-1">
+                <button
+                  type="button"
+                  onClick={() => setNovoDia(dia)}
+                  aria-label={`Novo post em ${dia.slice(8)}/${dia.slice(5, 7)}`}
+                  className="hidden h-5 w-5 items-center justify-center rounded-full text-sm leading-none text-muted opacity-0 transition group-hover:opacity-100 hover:bg-accent-soft hover:text-ink focus:opacity-100 sm:flex"
+                >
+                  +
+                </button>
                 <span
-                  className={`self-end font-serif text-xs leading-none sm:text-sm ${
+                  className={`ml-auto font-serif text-xs leading-none sm:text-sm ${
                     ehHoje ? "rounded-full bg-ink px-1.5 py-0.5 text-background" : doMes ? "text-ink" : "text-muted/60"
                   }`}
                 >
                   {Number(dia.slice(8))}
+                </span>
                 </span>
                 {doDia.map((c, k) => {
                   const publicado = c.status === "publicado";
@@ -83,6 +151,16 @@ export function CalendarioMensal({
                       key={c.id}
                       type="button"
                       onClick={() => setAberto(c.id)}
+                      draggable={!publicado}
+                      onDragStart={(e) => {
+                        e.dataTransfer.effectAllowed = "move";
+                        e.dataTransfer.setData("text/plain", c.id);
+                        setArrastando(c.id);
+                      }}
+                      onDragEnd={() => {
+                        setArrastando(null);
+                        setAlvo(null);
+                      }}
                       title={`${CANAIS[c.canal].rotulo}${c.perfil ? ` · ${c.perfil}` : ""} · ${c.titulo}`}
                       className={`relative w-full min-w-0 rounded-[3px] px-1 py-0.5 text-left text-[10px] leading-tight shadow-[0_1px_2px_rgba(43,38,32,0.15)] transition hover:z-10 hover:scale-105 sm:px-1.5 sm:py-1 sm:text-[11px] ${
                         CANAIS[c.canal].chip
@@ -132,6 +210,26 @@ export function CalendarioMensal({
             </div>
             <div className={`h-1.5 rounded-full ${CANAIS[atual.canal].ponto}`} />
             <DetalhesConteudo c={atual} />
+          </div>
+        )}
+      </dialog>
+
+      <dialog
+        ref={dialogoNovo}
+        onClose={() => setNovoDia(null)}
+        className="m-auto max-h-[92dvh] w-[min(46rem,calc(100vw-1rem))] overflow-y-auto rounded-2xl bg-background p-0 text-ink shadow-xl backdrop:bg-ink/40"
+      >
+        {novoDia && (
+          <div className="p-3 sm:p-4">
+            <EditarConteudo
+              key={novoDia}
+              inicial={{ data: novoDia }}
+              onPronto={(id) => {
+                setNovoDia(null);
+                if (id) setAberto(id);
+              }}
+              onCancelar={() => setNovoDia(null)}
+            />
           </div>
         )}
       </dialog>

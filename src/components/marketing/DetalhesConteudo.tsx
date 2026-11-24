@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { MktConteudo } from "@prisma/client";
 import { AcoesConteudo, CopiarTexto, LinkCanva } from "@/components/marketing/Acoes";
+import { FerramentasConteudo } from "@/components/marketing/FerramentasConteudo";
 import { CANAIS, STATUS } from "@/lib/marketing/rotulos";
 import { dataLonga } from "@/lib/marketing/datas";
 
@@ -55,6 +56,8 @@ export function DetalhesConteudo({ c }: { c: ConteudoCompleto }) {
           {c.campanha && ` · ${c.campanha}`}
         </p>
       </header>
+
+      <FerramentasConteudo c={c} />
 
       {c.arquivadoEm && (
         <p className="rounded-xl bg-alerta-soft p-3 text-sm text-alerta">Arquivado: saiu do calendário e das tarefas. Fica aqui só como histórico.</p>

@@ -5,17 +5,19 @@ import { useRouter } from "next/navigation";
 import type { MktStatus } from "@prisma/client";
 import { botaoPrimario, botaoSecundario, campo } from "@/components/financeiro/estilos";
 
-async function enviar(url: string, corpo: unknown) {
+// Chama uma rota do Marketing e devolve o JSON; erro vira mensagem legivel.
+export async function chamarApi<T = Record<string, unknown>>(url: string, corpo: unknown, metodo = "PATCH"): Promise<T> {
   const res = await fetch(url, {
-    method: "PATCH",
+    method: metodo,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(corpo),
   });
-  if (!res.ok) {
-    const j = await res.json().catch(() => null);
-    throw new Error(j?.erro ?? "Não deu certo. Tente de novo.");
-  }
+  const j = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(j?.erro ?? "Não deu certo. Tente de novo.");
+  return j as T;
 }
+
+const enviar = (url: string, corpo: unknown) => chamarApi(url, corpo);
 
 function useAcao() {
   const router = useRouter();

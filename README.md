@@ -106,6 +106,17 @@ Unica Planner. Módulos ativos:
   - **Minhas tarefas** (`/marketing/tarefas`): junta o andamento dos conteúdos
     (aprovar 3 dias antes, gravar 1 dia antes, postar no dia; só fica atrasada
     depois da data do post) com as tarefas avulsas (`MktTarefa`, com link).
+  - **Editar pela tela**: “＋ Novo post” (ou o “+” de cada dia), e na ficha
+    Editar, Duplicar e Arquivar/Desarquivar (arquivar guarda `arquivadoEm`, nunca
+    apaga). Post vencido e não postado mostra Remarcar, “Já postei em” (a data
+    real substitui a planejada) e “Não vou postar” (arquiva). Arrastar o post-it
+    pra outro dia remarca. Rotas em `src/app/api/marketing/conteudos`; regras em
+    `src/lib/marketing/edicao.ts` (data fora de lote cria um lote novo de 15 dias).
+  - **Importar plano** (`/marketing/importar`): cola ou escolhe o JSON no
+    formato de `marketing/lotes`, vê a prévia (novos, alterados, arquivados,
+    tarefas) e só grava com “Aprovar e gravar”, numa transação
+    (`src/lib/marketing/plano.ts`). É o caminho pras conversas do Claude
+    mandarem planos sem a senha do banco de produção.
   - Os roteiros entram por arquivo: `marketing/lotes/00-lotes.json` (lotes) e
     `lote-NN.json` (conteúdos e tarefas), carregados com
     `node scripts/marketing-importar.mjs`. Reimportar atualiza pelo `codigo` e
