@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { DetalhesConteudo } from "@/components/marketing/DetalhesConteudo";
+import { AvisosDoConteudo } from "@/components/marketing/Avisos";
 import { diaISO } from "@/lib/marketing/datas";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +28,7 @@ export default async function ConteudoPage({ params }: PageProps<"/marketing/con
         ← Calendário
       </Link>
       <DetalhesConteudo c={{ ...c, origem }} />
+      <AvisosDoConteudo c={c} />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import type { MktCanal, MktNivel } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { PastaDrive } from "@/components/marketing/Acoes";
 import { CalendarioMensal } from "@/components/marketing/CalendarioMensal";
+import { AvisosCalendario } from "@/components/marketing/Avisos";
 import { CANAIS, ORDEM_CANAIS, PRODUZIDO } from "@/lib/marketing/rotulos";
 import { dataCurta, diaISO, hojeISO, somarDias } from "@/lib/marketing/datas";
 
@@ -145,6 +146,12 @@ export default async function CalendarioPage({ searchParams }: PageProps<"/marke
           ))}
         </div>
       </div>
+
+      <AvisosCalendario />
+
+      <Link href="/marketing/importar" className="self-start text-xs text-muted underline">
+        Importar plano de uma conversa do Claude (.json)
+      </Link>
 
       <CalendarioMensal key={`${mes}-${modo}-${canal ?? ""}`} dias={dias} mes={mes} hoje={hoje} itens={visiveis} abrirInicial={abrir} />
 
