@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Open_Sans } from "next/font/google";
 import "./globals.css";
+import { MenuLateral } from "@/components/MenuLateral";
 
 const openSans = Open_Sans({
   variable: "--font-open-sans",
@@ -26,7 +27,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${openSans.variable} ${fraunces.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-background text-ink">{children}</body>
+      <body className="min-h-full flex flex-col bg-background text-ink md:flex-row">
+        <MenuLateral />
+        <div className="flex min-w-0 flex-1 flex-col">{children}</div>
+      </body>
     </html>
   );
 }
