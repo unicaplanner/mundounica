@@ -16,6 +16,8 @@ const STATUS_VALIDOS: MktStatus[] = ["ideia", "roteiro", "ajustar", "aprovado", 
 export type Previa = {
   erros: string[];
   lotes: { novos: string[]; mudados: string[] };
+  campanhas: { novas: string[]; mudadas: string[] };
+  datas: { novas: string[]; mudadas: string[] };
   conteudos: {
     novos: { codigo: string; data: string; titulo: string }[];
     mudados: { codigo: string; data: string; titulo: string; campos: string[] }[];
@@ -46,6 +48,8 @@ async function planejar(entrada: unknown) {
   const previa: Previa = {
     erros: [],
     lotes: { novos: [], mudados: [] },
+    campanhas: { novas: [], mudadas: [] },
+    datas: { novas: [], mudadas: [] },
     conteudos: { novos: [], mudados: [], arquivar: [], desarquivar: [] },
     tarefas: { novas: [], mudadas: [], arquivar: [] },
   };
@@ -76,6 +80,59 @@ async function planejar(entrada: unknown) {
     }
   }
 
+  // Campanhas e datas da marca (por codigo). Vem antes dos conteudos, que
+  // podem apontar pra campanha com "campanhaCodigo".
+  const codigosCampanha = new Set((await prisma.mktCampanha.findMany({ select: { codigo: true } })).map((c) => c.codigo));
+  for (const p of planos) {
+    for (const c of comoLista(p.campanhas)) {
+      const codigo = texto(c.codigo);
+      const nome = texto(c.nome);
+      const datasOk = ["inicio", "fim", "ultimoDiaPedido"].every((k) => !c[k] || ehDia(c[k]));
+      if (!codigo || !nome || !datasOk) {
+        previa.erros.push(`Campanha ${nome ?? codigo ?? "?"}: precisa de codigo, nome e datas AAAA-MM-DD.`);
+        continue;
+      }
+      const n = (k: string) => (c[k] === undefined || c[k] === null || c[k] === "" ? null : Number(c[k]));
+      const dados = {
+        nome,
+        descricao: texto(c.descricao),
+        oferta: texto(c.oferta),
+        descontoPct: n("descontoPct"),
+        cupom: texto(c.cupom),
+        brinde: texto(c.brinde),
+        brindeQtd: n("brindeQtd"),
+        quantidade: n("quantidade"),
+        freteGratisAcima: n("freteGratisAcima"),
+        produtos: texto(c.produtos),
+        inicio: c.inicio ? comoDia(String(c.inicio)) : null,
+        fim: c.fim ? comoDia(String(c.fim)) : null,
+        prazoProducaoDias: n("prazoProducaoDias"),
+        ultimoDiaPedido: c.ultimoDiaPedido ? comoDia(String(c.ultimoDiaPedido)) : null,
+        prazosRegiao: Array.isArray(c.prazosRegiao) ? (c.prazosRegiao as Prisma.InputJsonValue) : undefined,
+      };
+      // Campanha que ja existe nao e sobrescrita pelo plano: a Lari edita na tela.
+      if (codigosCampanha.has(codigo)) continue;
+      previa.campanhas.novas.push(nome);
+      codigosCampanha.add(codigo);
+      ops.push((tx) => tx.mktCampanha.create({ data: { codigo, ...dados } }));
+    }
+    for (const d of comoLista(p.datas)) {
+      const codigo = texto(d.codigo);
+      const titulo = texto(d.titulo);
+      if (!codigo || !titulo || !ehDia(d.inicio) || (d.fim && !ehDia(d.fim))) {
+        previa.erros.push(`Data ${titulo ?? codigo ?? "?"}: precisa de codigo, titulo e inicio AAAA-MM-DD.`);
+        continue;
+      }
+      const dados = { titulo, tipo: texto(d.tipo) ?? "marca", inicio: comoDia(String(d.inicio)), fim: d.fim ? comoDia(String(d.fim)) : null, nota: texto(d.nota), recorrente: d.recorrente === true };
+      const atual = await prisma.mktData.findUnique({ where: { codigo } });
+      if (!atual) previa.datas.novas.push(titulo);
+      else if (atual.titulo !== dados.titulo || atual.tipo !== dados.tipo || diaDe(atual.inicio) !== d.inicio || diaDe(atual.fim) !== (d.fim ?? null) || atual.nota !== dados.nota || atual.recorrente !== dados.recorrente)
+        previa.datas.mudadas.push(titulo);
+      else continue;
+      ops.push((tx) => tx.mktData.upsert({ where: { codigo }, create: { codigo, ...dados }, update: dados }));
+    }
+  }
+
   for (const p of planos) {
     if (p.lote === undefined) continue;
     const numero = Number(p.lote);
@@ -101,6 +158,12 @@ async function planejar(entrada: unknown) {
       const dados: Record<string, unknown> = { data: comoDia(c.data), canal: c.canal, nivel: c.nivel, roteiro: c.roteiro ?? null };
       for (const k of CAMPOS) dados[k] = texto(c[k]);
       if (c.linkCanva) dados.linkCanva = String(c.linkCanva);
+      const campanhaCodigo = texto(c.campanhaCodigo);
+      if (campanhaCodigo && !codigosCampanha.has(campanhaCodigo)) previa.erros.push(`Conteúdo ${nome}: a campanha "${campanhaCodigo}" não existe.`);
+      // Sem "campanhaCodigo" no JSON, a ligacao feita na tela fica como esta.
+      const idCampanha = async (tx: Prisma.TransactionClient) =>
+        campanhaCodigo ? { campanhaId: (await tx.mktCampanha.findUnique({ where: { codigo: campanhaCodigo }, select: { id: true } }))?.id ?? null } : {};
+      const campanhaBanco = campanhaCodigo ? (await prisma.mktCampanha.findUnique({ where: { codigo: campanhaCodigo }, select: { id: true } }))?.id ?? null : null;
       const item = { codigo, data: String(c.data), titulo: String(c.titulo) };
       const atual = existentes.get(codigo);
 
@@ -110,7 +173,7 @@ async function planejar(entrada: unknown) {
         ops.push(async (tx) => {
           const lote = await tx.mktLote.findUniqueOrThrow({ where: { numero } });
           return tx.mktConteudo.create({
-            data: { codigo, ...(dados as object), loteId: lote.id, status: (c.status as MktStatus) ?? "roteiro", arquivadoEm: c.arquivado ? new Date() : null } as Prisma.MktConteudoUncheckedCreateInput,
+            data: { codigo, ...(dados as object), ...(await idCampanha(tx)), loteId: lote.id, status: (c.status as MktStatus) ?? "roteiro", arquivadoEm: c.arquivado ? new Date() : null } as Prisma.MktConteudoUncheckedCreateInput,
           });
         });
         continue;
@@ -118,12 +181,15 @@ async function planejar(entrada: unknown) {
 
       const mudou = Object.keys(dados).filter((k) => (k === "data" ? diaDe(atual.data) !== c.data : !igual((atual as Json)[k], dados[k])));
       if (lotePorNumero.get(numero)?.id !== atual.loteId) mudou.push("lote");
-      const forcado = c.forcarStatus && c.forcarStatus !== atual.status ? (c.forcarStatus as MktStatus) : null;
+      if (campanhaCodigo && (!campanhaBanco || campanhaBanco !== atual.campanhaId)) mudou.push("campanha");
+      // Nunca desfaz um "Postei": publicado so muda pela tela.
+      const forcado = c.forcarStatus && c.forcarStatus !== atual.status && atual.status !== "publicado" ? (c.forcarStatus as MktStatus) : null;
       const reescrito = atual.status === "ajustar";
       if (forcado) mudou.push(`status → ${forcado}`);
       else if (reescrito) mudou.push("ajuste reescrito → pra aprovar");
       const arquivar = !!c.arquivado && !atual.arquivadoEm;
-      const desarquivar = !c.arquivado && !!atual.arquivadoEm;
+      // So desarquiva se o plano pedir ("arquivado": false); arquivado pela tela fica arquivado.
+      const desarquivar = c.arquivado === false && !!atual.arquivadoEm;
       if (arquivar) previa.conteudos.arquivar.push(item);
       if (desarquivar) previa.conteudos.desarquivar.push(item);
       if (!mudou.length && !arquivar && !desarquivar) continue;
@@ -136,7 +202,7 @@ async function planejar(entrada: unknown) {
         else if (reescrito) Object.assign(extra, { status: "roteiro", notaLari: null, statusEm: new Date() });
         if (arquivar) extra.arquivadoEm = new Date();
         if (desarquivar) extra.arquivadoEm = null;
-        return tx.mktConteudo.update({ where: { codigo }, data: { ...(dados as object), ...extra, loteId: lote.id } as Prisma.MktConteudoUncheckedUpdateInput });
+        return tx.mktConteudo.update({ where: { codigo }, data: { ...(dados as object), ...extra, ...(await idCampanha(tx)), loteId: lote.id } as Prisma.MktConteudoUncheckedUpdateInput });
       });
     }
 
@@ -160,14 +226,14 @@ async function planejar(entrada: unknown) {
       const atual = existentesT.get(codigo);
       const arquivar = !!t.arquivado && !atual?.arquivadoEm;
       if (!atual) previa.tarefas.novas.push(dados.titulo);
-      else if (Object.entries(dados).some(([k, v]) => (k === "prazo" ? diaDe(atual.prazo) !== diaDe(v as Date | null) : !igual((atual as Json)[k], v))) || (!t.arquivado && atual.arquivadoEm))
+      else if (Object.entries(dados).some(([k, v]) => (k === "prazo" ? diaDe(atual.prazo) !== diaDe(v as Date | null) : !igual((atual as Json)[k], v))) || (t.arquivado === false && atual.arquivadoEm))
         previa.tarefas.mudadas.push(dados.titulo);
       else if (!arquivar) continue;
       if (arquivar) previa.tarefas.arquivar.push(dados.titulo);
 
       ops.push(async (tx) => {
         const conteudo = conteudoCodigo ? await tx.mktConteudo.findUnique({ where: { codigo: conteudoCodigo }, select: { id: true } }) : null;
-        const completo = { ...dados, conteudoId: conteudo?.id ?? null, arquivadoEm: t.arquivado ? (atual?.arquivadoEm ?? new Date()) : null };
+        const completo = { ...dados, conteudoId: conteudo?.id ?? null, arquivadoEm: t.arquivado ? (atual?.arquivadoEm ?? new Date()) : t.arquivado === false ? null : (atual?.arquivadoEm ?? null) };
         return tx.mktTarefa.upsert({ where: { codigo }, create: { codigo, ...completo }, update: completo });
       });
     }

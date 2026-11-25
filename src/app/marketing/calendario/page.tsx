@@ -6,6 +6,8 @@ import { CalendarioMensal } from "@/components/marketing/CalendarioMensal";
 import { AvisosCalendario } from "@/components/marketing/Avisos";
 import { CANAIS, ORDEM_CANAIS, PRODUZIDO } from "@/lib/marketing/rotulos";
 import { dataCurta, diaISO, hojeISO, somarDias } from "@/lib/marketing/datas";
+import { carregarFila } from "@/lib/marketing/alertas";
+import { ativaNoDia, noAno, resumoCampanha } from "@/lib/marketing/campanhas";
 
 export const dynamic = "force-dynamic";
 
@@ -60,16 +62,19 @@ export default async function CalendarioPage({ searchParams }: PageProps<"/marke
   const dias: string[] = [];
   for (let d = inicio; d <= fim; d = somarDias(d, 1)) dias.push(d);
 
-  const [conteudos, lotes] = await Promise.all([
+  const [conteudos, lotes, campanhas, datasMarca, fila] = await Promise.all([
     prisma.mktConteudo.findMany({
       where: { data: { gte: new Date(`${inicio}T00:00:00Z`), lte: new Date(`${fim}T00:00:00Z`) }, arquivadoEm: null },
-      include: { lote: { select: { numero: true, pastaDriveUrl: true } } },
+      include: { lote: { select: { numero: true, pastaDriveUrl: true } }, campanhaRef: true },
       orderBy: [{ data: "asc" }],
     }),
     prisma.mktLote.findMany({
       where: { inicio: { lte: new Date(`${ultimo}T00:00:00Z`) }, fim: { gte: new Date(`${primeiro}T00:00:00Z`) } },
       orderBy: { numero: "asc" },
     }),
+    prisma.mktCampanha.findMany({ where: { arquivadoEm: null, inicio: { not: null } } }),
+    prisma.mktData.findMany(),
+    carregarFila().catch(() => null),
   ]);
 
   const codigos = conteudos.map((c) => c.reaproveita).filter((x): x is string => !!x);
@@ -83,7 +88,25 @@ export default async function CalendarioPage({ searchParams }: PageProps<"/marke
   const visiveis = conteudos
     .filter((c) => (modo === "realista" ? c.nivel === "realista" : true) && (!canal || c.canal === canal))
     .sort((a, b) => a.data.getTime() - b.data.getTime() || hora(a.horario) - hora(b.horario))
-    .map((c) => ({ ...c, origem: c.reaproveita ? (origemPor.get(c.reaproveita) ?? null) : null }));
+    .map(({ campanhaRef, ...c }) => ({
+      ...c,
+      origem: c.reaproveita ? (origemPor.get(c.reaproveita) ?? null) : null,
+      campanhaInfo: campanhaRef ? resumoCampanha(campanhaRef) : null,
+      prazoFilaDias: fila?.prazoRealDiasUteis ?? null,
+    }));
+
+  // Datas da marca e campanhas que caem em cada dia da grade.
+  const marcas: Record<string, { texto: string; tipo: string }[]> = {};
+  const anos = [...new Set(dias.map((d) => Number(d.slice(0, 4))))];
+  for (const dia of dias) {
+    const lista: { texto: string; tipo: string }[] = [];
+    for (const d of datasMarca) {
+      const faixas = d.recorrente ? anos.map((a) => noAno(d.inicio, d.fim, a)) : [{ inicio: diaISO(d.inicio), fim: d.fim ? diaISO(d.fim) : diaISO(d.inicio) }];
+      if (faixas.some((f) => f.inicio <= dia && dia <= f.fim)) lista.push({ texto: d.titulo, tipo: d.tipo });
+    }
+    for (const c of campanhas) if (ativaNoDia(c, dia)) lista.push({ texto: c.nome, tipo: "campanha" });
+    if (lista.length) marcas[dia] = lista;
+  }
 
   const doMes = conteudos.filter((c) => diaISO(c.data).startsWith(mes));
   const conta = (nivel: MktNivel) => {
@@ -153,7 +176,7 @@ export default async function CalendarioPage({ searchParams }: PageProps<"/marke
         Importar plano de uma conversa do Claude (.json)
       </Link>
 
-      <CalendarioMensal key={`${mes}-${modo}-${canal ?? ""}`} dias={dias} mes={mes} hoje={hoje} itens={visiveis} abrirInicial={abrir} />
+      <CalendarioMensal key={`${mes}-${modo}-${canal ?? ""}`} dias={dias} mes={mes} hoje={hoje} itens={visiveis} marcas={marcas} abrirInicial={abrir} />
 
       <p className="text-xs text-muted">
         Toque num post-it pra abrir. • = roteiro pra você aprovar · ✓ = publicado · borda tracejada = extra · apagadinho = já

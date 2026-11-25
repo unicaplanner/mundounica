@@ -38,9 +38,9 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   }
   if (body.acao === "duplicar") {
     // Copia o conteudo e a arte; andamento, link publicado e notas ficam no original.
-    const { data, horario, canal, formato, nivel, pilar, campanha, objetivo, gancho, roteiro, legenda, cta, hashtags, producao, produtos, reaproveita, observacao, linkCanva, perfil, loteId } = atual;
+    const { data, horario, canal, formato, nivel, pilar, campanha, objetivo, gancho, roteiro, legenda, cta, hashtags, producao, produtos, reaproveita, observacao, linkCanva, perfil, loteId, campanhaId } = atual;
     const novo = await prisma.mktConteudo.create({
-      data: { data, horario, canal, formato, nivel, pilar, campanha, objetivo, gancho, roteiro: roteiro ?? undefined, legenda, cta, hashtags, producao, produtos, reaproveita, observacao, linkCanva, perfil, loteId, codigo: novoCodigo(), titulo: `${atual.titulo} (cópia)`, status: statusInicial(atual), statusEm: new Date() },
+      data: { data, horario, canal, formato, nivel, pilar, campanha, objetivo, gancho, roteiro: roteiro ?? undefined, legenda, cta, hashtags, producao, produtos, reaproveita, observacao, linkCanva, perfil, loteId, campanhaId, codigo: novoCodigo(), titulo: `${atual.titulo} (cópia)`, status: statusInicial(atual), statusEm: new Date() },
       select: { id: true },
     });
     return NextResponse.json({ ok: true, id: novo.id });

@@ -705,14 +705,16 @@ model MktConteudo {
   gancho      String?
   // [{ "cena": "...", "fala": "...", "tela": "...", "imagem": "..." }]
   roteiro     Json?
-  legenda     String? @db.Text
+  legenda     String?      @db.Text
   cta         String?
   hashtags    String?
-  producao    String? @db.Text // o que gravar/fotografar, uma linha por item
+  producao    String?      @db.Text // o que gravar/fotografar, uma linha por item
   produtos    String? // produtos que aparecem, com link quando houver
   reaproveita String? // codigo do conteudo de origem (ex: TikTok do Reels)
-  observacao  String? @db.Text
+  observacao  String?      @db.Text
   linkCanva   String? // arte pronta no Canva
+  campanhaId  String?
+  campanhaRef MktCampanha? @relation(fields: [campanhaId], references: [id], onDelete: SetNull)
   perfil      String? // @unicaplanner, @larirotina, Collab, E-mail...
 
   status        MktStatus @default(roteiro)
@@ -816,4 +818,55 @@ model Tarefa {
 
   @@index([status])
   @@index([prazo])
+}
+
+// Campanhas e ofertas do Marketing: a fonte unica dos dados que aparecem nos
+// posts ([OFERTA], [DESCONTO], [QTD], [ULTIMO DIA], [PRAZO]...). Separada da
+// Campanha de Parcerias, que e uma onda de envios pra criadoras.
+model MktCampanha {
+  id        String  @id @default(cuid())
+  codigo    String  @unique // chave estavel pra planos importados (ex: black-2026)
+  nome      String
+  descricao String? @db.Text
+
+  oferta           String?  @db.Text // texto da oferta como vai no post
+  descontoPct      Decimal? @db.Decimal(5, 2)
+  cupom            String?
+  brinde           String?
+  brindeQtd        Int?
+  quantidade       Int? // tamanho do lote da oferta ([QTD])
+  freteGratisAcima Decimal? @db.Decimal(10, 2)
+  produtos         String?  @db.Text // produtos e kits do Shopify, um por linha (nome ou link)
+
+  inicio DateTime? @db.Date
+  fim    DateTime? @db.Date
+
+  // Prazos: dias uteis de producao prometidos (vazio = o prazo real da fila
+  // da Central) e o ultimo dia pra pedir, geral e por regiao.
+  prazoProducaoDias Int?
+  ultimoDiaPedido   DateTime? @db.Date
+  prazosRegiao      Json? // [{ "regiao": "Sudeste", "ultimoDia": "2026-12-10" }]
+
+  arquivadoEm DateTime?
+
+  conteudos MktConteudo[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Datas da marca que aparecem no calendario (aniversario, recesso, picos de
+// busca). recorrente = repete todo ano no mesmo dia/mes.
+model MktData {
+  id         String    @id @default(cuid())
+  codigo     String    @unique
+  titulo     String
+  tipo       String // marca, recesso, pico, sazonal, feriado
+  inicio     DateTime  @db.Date
+  fim        DateTime? @db.Date
+  nota       String?   @db.Text
+  recorrente Boolean   @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

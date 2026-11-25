@@ -56,6 +56,9 @@ export function ImportarPlano() {
   const p = previa;
   const total = p
     ? p.lotes.novos.length +
+      p.campanhas.novas.length +
+      p.datas.novas.length +
+      p.datas.mudadas.length +
       p.lotes.mudados.length +
       p.conteudos.novos.length +
       p.conteudos.mudados.length +
@@ -144,6 +147,8 @@ export function ImportarPlano() {
           {!p.erros.length && total === 0 && <p className="text-sm text-muted">Nada a mudar: o calendário já está igual a esse plano.</p>}
           <Lista titulo="Erros (corrija o plano antes de gravar)" cor="text-alerta" itens={p.erros.map((e) => <li key={e}>{e}</li>)} />
           <Lista titulo="Lotes novos ou alterados" cor="text-ink" itens={[...p.lotes.novos, ...p.lotes.mudados].map((l) => <li key={l}>{l}</li>)} />
+          <Lista titulo="Campanhas novas" cor="text-ok" itens={p.campanhas.novas.map((c) => <li key={c}>{c}</li>)} />
+          <Lista titulo="Datas da marca novas ou alteradas" cor="text-ink" itens={[...p.datas.novas, ...p.datas.mudadas].map((d) => <li key={d}>{d}</li>)} />
           <Lista titulo="Posts novos" cor="text-ok" itens={p.conteudos.novos.map((c) => item(c))} />
           <Lista titulo="Posts alterados" cor="text-azul" itens={p.conteudos.mudados.map((c) => item(c, c.campos.join(", ")))} />
           <Lista titulo="Posts que vão ser arquivados" cor="text-alerta" itens={p.conteudos.arquivar.map((c) => item(c))} />

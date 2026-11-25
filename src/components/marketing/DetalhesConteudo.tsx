@@ -3,7 +3,8 @@ import type { MktConteudo } from "@prisma/client";
 import { AcoesConteudo, CopiarTexto, LinkCanva } from "@/components/marketing/Acoes";
 import { FerramentasConteudo } from "@/components/marketing/FerramentasConteudo";
 import { CANAIS, STATUS } from "@/lib/marketing/rotulos";
-import { dataLonga } from "@/lib/marketing/datas";
+import { dataCurta, dataLonga } from "@/lib/marketing/datas";
+import { preencher, type CampanhaDados } from "@/lib/marketing/campanhas";
 
 // Tudo sobre um conteudo: usado na ficha (pagina inteira) e no post-it
 // ampliado do calendario. Sem hooks, entao serve nos dois lados.
@@ -12,6 +13,8 @@ export type ConteudoCompleto = MktConteudo & {
   lote: { numero: number; pastaDriveUrl: string | null };
   origem?: { id: string; titulo: string; formato: string } | null;
   tarefas?: { id: string; titulo: string }[];
+  campanhaInfo?: CampanhaDados | null;
+  prazoFilaDias?: number | null;
 };
 
 type Cena = { cena?: string; fala?: string; tela?: string; imagem?: string };
@@ -35,7 +38,12 @@ export function DetalhesConteudo({ c }: { c: ConteudoCompleto }) {
   const textoRoteiro = roteiro
     .map((r, i) => [`${i + 1}. ${r.cena ?? ""}`, r.fala && `Fala: ${r.fala}`, r.tela && `Na tela: ${r.tela}`, r.imagem && `Imagem: ${r.imagem}`].filter(Boolean).join("\n"))
     .join("\n\n");
-  const legendaCompleta = [c.legenda, c.hashtags].filter(Boolean).join("\n\n");
+  // Marcadores ([QTD], [DESCONTO], [ULTIMO DIA]...) trocados pelos dados da campanha.
+  const camp = c.campanhaInfo ?? null;
+  const legenda = c.legenda ? preencher(c.legenda, camp, c.prazoFilaDias) : null;
+  const cta = c.cta ? preencher(c.cta, camp, c.prazoFilaDias) : null;
+  const faltando = [...new Set([...(legenda?.faltando ?? []), ...(cta?.faltando ?? [])])];
+  const legendaCompleta = [legenda?.texto, c.hashtags].filter(Boolean).join("\n\n");
   const rotuloLegenda = c.canal === "email" ? "Texto do e-mail" : c.canal === "youtube" ? "Descrição do vídeo" : "Legenda";
 
   return (
@@ -77,6 +85,34 @@ export function DetalhesConteudo({ c }: { c: ConteudoCompleto }) {
         )}
         <AcoesConteudo id={c.id} status={c.status} />
       </section>
+
+      {(camp || faltando.length > 0) && (
+        <section className={`flex flex-col gap-2 rounded-2xl p-4 sm:p-5 ${faltando.length ? "bg-atencao-soft" : "bg-ok-soft"}`}>
+          {camp ? (
+            <p className="text-sm text-ink">
+              Campanha:{" "}
+              <Link href="/marketing/campanhas" className="font-semibold underline">
+                {camp.nome}
+              </Link>
+              {camp.inicio && ` · ${dataCurta(camp.inicio)}${camp.fim ? ` a ${dataCurta(camp.fim)}` : ""}`}
+            </p>
+          ) : (
+            <p className="text-sm text-ink">Este post não está ligado a nenhuma campanha (Editar › Campanha).</p>
+          )}
+          {faltando.length > 0 ? (
+            <p className="text-sm text-atencao">
+              Falta preencher antes de postar: <strong>{faltando.join(", ")}</strong>.{" "}
+              {camp && (
+                <Link href="/marketing/campanhas" className="underline">
+                  Completar na campanha
+                </Link>
+              )}
+            </p>
+          ) : legenda?.usados.length ? (
+            <p className="text-xs text-ok">A legenda já está com os dados da campanha.</p>
+          ) : null}
+        </section>
+      )}
 
       <Bloco titulo="Arte no Canva">
         <LinkCanva id={c.id} url={c.linkCanva} />
@@ -138,14 +174,14 @@ export function DetalhesConteudo({ c }: { c: ConteudoCompleto }) {
 
       {c.legenda && (
         <Bloco titulo={rotuloLegenda} acao={<CopiarTexto texto={legendaCompleta} />}>
-          <p className="text-sm whitespace-pre-line text-ink">{c.legenda}</p>
+          <p className="text-sm whitespace-pre-line text-ink">{legenda?.texto}</p>
           {c.hashtags && <p className="text-sm text-muted">{c.hashtags}</p>}
         </Bloco>
       )}
 
       {c.cta && (
         <Bloco titulo="Chamada (CTA)">
-          <p className="text-sm text-ink">{c.cta}</p>
+          <p className="text-sm text-ink">{cta?.texto}</p>
         </Bloco>
       )}
 

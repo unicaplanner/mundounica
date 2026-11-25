@@ -1,0 +1,86 @@
+{
+  "campanhas": [
+    {
+      "codigo": "black-2026",
+      "nome": "Black Friday 2026",
+      "inicio": "2026-11-26",
+      "descricao": "Começa na quinta 26/11, véspera do aniversário da Lari (27/11). Oferta, lote e prazo a definir: preencha aqui antes de postar."
+    },
+    {
+      "codigo": "natal-2026",
+      "nome": "Natal 2026",
+      "inicio": "2026-12-01",
+      "fim": "2026-12-24",
+      "descricao": "Decisão da Lari (25/11): só a coleção UPExpress tem promessa de Natal. O resto da loja segue o prazo normal de produção (hoje 20 dias úteis) e não chega antes do Natal. Último dia calculado pra entrega até 23/12: 3 dias úteis de envio + transporte estimado por região a partir de Curitiba. Recesso da produção de 24/12 a 02/01.",
+      "oferta": "A coleção UPExpress (pronta-entrega, enviada em até 3 dias úteis) ainda chega antes do Natal.",
+      "prazoProducaoDias": 3,
+      "prazosRegiao": [
+        {
+          "regiao": "Sul",
+          "ultimoDia": "2026-12-15"
+        },
+        {
+          "regiao": "Sudeste",
+          "ultimoDia": "2026-12-14"
+        },
+        {
+          "regiao": "Centro-Oeste",
+          "ultimoDia": "2026-12-10"
+        },
+        {
+          "regiao": "Nordeste",
+          "ultimoDia": "2026-12-08"
+        },
+        {
+          "regiao": "Norte",
+          "ultimoDia": "2026-12-04"
+        }
+      ],
+      "produtos": "Coleção UPExpress: https://www.unicaplanner.com.br/collections/upexpress\nSemanal Vertical 2027: https://www.unicaplanner.com.br/products/semanal-vertical-2027\nMensal Datado 2027: https://www.unicaplanner.com.br/products/mensal-datado-2027\nPlanner 2027 Essencial Vertical: https://www.unicaplanner.com.br/products/planner-2027-essencial-vertical\nBloco Essenciais 2027: https://www.unicaplanner.com.br/products/bloco-essenciais\nVellum Calendário 2027: https://www.unicaplanner.com.br/products/vellum-calendario-2027"
+    }
+  ],
+  "datas": [
+    {
+      "codigo": "aniversario-lari",
+      "titulo": "Aniversário da Lari",
+      "tipo": "marca",
+      "inicio": "2026-11-27",
+      "recorrente": true
+    },
+    {
+      "codigo": "recesso-fim-de-ano",
+      "titulo": "Recesso da produção",
+      "tipo": "recesso",
+      "inicio": "2026-12-24",
+      "fim": "2027-01-02",
+      "nota": "Sem produção nem envio. Pedidos feitos no recesso saem a partir de 04/01."
+    },
+    {
+      "codigo": "pico-planner-janeiro",
+      "titulo": "Pico de busca por planner",
+      "tipo": "pico",
+      "inicio": "2027-01-01",
+      "fim": "2027-01-07",
+      "nota": "1ª semana de janeiro: o maior pico de buscas por planner no ano.",
+      "recorrente": true
+    },
+    {
+      "codigo": "pico-planner-setembro",
+      "titulo": "2º pico de busca por planner",
+      "tipo": "pico",
+      "inicio": "2026-09-01",
+      "fim": "2026-09-30",
+      "nota": "Planejamento do ano seguinte começa.",
+      "recorrente": true
+    },
+    {
+      "codigo": "estudos-jan-fev",
+      "titulo": "Estudos: concursos e volta às aulas",
+      "tipo": "sazonal",
+      "inicio": "2027-01-05",
+      "fim": "2027-02-28",
+      "nota": "Linha Estudos (concurseiras, vestibular).",
+      "recorrente": true
+    }
+  ]
+}

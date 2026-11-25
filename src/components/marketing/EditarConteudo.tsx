@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { MktCanal, MktNivel } from "@prisma/client";
 import { chamarApi } from "@/components/marketing/Acoes";
@@ -25,6 +25,7 @@ export type ValoresConteudo = {
   linkCanva?: string | null;
   produtos?: string | null;
   campanha?: string | null;
+  campanhaId?: string | null;
   producao?: string | null;
   observacao?: string | null;
 };
@@ -55,6 +56,13 @@ export function EditarConteudo({
   const [v, setV] = useState<ValoresConteudo>({ canal: "instagram", nivel: "realista", formato: inicial.formato ?? FORMATOS[inicial.canal ?? "instagram"], ...inicial });
   const [ocupado, setOcupado] = useState(false);
   const [mensagem, setMensagem] = useState<string | null>(null);
+  const [campanhas, setCampanhas] = useState<{ id: string; nome: string }[]>([]);
+  useEffect(() => {
+    fetch("/api/marketing/campanhas")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => j?.campanhas && setCampanhas(j.campanhas))
+      .catch(() => {});
+  }, []);
   const muda = (k: keyof ValoresConteudo) => (e: { target: { value: string } }) => setV((a) => ({ ...a, [k]: e.target.value }));
 
   async function salvar(e: React.FormEvent) {
@@ -132,7 +140,17 @@ export function EditarConteudo({
           <input value={v.titulo ?? ""} onChange={muda("titulo")} className={campo} required />
         </label>
         {linha("linkCanva", "Link do Canva", "https://www.canva.com/...")}
-        {linha("campanha", "Campanha", "ex: Black Friday")}
+        <label className="flex flex-col">
+          <span className={rotulo}>Campanha (preenche [OFERTA], [QTD], [ÚLTIMO DIA]…)</span>
+          <select value={v.campanhaId ?? ""} onChange={muda("campanhaId")} className={campo}>
+            <option value="">Nenhuma</option>
+            {campanhas.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.nome}
+              </option>
+            ))}
+          </select>
+        </label>
         {area("gancho", "Gancho (a primeira frase)", 2)}
         {area("legenda", v.canal === "email" ? "Texto do e-mail" : v.canal === "youtube" ? "Descrição do vídeo" : "Legenda", 6)}
         {linha("hashtags", "Hashtags")}

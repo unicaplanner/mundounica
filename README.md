@@ -119,9 +119,22 @@ Unica Planner. Módulos ativos:
     mandarem planos sem a senha do banco de produção.
   - Os roteiros entram por arquivo: `marketing/lotes/00-lotes.json` (lotes) e
     `lote-NN.json` (conteúdos e tarefas), carregados com
-    `node scripts/marketing-importar.mjs`. Reimportar atualiza pelo `codigo` e
+    `node scripts/marketing-importar.mjs`. Por padrão o script só CRIA o que
+    ainda não existe (o que a Lari editou, remarcou ou arquivou pela tela fica
+    como está); `--atualizar` reescreve pelo `codigo`, mas prefira o “Importar
+    plano” da tela, que mostra a prévia. Ao atualizar,
     nunca desfaz o que a Lari marcou na tela; um conteúdo com ajuste pedido volta
     pra “pra aprovar”.
+  - **Campanhas** (`/marketing/campanhas`): fonte única de cada oferta
+    (`MktCampanha`: oferta, desconto, cupom, brinde e quantidade, lote, frete
+    grátis, produtos, início e fim, prazo de produção e último dia de pedido,
+    geral ou por região, com “Calcular último dia por região”). O post ligado
+    (`MktConteudo.campanhaId`) troca [OFERTA], [DESCONTO], [QTD], [BRINDE],
+    [CUPOM], [FRETE], [DATA], [ÚLTIMO DIA] e [PRAZO] pelos dados da campanha
+    (`src/lib/marketing/campanhas.ts`) e avisa o que falta. Sem prazo na
+    campanha, [PRAZO] usa o prazo real da fila da Central (`alertas.ts`).
+    Datas da marca (`MktData`: aniversário, recesso, picos de busca) aparecem
+    no calendário junto com a faixa de cada campanha.
   - **Mapa**: nó central "Marketing"; tocar num braço abre os sub-braços (ex:
     Conteúdo → Instagram, TikTok, YouTube…), tocar de novo recolhe, e há o
     botão "Abrir tudo". No computador os braços ficam dos dois lados do centro;

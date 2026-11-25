@@ -28,6 +28,7 @@ export type CamposConteudo = {
   linkCanva: string | null;
   produtos: string | null;
   campanha: string | null;
+  campanhaId: string | null;
   pilar: string | null;
   producao: string | null;
   observacao: string | null;
@@ -65,6 +66,7 @@ export function lerCampos(body: Record<string, unknown>): { ok: true; campos: Ca
       linkCanva,
       produtos: paraTexto(body.produtos, 1000),
       campanha: paraTexto(body.campanha, 120),
+      campanhaId: typeof body.campanhaId === "string" && body.campanhaId ? body.campanhaId : null,
       pilar: paraTexto(body.pilar, 120),
       producao: paraTexto(body.producao, 3000),
       observacao: paraTexto(body.observacao, 3000),
@@ -94,3 +96,53 @@ export function novoCodigo() {
 // Post criado pela propria Lari nao precisa da aprovacao dela: com arte no
 // Canva ja esta pronto pra postar; sem arte, falta produzir.
 export const statusInicial = (campos: { linkCanva: string | null }): "gravado" | "aprovado" => (campos.linkCanva ? "gravado" : "aprovado");
+
+// ---------- campanhas ----------
+// Le o formulario da campanha. Numeros aceitam "15", "15,5", "R$ 199".
+export function lerCampanha(body: Record<string, unknown>) {
+  const nome = paraTexto(body.nome, 120);
+  if (!nome) return { ok: false as const, erro: "Dê um nome pra campanha (ex: Black Friday 2026)." };
+  const num = (v: unknown) => {
+    const t = String(v ?? "").replace(/[R$%\s]/g, "").replace(/\.(?=\d{3}(\D|$))/g, "").replace(",", ".");
+    if (!t) return null;
+    const n = Number(t);
+    return Number.isFinite(n) && n >= 0 ? n : undefined;
+  };
+  const inteiro = (v: unknown) => {
+    const n = num(v);
+    return n === undefined ? undefined : n === null ? null : Math.round(n);
+  };
+  const dia = (v: unknown) => (v ? (ehDia(v) ? comoDia(v) : undefined) : null);
+
+  const campos = {
+    nome,
+    descricao: paraTexto(body.descricao, 3000),
+    oferta: paraTexto(body.oferta, 1000),
+    descontoPct: num(body.descontoPct),
+    cupom: paraTexto(body.cupom, 60),
+    brinde: paraTexto(body.brinde, 200),
+    brindeQtd: inteiro(body.brindeQtd),
+    quantidade: inteiro(body.quantidade),
+    freteGratisAcima: num(body.freteGratisAcima),
+    produtos: paraTexto(body.produtos, 3000),
+    inicio: dia(body.inicio),
+    fim: dia(body.fim),
+    prazoProducaoDias: inteiro(body.prazoProducaoDias),
+    ultimoDiaPedido: dia(body.ultimoDiaPedido),
+  };
+  const invalido = Object.entries(campos).find(([, v]) => v === undefined);
+  if (invalido) return { ok: false as const, erro: `Confira o campo “${invalido[0]}”: valor inválido.` };
+  if (campos.inicio && campos.fim && campos.fim < campos.inicio) return { ok: false as const, erro: "O fim da campanha está antes do início." };
+
+  const regioes = Array.isArray(body.prazosRegiao)
+    ? (body.prazosRegiao as { regiao?: unknown; ultimoDia?: unknown }[])
+        .filter((r) => typeof r.regiao === "string" && ehDia(r.ultimoDia))
+        .map((r) => ({ regiao: String(r.regiao), ultimoDia: String(r.ultimoDia) }))
+    : [];
+  return { ok: true as const, campos: { ...campos, prazosRegiao: regioes.length ? regioes : null } };
+}
+
+export function codigoDe(nome: string) {
+  const base = nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
+  return `${base || "campanha"}-${Math.random().toString(36).slice(2, 6)}`;
+}

@@ -17,6 +17,15 @@ import { diaISO } from "@/lib/marketing/datas";
 const SEMANA = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 // "@unicaplanner" -> "Unica", "@larirotina" -> "Lari", "Collab ..." -> "Collab".
 const PERFIL_CURTO = (p: string) => (/unica/i.test(p) && !/collab/i.test(p) ? "Unica" : /lari/i.test(p) && !/collab/i.test(p) ? "Lari" : p.split(" ")[0]);
+// Faixa das datas da marca e das campanhas dentro do dia.
+const MARCA: Record<string, string> = {
+  campanha: "bg-ink/85 text-background",
+  marca: "bg-rosa-soft text-rosa",
+  recesso: "bg-border text-muted",
+  pico: "bg-ok-soft text-ok",
+  sazonal: "bg-azul-soft text-azul",
+  feriado: "bg-accent-soft text-accent-ink",
+};
 const CURTO: Record<MktCanal, string> = { stories: "Story", instagram: "IG", tiktok: "TT", youtube: "YT", email: "Mail", blog: "Blog" };
 
 export function CalendarioMensal({
@@ -24,12 +33,14 @@ export function CalendarioMensal({
   mes,
   hoje,
   itens,
+  marcas = {},
   abrirInicial,
 }: {
   dias: string[];
   mes: string; // AAAA-MM
   hoje: string;
   itens: ConteudoCompleto[];
+  marcas?: Record<string, { texto: string; tipo: string }[]>; // datas da marca e campanhas do dia
   abrirInicial?: string;
 }) {
   const [aberto, setAberto] = useState<string | null>(abrirInicial ?? null);
@@ -143,6 +154,15 @@ export function CalendarioMensal({
                   {Number(dia.slice(8))}
                 </span>
                 </span>
+                {(marcas[dia] ?? []).map((m) => (
+                  <span
+                    key={m.texto}
+                    title={m.texto}
+                    className={`truncate rounded-sm px-1 text-[9px] leading-4 font-semibold sm:text-[10px] ${MARCA[m.tipo] ?? MARCA.marca}`}
+                  >
+                    {m.texto}
+                  </span>
+                ))}
                 {doDia.map((c, k) => {
                   const publicado = c.status === "publicado";
                   const passou = dia < hoje && !publicado;

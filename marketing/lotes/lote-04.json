@@ -38,7 +38,8 @@
       "cta": "Comentar qual caneta testar na próxima.",
       "producao": "4 fotos: página escrita com caneta gel + marca-texto + brush; close da frente; verso contra a luz da janela; bloco fechado.",
       "perfil": "@unicaplanner",
-      "observacao": "Na v3 este dia também leva o e-mail do último dia de pedido com entrega antes do Natal (ver o e-mail de 10/12). Se der pra gravar, pode virar Reel com as mesmas cenas."
+      "observacao": "Na v3 este dia também leva o e-mail do último dia de pedido com entrega antes do Natal (ver o e-mail de 10/12). Se der pra gravar, pode virar Reel com as mesmas cenas.",
+      "campanhaCodigo": "natal-2026"
     },
     {
       "codigo": "l1-1026-ig-carrossel-montar",
@@ -161,7 +162,12 @@
       "formato": "E-mail",
       "perfil": "E-mail",
       "titulo": "Último dia de pedido pro Natal",
-      "observacao": "Vai junto com o post do teste da caneta. Eu escrevo assim que o último dia de pedido com entrega antes do Natal for definido.\nReplanejamento v3 (12/11): doc “BrandClub → Unica”."
+      "observacao": "Vai junto com o post do teste da caneta. Escrito em 25/11 com a decisão da Lari: só a coleção UPExpress tem promessa de Natal. Enviar pelo Shopify Email.",
+      "campanhaCodigo": "natal-2026",
+      "gancho": "Últimos dias pra chegar antes do Natal",
+      "legenda": "Assunto: Últimos dias pra chegar antes do Natal\nPré-visualização: Até quando pedir, região por região\n\nOi, {{ first_name }}! Aqui é a Lari, passando rapidinho.\n\nSe você ainda quer um planner de presente (pra alguém ou pra você), esta é a hora: a coleção UPExpress sai daqui em até 3 dias úteis e ainda chega antes do Natal.\n\nPeça até: [ÚLTIMO DIA].\n\n[Ver a coleção UPExpress] https://www.unicaplanner.com.br/collections/upexpress\n\nDepois dessas datas, os pedidos continuam chegando com o mesmo carinho, só que já em janeiro. A produção faz uma pausa de 24/12 a 02/01 e volta com tudo em 2027.\n\nUm abraço,\nLari",
+      "cta": "Ver a coleção UPExpress.",
+      "produtos": "Coleção UPExpress: https://www.unicaplanner.com.br/collections/upexpress"
     },
     {
       "codigo": "v3-1214-problema-solucao",

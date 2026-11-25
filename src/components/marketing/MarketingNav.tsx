@@ -9,6 +9,7 @@ export function MarketingNav() {
     // as tarefas do Marketing ficam no modulo Tarefas, ja filtradas
     { href: "/tarefas?categoria=marketing&visao=lista", label: "Tarefas ↗", contador: 0 },
     { href: "/marketing/calendario", label: "Calendário" },
+    { href: "/marketing/campanhas", label: "Campanhas" },
     { href: "/marketing/parcerias", label: "Parcerias" },
     { href: "/marketing", label: "Mapa" },
   ];
