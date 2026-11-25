@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { LogoutButton } from "./LogoutButton";
 
 const CENTRAL_PRODUCAO_URL = process.env.NEXT_PUBLIC_CENTRAL_PRODUCAO_URL;
 
@@ -71,15 +72,18 @@ export function MenuLateral() {
         <Link href="/" className="brand-mark text-sm text-accent-ink">
           Mundo da Unica
         </Link>
-        <button
-          type="button"
-          onClick={() => setAberto((a) => !a)}
-          aria-expanded={aberto}
-          aria-controls="menu-modulos"
-          className="rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-ink"
-        >
-          {aberto ? "Fechar" : "Módulos"}
-        </button>
+        <div className="flex items-center gap-3">
+          <LogoutButton />
+          <button
+            type="button"
+            onClick={() => setAberto((a) => !a)}
+            aria-expanded={aberto}
+            aria-controls="menu-modulos"
+            className="rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-ink"
+          >
+            {aberto ? "Fechar" : "Módulos"}
+          </button>
+        </div>
       </div>
       {aberto && (
         <nav id="menu-modulos" aria-label="Módulos" className="border-b border-border bg-background px-4 py-3 md:hidden print:hidden">
@@ -96,6 +100,9 @@ export function MenuLateral() {
           Mundo da Unica
         </Link>
         <Links />
+        <div className="mt-auto px-3">
+          <LogoutButton />
+        </div>
       </nav>
     </>
   );
