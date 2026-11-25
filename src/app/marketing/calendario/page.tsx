@@ -118,7 +118,7 @@ export default async function CalendarioPage({ searchParams }: PageProps<"/marke
             <Barra rotulo="Extras (até o estratégico)" {...conta("extra")} />
           </div>
           {paraAprovar > 0 && (
-            <Link href="/marketing/tarefas?tipo=aprovar" className="text-xs font-semibold text-atencao underline">
+            <Link href="/tarefas?categoria=marketing&visao=lista&tag=aprovacao" className="text-xs font-semibold text-atencao underline">
               {paraAprovar} {paraAprovar === 1 ? "roteiro espera" : "roteiros esperam"} sua aprovação neste mês.
             </Link>
           )}

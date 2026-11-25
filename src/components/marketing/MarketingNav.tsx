@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export function MarketingNav({ pendentes }: { pendentes: number }) {
+export function MarketingNav() {
   const pathname = usePathname();
   const abas = [
-    { href: "/marketing/tarefas", label: "Minhas tarefas", contador: pendentes },
+    // as tarefas do Marketing ficam no modulo Tarefas, ja filtradas
+    { href: "/tarefas?categoria=marketing&visao=lista", label: "Tarefas ↗", contador: 0 },
     { href: "/marketing/calendario", label: "Calendário" },
     { href: "/marketing/parcerias", label: "Parcerias" },
     { href: "/marketing", label: "Mapa" },

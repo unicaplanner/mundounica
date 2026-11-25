@@ -17,7 +17,7 @@ export const ROTULO_STATUS: Record<StatusTarefa, string> = {
 export type Categoria = { valor: string; rotulo: string; cor: string; href?: string };
 
 export const CATEGORIAS: Categoria[] = [
-  { valor: "marketing", rotulo: "Marketing", cor: "var(--rosa)", href: "/marketing/tarefas" },
+  { valor: "marketing", rotulo: "Marketing", cor: "var(--rosa)", href: "/marketing/calendario" },
   { valor: "parcerias", rotulo: "Parcerias", cor: "var(--azul)", href: "/marketing/parcerias" },
   { valor: "financeiro", rotulo: "Financeiro", cor: "var(--ok)", href: "/financeiro" },
   { valor: "producao", rotulo: "Produção", cor: "var(--alerta)" },

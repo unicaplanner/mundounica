@@ -67,7 +67,7 @@ export async function buscar(texto: string): Promise<GrupoBusca[]> {
         ...tarefasMkt.map((t) => ({
           titulo: t.titulo,
           detalhe: `Marketing${t.prazo ? ` · prazo ${dataBR.format(t.prazo)}` : ""}`,
-          href: "/marketing/tarefas",
+          href: "/tarefas?categoria=marketing&visao=lista",
         })),
       ].slice(0, n)
     ),

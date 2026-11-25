@@ -185,7 +185,7 @@ export function DetalhesConteudo({ c }: { c: ConteudoCompleto }) {
           <ul className="flex list-disc flex-col gap-1 pl-5 text-sm">
             {c.tarefas.map((t) => (
               <li key={t.id}>
-                <Link href="/marketing/tarefas" className="text-ink underline">
+                <Link href="/tarefas?categoria=marketing&visao=lista" className="text-ink underline">
                   {t.titulo}
                 </Link>
               </li>

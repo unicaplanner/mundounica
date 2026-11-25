@@ -1,5 +1,6 @@
 import { carregarTarefas } from "@/lib/tarefas/carregar";
 import { Organizador, type Visao } from "@/components/tarefas/Organizador";
+import { CATEGORIAS, TAGS } from "@/lib/tarefas/meta";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +11,9 @@ const VISOES: Visao[] = ["hoje", "lista", "kanban", "calendario"];
 export default async function TarefasPage({ searchParams }: PageProps<"/tarefas">) {
   const sp = await searchParams;
   const visao = VISOES.find((v) => v === sp.visao) ?? "hoje";
+  // Atalhos dos modulos: /tarefas?categoria=marketing&tag=aprovacao abre ja filtrado.
+  const categoria = CATEGORIAS.find((c) => c.valor === sp.categoria)?.valor;
+  const tag = TAGS.find((t) => t.valor === sp.tag)?.valor;
   const { tarefas, hoje, comErro } = await carregarTarefas();
 
   return (
@@ -19,7 +23,7 @@ export default async function TarefasPage({ searchParams }: PageProps<"/tarefas"
           Não deu pra carregar as tarefas de {comErro.join(", ")} agora. O resto está aqui; recarregue daqui a pouco.
         </p>
       )}
-      <Organizador tarefas={tarefas} hoje={hoje} visaoInicial={visao} />
+      <Organizador tarefas={tarefas} hoje={hoje} visaoInicial={visao} categoriaInicial={categoria} tagsIniciais={tag ? [tag] : []} />
     </div>
   );
 }

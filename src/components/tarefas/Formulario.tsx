@@ -18,7 +18,7 @@ import type { Acoes } from "./useAcoes";
 const CENTRAL_PRODUCAO_URL = process.env.NEXT_PUBLIC_CENTRAL_PRODUCAO_URL;
 
 const SUGESTOES_LINK = [
-  { href: "/marketing/tarefas", rotulo: "Marketing · Minhas tarefas" },
+  { href: "/marketing/calendario", rotulo: "Marketing · Calendário" },
   { href: "/marketing/calendario", rotulo: "Marketing · Calendário" },
   { href: "/marketing/parcerias", rotulo: "Parcerias" },
   { href: "/marketing/parcerias/triagem", rotulo: "Parcerias · Triagem" },

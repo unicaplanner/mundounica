@@ -21,12 +21,24 @@ const VISOES: { valor: Visao; rotulo: string }[] = [
 
 type Origem = "todas" | "manual" | "auto";
 
-export function Organizador({ tarefas, hoje, visaoInicial }: { tarefas: TarefaUnificada[]; hoje: string; visaoInicial: Visao }) {
+export function Organizador({
+  tarefas,
+  hoje,
+  visaoInicial,
+  categoriaInicial,
+  tagsIniciais = [],
+}: {
+  tarefas: TarefaUnificada[];
+  hoje: string;
+  visaoInicial: Visao;
+  categoriaInicial?: string;
+  tagsIniciais?: string[];
+}) {
   const acoes = useAcoes();
   const [visao, setVisao] = useState<Visao>(visaoInicial);
   const [busca, setBusca] = useState("");
-  const [cat, setCat] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
+  const [cat, setCat] = useState(categoriaInicial ?? "");
+  const [tags, setTags] = useState<string[]>(tagsIniciais);
   const [origem, setOrigem] = useState<Origem>("todas");
   const [rapida, setRapida] = useState("");
   // undefined = fechado; null = nova
